@@ -1,4 +1,4 @@
-from datacatalogtordf.catalog import Dataset
+from datacatalogtordf.dataset import Dataset
 from datacatalogtordf.distribution import Distribution
 
 from rdflib import Graph
@@ -8,9 +8,9 @@ from rdflib.compare import isomorphic, graph_diff
 
 def test_to_graph_should_return_publisher_as_graph():
 
-    catalog = Dataset()
-    catalog.identifier = 'http://example.com/catalogs/1'
-    catalog.publisher = 'http://example.com/publisher/1'
+    dataset = Dataset()
+    dataset.identifier = 'http://example.com/datasets/1'
+    dataset.publisher = 'http://example.com/publisher/1'
 
     src = '''
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -18,11 +18,11 @@ def test_to_graph_should_return_publisher_as_graph():
     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
 
-    <http://example.com/catalogs/1> a dcat:Dataset ;
+    <http://example.com/datasets/1> a dcat:Dataset ;
         dct:publisher   <http://example.com/publisher/1> ;
         .
     '''
-    g1 = Graph().parse(data=catalog.to_rdf(), format='turtle')
+    g1 = Graph().parse(data=dataset.to_rdf(), format='turtle')
     g2 = Graph().parse(data=src, format='turtle')
 
     _isomorphic = isomorphic(g1, g2)
@@ -34,9 +34,9 @@ def test_to_graph_should_return_publisher_as_graph():
 
 def test_to_graph_should_return_title_as_graph():
 
-    catalog = Dataset()
-    catalog.identifier = 'http://example.com/catalogs/1'
-    catalog.title = {"nb": "Tittel 1", "en": "Title 1"}
+    dataset = Dataset()
+    dataset.identifier = 'http://example.com/datasets/1'
+    dataset.title = {"nb": "Tittel 1", "en": "Title 1"}
 
     src = '''
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -44,11 +44,11 @@ def test_to_graph_should_return_title_as_graph():
     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
 
-    <http://example.com/catalogs/1> a dcat:Dataset ;
+    <http://example.com/datasets/1> a dcat:Dataset ;
         dct:title   "Title 1"@en, "Tittel 1"@nb ;
         .
     '''
-    g1 = Graph().parse(data=catalog.to_rdf(), format='turtle')
+    g1 = Graph().parse(data=dataset.to_rdf(), format='turtle')
     g2 = Graph().parse(data=src, format='turtle')
 
     _isomorphic = isomorphic(g1, g2)
@@ -60,16 +60,16 @@ def test_to_graph_should_return_title_as_graph():
 
 def test_to_graph_should_return_distribution_as_graph():
 
-    catalog = Dataset()
-    catalog.identifier = 'http://example.com/datasets/1'
+    dataset = Dataset()
+    dataset.identifier = 'http://example.com/datasets/1'
 
     distribution1 = Distribution()
     distribution1.identifier = 'http://example.com/distributions/1'
-    catalog.distributions.append(distribution1)
+    dataset.distributions.append(distribution1)
 
     distribution2 = Distribution()
     distribution2.identifier = 'http://example.com/distributions/2'
-    catalog.distributions.append(distribution2)
+    dataset.distributions.append(distribution2)
 
     src = '''
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -82,7 +82,7 @@ def test_to_graph_should_return_distribution_as_graph():
                             <http://example.com/distributions/2>
         .
     '''
-    g1 = Graph().parse(data=catalog.to_rdf(), format='turtle')
+    g1 = Graph().parse(data=dataset.to_rdf(), format='turtle')
     g2 = Graph().parse(data=src, format='turtle')
 
     _isomorphic = isomorphic(g1, g2)
