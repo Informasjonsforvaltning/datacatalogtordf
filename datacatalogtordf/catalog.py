@@ -25,13 +25,6 @@ class Catalog(Dataset):
     def datasets(self, datasets: List[Dataset]):
         self._datasets = datasets
 # -
-
-    def to_rdf(self, format='turtle') -> str:
-        """Maps the catalog to rdf and returns a serialization
-           as a string according to format"""
-
-        return self._to_graph().serialize(format=format, encoding='utf-8')
-# -
     def _to_graph(self) -> Graph:
 
         super(Catalog, self)._to_graph()
