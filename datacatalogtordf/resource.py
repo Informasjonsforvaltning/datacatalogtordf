@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
 from rdflib import Graph, Namespace, RDF, URIRef, Literal
 DCT = Namespace('http://purl.org/dc/terms/')
@@ -9,7 +9,7 @@ class Resource(ABC):
     """
     An abstract class representing dcat:Resource
     """
-
+    @abstractmethod
     def __init__(self):
         # set up graph and namespaces:
         self._g = Graph()

@@ -6,58 +6,6 @@ from rdflib.compare import isomorphic, graph_diff
 # import pytest
 
 
-def test_to_graph_should_return_publisher_as_graph():
-
-    dataset = Dataset()
-    dataset.identifier = 'http://example.com/datasets/1'
-    dataset.publisher = 'http://example.com/publisher/1'
-
-    src = '''
-    @prefix dct: <http://purl.org/dc/terms/> .
-    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-    @prefix dcat: <http://www.w3.org/ns/dcat#> .
-
-    <http://example.com/datasets/1> a dcat:Dataset ;
-        dct:publisher   <http://example.com/publisher/1> ;
-        .
-    '''
-    g1 = Graph().parse(data=dataset.to_rdf(), format='turtle')
-    g2 = Graph().parse(data=src, format='turtle')
-
-    _isomorphic = isomorphic(g1, g2)
-    if not _isomorphic:
-        _dump_diff(g1, g2)
-        pass
-    assert _isomorphic
-
-
-def test_to_graph_should_return_title_as_graph():
-
-    dataset = Dataset()
-    dataset.identifier = 'http://example.com/datasets/1'
-    dataset.title = {"nb": "Tittel 1", "en": "Title 1"}
-
-    src = '''
-    @prefix dct: <http://purl.org/dc/terms/> .
-    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-    @prefix dcat: <http://www.w3.org/ns/dcat#> .
-
-    <http://example.com/datasets/1> a dcat:Dataset ;
-        dct:title   "Title 1"@en, "Tittel 1"@nb ;
-        .
-    '''
-    g1 = Graph().parse(data=dataset.to_rdf(), format='turtle')
-    g2 = Graph().parse(data=src, format='turtle')
-
-    _isomorphic = isomorphic(g1, g2)
-    if not _isomorphic:
-        _dump_diff(g1, g2)
-        pass
-    assert _isomorphic
-
-
 def test_to_graph_should_return_distribution_as_graph():
 
     dataset = Dataset()
