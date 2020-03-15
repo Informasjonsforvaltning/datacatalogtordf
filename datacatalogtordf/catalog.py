@@ -19,6 +19,11 @@ class Catalog(Dataset):
 
     @property
     def datasets(self) -> List[Dataset]:
+        """
+        A list of
+        [datasets](https://www.w3.org/TR/vocab-dcat-2/#Property:catalog_dataset)
+        Add to the by ```catalog.datasets.append(dataset)```
+        """
         return self._datasets
 
     @datasets.setter

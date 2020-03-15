@@ -1,4 +1,4 @@
-from datacatalogtordf.distribution import Distribution
+from datacatalogtordf import Distribution
 
 from rdflib import Graph
 from rdflib.compare import isomorphic, graph_diff

@@ -20,8 +20,7 @@ The library contains helper classes for the following dcat classes:
 ```
 ### Getting started
 ```
-from datacatalogtordf.catalog import Catalog
-from datacatalogtordf.catalog import Dataset
+from datacatalogtordf.catalog import Catalog, Dataset
 
 # Create catalog object
 catalog = Catalog()

@@ -44,7 +44,13 @@ class Resource(ABC):
     def to_rdf(self, format='turtle') -> str:
         """
         Maps the resource to rdf and returns a serialization
-           as a string according to format
+        as a string according to format
+
+        Available formats:
+
+         - turtle (default)
+         - xml
+         - json-ld
         """
 
         return self._to_graph().serialize(format=format, encoding='utf-8')

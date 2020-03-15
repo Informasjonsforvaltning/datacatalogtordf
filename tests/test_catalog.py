@@ -1,5 +1,4 @@
-from datacatalogtordf.catalog import Catalog
-from datacatalogtordf.dataset import Dataset
+from datacatalogtordf import Catalog, Dataset
 
 from rdflib import Graph
 from rdflib.compare import isomorphic, graph_diff

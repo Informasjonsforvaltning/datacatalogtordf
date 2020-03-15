@@ -1,5 +1,4 @@
-from datacatalogtordf.catalog import Catalog
-from datacatalogtordf.catalog import Dataset
+from datacatalogtordf import Catalog, Dataset
 
 # Create catalog object
 catalog = Catalog()
