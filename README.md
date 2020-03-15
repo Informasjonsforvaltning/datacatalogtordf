@@ -1,6 +1,6 @@
 # datacatalogtordf
 
-A small Python library for mapping a data catalog to rdf  
+A small Python library for mapping a data catalog to rdf
 
 The library contains helper classes for the following dcat classes:
  - [Catalog](https://www.w3.org/TR/vocab-dcat-2/#Class:Catalog)
