@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import List
 
 from rdflib import Graph, Namespace, RDF, URIRef
@@ -14,21 +16,23 @@ class Dataset(Resource):
     A class representing dcat:Dataset
     """
 
-    def __init__(self):
+    _distributions: List
+
+    def __init__(self) -> None:
         super().__init__()
         self._type = DCAT.Dataset
         self.distributions = []
 
     @property
-    def distributions(self) -> List[Distribution]:
+    def distributions(self: Dataset) -> List[Distribution]:
         return self._distributions
 
     @distributions.setter
-    def distributions(self, distributions: List[Distribution]):
+    def distributions(self: Dataset, distributions: List[Distribution]) -> None:
         self._distributions = distributions
 
     # -
-    def _to_graph(self) -> Graph:
+    def _to_graph(self: Dataset) -> Graph:
 
         super(Dataset, self)._to_graph()
 
@@ -39,7 +43,7 @@ class Dataset(Resource):
 
         return self._g
 
-    def _distributions_to_graph(self):
+    def _distributions_to_graph(self: Dataset) -> None:
 
         for distribution in self._distributions:
             self._g.add(

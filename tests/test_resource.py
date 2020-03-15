@@ -10,13 +10,13 @@ Using Dataset class in order to instantiate Resource.
 """
 
 
-def test_instantiate_resource_should_fail_with_TypeError():
+def test_instantiate_resource_should_fail_with_TypeError() -> None:
 
     with pytest.raises(TypeError):
-        _ = Resource()
+        _ = Resource()  # type: ignore
 
 
-def test_to_graph_should_return_publisher_as_graph():
+def test_to_graph_should_return_publisher_as_graph() -> None:
 
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
@@ -42,7 +42,7 @@ def test_to_graph_should_return_publisher_as_graph():
     assert _isomorphic
 
 
-def test_to_graph_should_return_title_as_graph():
+def test_to_graph_should_return_title_as_graph() -> None:
 
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
@@ -72,7 +72,7 @@ def test_to_graph_should_return_title_as_graph():
 # Utils for displaying debug information
 
 
-def _dump_diff(g1, g2):
+def _dump_diff(g1: Graph, g2: Graph) -> None:
     in_both, in_first, in_second = graph_diff(g1, g2)
     print("\nin both:")
     _dump_turtle(in_both)
@@ -82,13 +82,7 @@ def _dump_diff(g1, g2):
     _dump_turtle(in_second)
 
 
-def _dump_turtle_sorted(g):
-    for l in sorted(g.serialize(format="turtle").splitlines()):
-        if l:
-            print(l.decode())
-
-
-def _dump_turtle(g):
+def _dump_turtle(g: Graph) -> None:
     for l in g.serialize(format="turtle").splitlines():
         if l:
             print(l.decode())

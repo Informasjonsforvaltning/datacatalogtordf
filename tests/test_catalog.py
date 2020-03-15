@@ -4,7 +4,7 @@ from rdflib.compare import graph_diff, isomorphic
 from datacatalogtordf import Catalog, Dataset
 
 
-def test_to_graph_should_return_publisher_as_graph():
+def test_to_graph_should_return_publisher_as_graph() -> None:
 
     catalog = Catalog()
     catalog.identifier = "http://example.com/catalogs/1"
@@ -30,7 +30,7 @@ def test_to_graph_should_return_publisher_as_graph():
     assert _isomorphic
 
 
-def test_to_graph_should_return_title_as_graph():
+def test_to_graph_should_return_title_as_graph() -> None:
 
     catalog = Catalog()
     catalog.identifier = "http://example.com/catalogs/1"
@@ -56,7 +56,7 @@ def test_to_graph_should_return_title_as_graph():
     assert _isomorphic
 
 
-def test_to_graph_should_return_dataset_as_graph():
+def test_to_graph_should_return_dataset_as_graph() -> None:
 
     catalog = Catalog()
     catalog.identifier = "http://example.com/catalogs/1"
@@ -94,7 +94,7 @@ def test_to_graph_should_return_dataset_as_graph():
 # Utils for displaying debug information
 
 
-def _dump_diff(g1, g2):
+def _dump_diff(g1: Graph, g2: Graph) -> None:
     in_both, in_first, in_second = graph_diff(g1, g2)
     print("\nin both:")
     _dump_turtle(in_both)
@@ -104,13 +104,7 @@ def _dump_diff(g1, g2):
     _dump_turtle(in_second)
 
 
-def _dump_turtle_sorted(g):
-    for l in sorted(g.serialize(format="turtle").splitlines()):
-        if l:
-            print(l.decode())
-
-
-def _dump_turtle(g):
+def _dump_turtle(g: Graph) -> None:
     for l in g.serialize(format="turtle").splitlines():
         if l:
             print(l.decode())

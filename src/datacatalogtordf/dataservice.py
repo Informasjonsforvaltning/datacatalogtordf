@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import List
 
 from rdflib import Graph, Namespace, RDF, URIRef
@@ -14,59 +16,63 @@ class DataService(Resource):
     A class representing dcat:DataService
     """
 
-    def __init__(self):
+    _endpointURL: str
+    _endpointDescription: str
+    _servesdatasets: List
+
+    def __init__(self) -> None:
         super().__init__()
         self._type = DCAT.DataService
         self.servesdatasets = []
 
     @property
-    def endpointURL(self) -> str:
+    def endpointURL(self: DataService) -> str:
         return self._endpointURL
 
     @endpointURL.setter
-    def endpointURL(self, endpointURL: str):
+    def endpointURL(self: DataService, endpointURL: str) -> None:
         self._endpointURL = endpointURL
 
     @property
-    def endpointDescription(self) -> str:
+    def endpointDescription(self: DataService) -> str:
         return self._endpointDescription
 
     @endpointDescription.setter
-    def endpointDescription(self, endpointDescription: str):
+    def endpointDescription(self: DataService, endpointDescription: str) -> None:
         self._endpointDescription = endpointDescription
 
     @property
-    def servesdatasets(self) -> List[Dataset]:
+    def servesdatasets(self: DataService) -> List[Dataset]:
         return self._servesdatasets
 
     @servesdatasets.setter
-    def servesdatasets(self, servesdatasets: List[Dataset]):
+    def servesdatasets(self: DataService, servesdatasets: List[Dataset]) -> None:
         self._servesdatasets = servesdatasets
 
     # -
-    def _to_graph(self) -> Graph:
+    def _to_graph(self: DataService) -> Graph:
 
         super(DataService, self)._to_graph()
 
         self._g.add((URIRef(self.identifier), RDF.type, self._type))
 
-        if hasattr(self, "endpointURL"):
+        if getattr(self, "endpointURL", None):
             self._endpointURL_to_graph()
-        if hasattr(self, "endpointDescription"):
+        if getattr(self, "endpointDescription", None):
             self._endpointDescription_to_graph()
-        if hasattr(self, "servesdatasets"):
+        if getattr(self, "servesdatasets", None):
             self._servesdatasets_to_graph()
 
         return self._g
 
     # -
-    def _endpointURL_to_graph(self):
+    def _endpointURL_to_graph(self: DataService) -> None:
 
         self._g.add(
             (URIRef(self.identifier), DCAT.endpointURL, URIRef(self.endpointURL))
         )
 
-    def _endpointDescription_to_graph(self):
+    def _endpointDescription_to_graph(self: DataService) -> None:
 
         self._g.add(
             (
@@ -76,7 +82,7 @@ class DataService(Resource):
             )
         )
 
-    def _servesdatasets_to_graph(self):
+    def _servesdatasets_to_graph(self: DataService) -> None:
 
         for dataset in self._servesdatasets:
             self._g.add(

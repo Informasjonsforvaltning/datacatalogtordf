@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import List
 
 from rdflib import Graph, Namespace, RDF, URIRef
@@ -14,13 +16,15 @@ class Catalog(Dataset):
     A class representing dcat:Catalog
     """
 
-    def __init__(self):
+    _datasets: List
+
+    def __init__(self) -> None:
         super().__init__()
         self._type = DCAT.Catalog
         self.datasets = []
 
     @property
-    def datasets(self) -> List[Dataset]:
+    def datasets(self: Catalog) -> List[Dataset]:
         """
         A list of
         [datasets](https://www.w3.org/TR/vocab-dcat-2/#Property:catalog_dataset)
@@ -29,11 +33,11 @@ class Catalog(Dataset):
         return self._datasets
 
     @datasets.setter
-    def datasets(self, datasets: List[Dataset]):
+    def datasets(self: Catalog, datasets: List[Dataset]) -> None:
         self._datasets = datasets
 
     # -
-    def _to_graph(self) -> Graph:
+    def _to_graph(self: Catalog) -> Graph:
 
         super(Catalog, self)._to_graph()
 
@@ -44,7 +48,7 @@ class Catalog(Dataset):
 
         return self._g
 
-    def _datasets_to_graph(self):
+    def _datasets_to_graph(self: Catalog) -> None:
 
         for dataset in self._datasets:
             self._g.add(
