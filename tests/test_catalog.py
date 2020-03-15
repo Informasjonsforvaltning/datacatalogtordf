@@ -1,17 +1,16 @@
-from datacatalogtordf import Catalog, Dataset
-
 from rdflib import Graph
-from rdflib.compare import isomorphic, graph_diff
-# import pytest
+from rdflib.compare import graph_diff, isomorphic
+
+from datacatalogtordf import Catalog, Dataset
 
 
 def test_to_graph_should_return_publisher_as_graph():
 
     catalog = Catalog()
-    catalog.identifier = 'http://example.com/catalogs/1'
-    catalog.publisher = 'http://example.com/publisher/1'
+    catalog.identifier = "http://example.com/catalogs/1"
+    catalog.publisher = "http://example.com/publisher/1"
 
-    src = '''
+    src = """
     @prefix dct: <http://purl.org/dc/terms/> .
     @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -20,9 +19,9 @@ def test_to_graph_should_return_publisher_as_graph():
     <http://example.com/catalogs/1> a dcat:Catalog ;
         dct:publisher   <http://example.com/publisher/1> ;
         .
-    '''
-    g1 = Graph().parse(data=catalog.to_rdf(), format='turtle')
-    g2 = Graph().parse(data=src, format='turtle')
+    """
+    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
 
     _isomorphic = isomorphic(g1, g2)
     if not _isomorphic:
@@ -34,10 +33,10 @@ def test_to_graph_should_return_publisher_as_graph():
 def test_to_graph_should_return_title_as_graph():
 
     catalog = Catalog()
-    catalog.identifier = 'http://example.com/catalogs/1'
+    catalog.identifier = "http://example.com/catalogs/1"
     catalog.title = {"nb": "Tittel 1", "en": "Title 1"}
 
-    src = '''
+    src = """
     @prefix dct: <http://purl.org/dc/terms/> .
     @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -46,9 +45,9 @@ def test_to_graph_should_return_title_as_graph():
     <http://example.com/catalogs/1> a dcat:Catalog ;
         dct:title   "Title 1"@en, "Tittel 1"@nb ;
         .
-    '''
-    g1 = Graph().parse(data=catalog.to_rdf(), format='turtle')
-    g2 = Graph().parse(data=src, format='turtle')
+    """
+    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
 
     _isomorphic = isomorphic(g1, g2)
     if not _isomorphic:
@@ -60,17 +59,17 @@ def test_to_graph_should_return_title_as_graph():
 def test_to_graph_should_return_dataset_as_graph():
 
     catalog = Catalog()
-    catalog.identifier = 'http://example.com/catalogs/1'
+    catalog.identifier = "http://example.com/catalogs/1"
 
     dataset1 = Dataset()
-    dataset1.identifier = 'http://example.com/datasets/1'
+    dataset1.identifier = "http://example.com/datasets/1"
     catalog.datasets.append(dataset1)
 
     dataset2 = Dataset()
-    dataset2.identifier = 'http://example.com/datasets/2'
+    dataset2.identifier = "http://example.com/datasets/2"
     catalog.datasets.append(dataset2)
 
-    src = '''
+    src = """
     @prefix dct: <http://purl.org/dc/terms/> .
     @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -80,15 +79,17 @@ def test_to_graph_should_return_dataset_as_graph():
         dcat:dataset    <http://example.com/datasets/1>,
                         <http://example.com/datasets/2>
         .
-    '''
-    g1 = Graph().parse(data=catalog.to_rdf(), format='turtle')
-    g2 = Graph().parse(data=src, format='turtle')
+    """
+    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
 
     _isomorphic = isomorphic(g1, g2)
     if not _isomorphic:
         _dump_diff(g1, g2)
         pass
     assert _isomorphic
+
+
 # ---------------------------------------------------------------------- #
 # Utils for displaying debug information
 
@@ -104,12 +105,12 @@ def _dump_diff(g1, g2):
 
 
 def _dump_turtle_sorted(g):
-    for l in sorted(g.serialize(format='turtle').splitlines()):
+    for l in sorted(g.serialize(format="turtle").splitlines()):
         if l:
             print(l.decode())
 
 
 def _dump_turtle(g):
-    for l in g.serialize(format='turtle').splitlines():
+    for l in g.serialize(format="turtle").splitlines():
         if l:
             print(l.decode())

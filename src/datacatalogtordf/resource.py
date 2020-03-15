@@ -1,20 +1,22 @@
 from abc import ABC, abstractmethod
 
-from rdflib import Graph, Namespace, RDF, URIRef, Literal
-DCT = Namespace('http://purl.org/dc/terms/')
-DCAT = Namespace('http://www.w3.org/ns/dcat#')
+from rdflib import Graph, Literal, Namespace, RDF, URIRef
+
+DCT = Namespace("http://purl.org/dc/terms/")
+DCAT = Namespace("http://www.w3.org/ns/dcat#")
 
 
 class Resource(ABC):
     """
     An abstract class representing dcat:Resource
     """
+
     @abstractmethod
     def __init__(self):
         # set up graph and namespaces:
         self._g = Graph()
-        self._g.bind('dct', DCT)
-        self._g.bind('dcat', DCAT)
+        self._g.bind("dct", DCT)
+        self._g.bind("dcat", DCAT)
 
     @property
     def identifier(self) -> str:
@@ -41,7 +43,7 @@ class Resource(ABC):
         self._title = title
 
     # -
-    def to_rdf(self, format='turtle') -> str:
+    def to_rdf(self, format="turtle") -> str:
         """
         Maps the resource to rdf and returns a serialization
         as a string according to format
@@ -53,27 +55,27 @@ class Resource(ABC):
          - json-ld
         """
 
-        return self._to_graph().serialize(format=format, encoding='utf-8')
+        return self._to_graph().serialize(format=format, encoding="utf-8")
 
-# -
+    # -
     def _to_graph(self) -> Graph:
 
         self._g.add((URIRef(self.identifier), RDF.type, self._type))
 
-        if hasattr(self, 'publisher'):
+        if hasattr(self, "publisher"):
             self._publisher_to_graph()
-        if hasattr(self, 'title'):
+        if hasattr(self, "title"):
             self._title_to_graph()
 
         return self._g
 
     def _publisher_to_graph(self):
 
-        self._g.add((URIRef(self.identifier), DCT.publisher,
-                     URIRef(self.publisher)))
+        self._g.add((URIRef(self.identifier), DCT.publisher, URIRef(self.publisher)))
 
     def _title_to_graph(self):
 
         for key in self._title:
-            self._g.add((URIRef(self.identifier), DCT.title,
-                         Literal(self.title[key], lang=key)))
+            self._g.add(
+                (URIRef(self.identifier), DCT.title, Literal(self.title[key], lang=key))
+            )

@@ -1,9 +1,12 @@
-from .resource import Resource
-from .dataset import Dataset
-from rdflib import Namespace, Graph, URIRef, RDF
 from typing import List
-DCT = Namespace('http://purl.org/dc/terms/')
-DCAT = Namespace('http://www.w3.org/ns/dcat#')
+
+from rdflib import Graph, Namespace, RDF, URIRef
+
+from .dataset import Dataset
+from .resource import Resource
+
+DCT = Namespace("http://purl.org/dc/terms/")
+DCAT = Namespace("http://www.w3.org/ns/dcat#")
 
 
 class DataService(Resource):
@@ -40,34 +43,46 @@ class DataService(Resource):
     def servesdatasets(self, servesdatasets: List[Dataset]):
         self._servesdatasets = servesdatasets
 
-# -
+    # -
     def _to_graph(self) -> Graph:
 
         super(DataService, self)._to_graph()
 
         self._g.add((URIRef(self.identifier), RDF.type, self._type))
 
-        if hasattr(self, 'endpointURL'):
+        if hasattr(self, "endpointURL"):
             self._endpointURL_to_graph()
-        if hasattr(self, 'endpointDescription'):
+        if hasattr(self, "endpointDescription"):
             self._endpointDescription_to_graph()
-        if hasattr(self, 'servesdatasets'):
+        if hasattr(self, "servesdatasets"):
             self._servesdatasets_to_graph()
 
         return self._g
-# -
+
+    # -
     def _endpointURL_to_graph(self):
 
-        self._g.add((URIRef(self.identifier), DCAT.endpointURL,
-                     URIRef(self.endpointURL)))
+        self._g.add(
+            (URIRef(self.identifier), DCAT.endpointURL, URIRef(self.endpointURL))
+        )
 
     def _endpointDescription_to_graph(self):
 
-        self._g.add((URIRef(self.identifier), DCAT.endpointDescription,
-                     URIRef(self.endpointDescription)))
+        self._g.add(
+            (
+                URIRef(self.identifier),
+                DCAT.endpointDescription,
+                URIRef(self.endpointDescription),
+            )
+        )
 
     def _servesdatasets_to_graph(self):
 
         for dataset in self._servesdatasets:
-            self._g.add((URIRef(self.identifier), DCAT.servesDataset,
-                         URIRef(dataset.identifier)))
+            self._g.add(
+                (
+                    URIRef(self.identifier),
+                    DCAT.servesDataset,
+                    URIRef(dataset.identifier),
+                )
+            )

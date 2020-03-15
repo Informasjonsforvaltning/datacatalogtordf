@@ -1,24 +1,25 @@
+from rdflib import Graph
+from rdflib.compare import graph_diff, isomorphic
+
 from datacatalogtordf import Dataset, Distribution
 
-from rdflib import Graph
-from rdflib.compare import isomorphic, graph_diff
 # import pytest
 
 
 def test_to_graph_should_return_distribution_as_graph():
 
     dataset = Dataset()
-    dataset.identifier = 'http://example.com/datasets/1'
+    dataset.identifier = "http://example.com/datasets/1"
 
     distribution1 = Distribution()
-    distribution1.identifier = 'http://example.com/distributions/1'
+    distribution1.identifier = "http://example.com/distributions/1"
     dataset.distributions.append(distribution1)
 
     distribution2 = Distribution()
-    distribution2.identifier = 'http://example.com/distributions/2'
+    distribution2.identifier = "http://example.com/distributions/2"
     dataset.distributions.append(distribution2)
 
-    src = '''
+    src = """
     @prefix dct: <http://purl.org/dc/terms/> .
     @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -28,15 +29,17 @@ def test_to_graph_should_return_distribution_as_graph():
         dcat:distribution   <http://example.com/distributions/1>,
                             <http://example.com/distributions/2>
         .
-    '''
-    g1 = Graph().parse(data=dataset.to_rdf(), format='turtle')
-    g2 = Graph().parse(data=src, format='turtle')
+    """
+    g1 = Graph().parse(data=dataset.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
 
     _isomorphic = isomorphic(g1, g2)
     if not _isomorphic:
         _dump_diff(g1, g2)
         pass
     assert _isomorphic
+
+
 # ---------------------------------------------------------------------- #
 # Utils for displaying debug information
 
@@ -52,12 +55,12 @@ def _dump_diff(g1, g2):
 
 
 def _dump_turtle_sorted(g):
-    for l in sorted(g.serialize(format='turtle').splitlines()):
+    for l in sorted(g.serialize(format="turtle").splitlines()):
         if l:
             print(l.decode())
 
 
 def _dump_turtle(g):
-    for l in g.serialize(format='turtle').splitlines():
+    for l in g.serialize(format="turtle").splitlines():
         if l:
             print(l.decode())

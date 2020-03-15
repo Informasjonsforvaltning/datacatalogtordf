@@ -1,10 +1,12 @@
-from .resource import Resource
-from .distribution import Distribution
 from typing import List
-from rdflib import Namespace, Graph, URIRef, RDF
 
-DCT = Namespace('http://purl.org/dc/terms/')
-DCAT = Namespace('http://www.w3.org/ns/dcat#')
+from rdflib import Graph, Namespace, RDF, URIRef
+
+from .distribution import Distribution
+from .resource import Resource
+
+DCT = Namespace("http://purl.org/dc/terms/")
+DCAT = Namespace("http://www.w3.org/ns/dcat#")
 
 
 class Dataset(Resource):
@@ -24,14 +26,15 @@ class Dataset(Resource):
     @distributions.setter
     def distributions(self, distributions: List[Distribution]):
         self._distributions = distributions
-# -
+
+    # -
     def _to_graph(self) -> Graph:
 
         super(Dataset, self)._to_graph()
 
         self._g.add((URIRef(self.identifier), RDF.type, self._type))
 
-        if hasattr(self, 'distributions'):
+        if hasattr(self, "distributions"):
             self._distributions_to_graph()
 
         return self._g
@@ -39,5 +42,10 @@ class Dataset(Resource):
     def _distributions_to_graph(self):
 
         for distribution in self._distributions:
-            self._g.add((URIRef(self.identifier), DCAT.distribution,
-                         URIRef(distribution.identifier)))
+            self._g.add(
+                (
+                    URIRef(self.identifier),
+                    DCAT.distribution,
+                    URIRef(distribution.identifier),
+                )
+            )
