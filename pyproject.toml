@@ -16,10 +16,24 @@ classifiers=[
       "Operating System :: OS Independent",
       ]
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.7"
 rdflib = "^4.2.2"
 
 [tool.poetry.dev-dependencies]
+pytest = "^5.4.1"
+coverage = {extras = ["toml"], version = "^5.0.3"}
+pytest-cov = "^2.8.1"
+
+[tool.coverage.paths]
+source = ["src", "*/site-packages"]
+
+[tool.coverage.run]
+branch = false
+source = ["datacatalogtordf"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 100
 
 [build-system]
 requires = ["poetry>=0.12"]
