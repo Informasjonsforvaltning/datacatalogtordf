@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "datacatalogtordf"
+version = "0.1.0"
+description="""
+              A small Python library for mapping a data catalog
+              to the dcat-ap-no specification
+            """
+authors = ["Stig B. Dørmænen <stigbd@gmail.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+homepage = "https://github.com/Informasjonsforvaltning/datacatalogtordf"
+repository = "https://github.com/Informasjonsforvaltning/datacatalogtordf"
+classifiers=[
+      "Programming Language :: Python :: 3",
+      "License :: OSI Approved :: Apache Software License",
+      "Operating System :: OS Independent",
+      ]
+[tool.poetry.dependencies]
+python = "^3.8"
+rdflib = "^4.2.2"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

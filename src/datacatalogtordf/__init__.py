@@ -4,6 +4,7 @@ Datacatalog to rdf
 Heading
 -------
 """
+__version__ = "0.1.0"
 from .catalog import Catalog
 from .dataservice import DataService
 from .dataset import Dataset
