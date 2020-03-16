@@ -1,3 +1,4 @@
+"""Test cases for the catalog module."""
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
@@ -5,7 +6,7 @@ from datacatalogtordf import Catalog, Dataset
 
 
 def test_to_graph_should_return_publisher_as_graph() -> None:
-
+    """It returns a publisher graph isomorphic to spec."""
     catalog = Catalog()
     catalog.identifier = "http://example.com/catalogs/1"
     catalog.publisher = "http://example.com/publisher/1"
@@ -31,7 +32,7 @@ def test_to_graph_should_return_publisher_as_graph() -> None:
 
 
 def test_to_graph_should_return_title_as_graph() -> None:
-
+    """It returns a title graph isomorphic to spec."""
     catalog = Catalog()
     catalog.identifier = "http://example.com/catalogs/1"
     catalog.title = {"nb": "Tittel 1", "en": "Title 1"}
@@ -57,7 +58,7 @@ def test_to_graph_should_return_title_as_graph() -> None:
 
 
 def test_to_graph_should_return_dataset_as_graph() -> None:
-
+    """It returns a dataset graph isomorphic to spec."""
     catalog = Catalog()
     catalog.identifier = "http://example.com/catalogs/1"
 

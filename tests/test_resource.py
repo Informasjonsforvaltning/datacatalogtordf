@@ -1,3 +1,4 @@
+"""Test cases for the resource module."""
 import pytest
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
@@ -11,13 +12,13 @@ Using Dataset class in order to instantiate Resource.
 
 
 def test_instantiate_resource_should_fail_with_TypeError() -> None:
-
+    """It returns a TypeErro exception."""
     with pytest.raises(TypeError):
         _ = Resource()  # type: ignore
 
 
 def test_to_graph_should_return_publisher_as_graph() -> None:
-
+    """It returns a publisher graph isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
     resource.publisher = "http://example.com/publisher/1"
@@ -43,7 +44,7 @@ def test_to_graph_should_return_publisher_as_graph() -> None:
 
 
 def test_to_graph_should_return_title_as_graph() -> None:
-
+    """It returns a title graph isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
     resource.title = {"nb": "Tittel 1", "en": "Title 1"}

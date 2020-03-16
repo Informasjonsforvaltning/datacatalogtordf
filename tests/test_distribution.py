@@ -1,3 +1,4 @@
+"""Test cases for the distribution module."""
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
@@ -7,7 +8,7 @@ from datacatalogtordf import Distribution
 
 
 def test_to_graph_should_return_title_as_graph() -> None:
-
+    """It returns a title graph isomorphic to spec."""
     distribution = Distribution()
     distribution.identifier = "http://example.com/distributions/1"
     distribution.title = {"nb": "API-distribusjon", "en": "API-distribution"}

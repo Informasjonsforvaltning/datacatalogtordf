@@ -1,3 +1,4 @@
+"""Test cases for the dataset module."""
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
@@ -7,7 +8,7 @@ from datacatalogtordf import Dataset, Distribution
 
 
 def test_to_graph_should_return_distribution_as_graph() -> None:
-
+    """It returns a distribution graph isomorphic to spec."""
     dataset = Dataset()
     dataset.identifier = "http://example.com/datasets/1"
 

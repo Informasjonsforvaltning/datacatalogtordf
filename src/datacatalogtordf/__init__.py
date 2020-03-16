@@ -1,8 +1,11 @@
-"""
-Datacatalog to rdf
+"""Datacatalog package.
 
-Heading
--------
+Modules:
+    resource
+    dataset
+    catalog
+    dataservice
+    distribution
 """
 __version__ = "0.1.0"
 from .catalog import Catalog

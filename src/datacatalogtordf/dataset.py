@@ -1,3 +1,19 @@
+"""Dataset module for mapping a dataset to rdf.
+
+This module contains methods for mapping a dataset object to rdf
+according to the [dcat-ap-no v.2 standard](https://doc.difi.no/review/dcat-ap-no/)
+
+    Typical usage example:
+
+    dataset = Dataset()
+    dataset.identifier = "http://example.com/datasets/1"
+    dataset.title = {"en": "Title of dataset"}
+
+    for distribution in listOfDistributions:
+        dataset.distributions.append(distribution)
+
+    rdf_turtle = dataservice.to_rdf()
+"""
 from __future__ import annotations
 
 from typing import List
@@ -12,19 +28,23 @@ DCAT = Namespace("http://www.w3.org/ns/dcat#")
 
 
 class Dataset(Resource):
-    """
-    A class representing dcat:Dataset
+    """A class representing dcat:Dataset.
+
+    Attributes:
+        distributions: a list of distributions of the dataset
     """
 
     _distributions: List
 
     def __init__(self) -> None:
+        """Inits an object with default values."""
         super().__init__()
         self._type = DCAT.Dataset
         self.distributions = []
 
     @property
     def distributions(self: Dataset) -> List[Distribution]:
+        """Get/set for identifier."""
         return self._distributions
 
     @distributions.setter

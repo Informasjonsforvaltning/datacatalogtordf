@@ -1,3 +1,10 @@
+"""Resource module for mapping a sub-classes to rdf.
+
+This module contains methods for mapping a sub-class objects to rdf
+according to the [dcat-ap-no v.2 standard](https://doc.difi.no/review/dcat-ap-no/)
+
+Refer to sub-class for typical usage examples.
+"""
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -9,8 +16,12 @@ DCAT = Namespace("http://www.w3.org/ns/dcat#")
 
 
 class Resource(ABC):
-    """
-    An abstract class representing dcat:Resource
+    """An abstract class representing dcat:Resource.
+
+    Attributes:
+        identifier: an URI uniquely identifying the resource
+        publisher: an URI uniquely identifying the publisher of the resource
+        title: a dict with title in multiple languages
     """
 
     _identifier: str
@@ -19,6 +30,7 @@ class Resource(ABC):
 
     @abstractmethod
     def __init__(self) -> None:
+        """Inits an object with default values."""
         self._type = DCAT.Resource
         # set up graph and namespaces:
         self._g = Graph()
@@ -27,6 +39,7 @@ class Resource(ABC):
 
     @property
     def identifier(self: Resource) -> str:
+        """Get/set for identifier."""
         return self._identifier
 
     @identifier.setter
@@ -35,6 +48,7 @@ class Resource(ABC):
 
     @property
     def publisher(self: Resource) -> str:
+        """Get/set for publisher."""
         return self._publisher
 
     @publisher.setter
@@ -43,6 +57,7 @@ class Resource(ABC):
 
     @property
     def title(self: Resource) -> dict:
+        """Get/set for title."""
         return self._title
 
     @title.setter
@@ -51,17 +66,19 @@ class Resource(ABC):
 
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
-        """
-        Maps the resource to rdf and returns a serialization
-        as a string according to format
+        """Maps the distribution to rdf.
 
         Available formats:
-
          - turtle (default)
          - xml
          - json-ld
-        """
 
+        Args:
+            format: a valid format.
+
+        Returns:
+            a rdf serialization as a string according to format.
+        """
         return self._to_graph().serialize(format=format, encoding="utf-8")
 
     # -

@@ -1,3 +1,16 @@
+"""Distribution module for mapping a distribution to rdf.
+
+This module contains methods for mapping a distribution object to rdf
+according to the [dcat-ap-no v.2 standard](https://doc.difi.no/review/dcat-ap-no/)
+
+    Typical usage example:
+
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/dataservices/1"
+    distribution.title = {"en": "Title of distribution"}
+
+    rdf_turtle = distribution.to_rdf()
+"""
 from __future__ import annotations
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
@@ -7,9 +20,7 @@ DCAT = Namespace("http://www.w3.org/ns/dcat#")
 
 
 class Distribution:
-    """
-    A class representing dcat:Distribution
-    """
+    """A class representing dcat:Distribution."""
 
     _identifier: str
     _publisher: str
@@ -17,6 +28,7 @@ class Distribution:
     _type: URIRef
 
     def __init__(self) -> None:
+        """Inits an object with default values."""
         self._type = DCAT.Distribution
         # set up graph and namespaces:
         self._g = Graph()
@@ -25,6 +37,7 @@ class Distribution:
 
     @property
     def identifier(self: Distribution) -> str:
+        """Get/set for identifier."""
         return self._identifier
 
     @identifier.setter
@@ -33,6 +46,7 @@ class Distribution:
 
     @property
     def title(self: Distribution) -> dict:
+        """Get/set for title."""
         return self._title
 
     @title.setter
@@ -41,11 +55,14 @@ class Distribution:
 
     # -
     def to_rdf(self: Distribution, format: str = "turtle") -> str:
-        """
-        Maps the distribution to rdf and returns a serialization
-           as a string according to format
-        """
+        """Maps the distribution to rdf.
 
+        Args:
+            format: a valid format. Default: turtle
+
+        Returns:
+            a rdf serialization as a string according to format.
+        """
         return self._to_graph().serialize(format=format, encoding="utf-8")
 
     # -

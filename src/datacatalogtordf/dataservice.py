@@ -1,3 +1,16 @@
+"""DataService module for mapping a dataService to rdf.
+
+This module contains methods for mapping a dataservice object to rdf
+according to the [dcat-ap-no v.2 standard](https://doc.difi.no/review/dcat-ap-no/)
+
+    Typical usage example:
+
+    dataservice = DataService()
+    dataservice.identifier = "http://example.com/dataservices/1"
+    dataservice.title = {"en": "Title of dataservice"}
+
+    rdf_turtle = dataservice.to_rdf()
+"""
 from __future__ import annotations
 
 from typing import List
@@ -12,8 +25,13 @@ DCAT = Namespace("http://www.w3.org/ns/dcat#")
 
 
 class DataService(Resource):
-    """
-    A class representing dcat:DataService
+    """A class representing dcat:DataService.
+
+    Attributes:
+        endpointURL: The root location or primary endpoint of the service
+         (a Web-resolvable IRI).
+        endpointDescription: A description of the services available via
+        the end-points, including their operations, parameters etc.
     """
 
     _endpointURL: str
@@ -21,12 +39,14 @@ class DataService(Resource):
     _servesdatasets: List
 
     def __init__(self) -> None:
+        """Inits DataService with default values."""
         super().__init__()
         self._type = DCAT.DataService
         self.servesdatasets = []
 
     @property
     def endpointURL(self: DataService) -> str:
+        """Get/set for endpointURL."""
         return self._endpointURL
 
     @endpointURL.setter
@@ -35,6 +55,7 @@ class DataService(Resource):
 
     @property
     def endpointDescription(self: DataService) -> str:
+        """Get/set for endpointDescription."""
         return self._endpointDescription
 
     @endpointDescription.setter
@@ -43,6 +64,7 @@ class DataService(Resource):
 
     @property
     def servesdatasets(self: DataService) -> List[Dataset]:
+        """Get/set for servesdatasets."""
         return self._servesdatasets
 
     @servesdatasets.setter

@@ -1,3 +1,22 @@
+"""Catalog module for mapping a catalog to rdf.
+
+This module contains methods for mapping a catalog object to rdf
+according to the [dcat-ap-no v.2 standard](https://doc.difi.no/review/dcat-ap-no/)
+
+Example:
+    >>> from datacatalogtordf import Catalog, Dataset
+    >>> catalog = Catalog()
+    >>> catalog.identifier = "http://example.com/catalogs/1"
+    >>> catalog.title = {"en": "Title of catlog"}
+    >>>
+    >>> a_dataset = Dataset()
+    >>> a_dataset.identifier = "http://example.com/datasets/1"
+    >>> catalog.datasets.append(a_dataset)
+    >>>
+    >>> bool(catalog.to_rdf())
+    True
+
+"""
 from __future__ import annotations
 
 from typing import List
@@ -12,24 +31,23 @@ DCAT = Namespace("http://www.w3.org/ns/dcat#")
 
 
 class Catalog(Dataset):
-    """
-    A class representing dcat:Catalog
+    """A class representing dcat:Catalog.
+
+    Attributes:
+        datasets: list of datsets in catalog
     """
 
     _datasets: List
 
     def __init__(self) -> None:
+        """Inits catalog object with default values."""
         super().__init__()
         self._type = DCAT.Catalog
         self.datasets = []
 
     @property
     def datasets(self: Catalog) -> List[Dataset]:
-        """
-        A list of
-        [datasets](https://www.w3.org/TR/vocab-dcat-2/#Property:catalog_dataset)
-        Add to the by ```catalog.datasets.append(dataset)```
-        """
+        """Get/set for datasets."""
         return self._datasets
 
     @datasets.setter

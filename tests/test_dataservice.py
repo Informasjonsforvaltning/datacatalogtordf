@@ -1,3 +1,4 @@
+"""Test cases for the dataservice module."""
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
@@ -7,7 +8,7 @@ from datacatalogtordf import DataService, Dataset
 
 
 def test_to_graph_should_return_endpointURL_as_graph() -> None:
-
+    """It returns a endpointURL graph isomorphic to spec."""
     dataService = DataService()
     dataService.identifier = "http://example.com/dataservices/1"
     dataService.endpointURL = "http://example.com/endpoints/1"
@@ -33,7 +34,7 @@ def test_to_graph_should_return_endpointURL_as_graph() -> None:
 
 
 def test_to_graph_should_return_endpointDescription_as_graph() -> None:
-
+    """It returns a endpointDescription graph isomorphic to spec."""
     dataService = DataService()
     dataService.identifier = "http://example.com/dataservices/1"
     dataService.endpointDescription = "http://example.com/endpointdescription/1"
@@ -58,7 +59,7 @@ def test_to_graph_should_return_endpointDescription_as_graph() -> None:
 
 
 def test_to_graph_should_return_servesDataset_as_graph() -> None:
-
+    """It returns a servesDataset graph isomorphic to spec."""
     dataService = DataService()
     dataService.identifier = "http://example.com/dataservices/1"
 
