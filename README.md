@@ -43,31 +43,30 @@ print(rdf.decode())
 ## Development
 ### Requirements
 - python3
-- pipenv
+- [pyenv](https://github.com/pyenv/pyenv) (recommended)
+- [poetry](https://python-poetry.org/)
+- [nox](https://nox.thea.codes/en/stable/)
 
 ### Install
 ```
 % git clone https://github.com/Informasjonsforvaltning/datacatalogtordf.git
 % cd datacatalogtordf
-% pipenv install
-% pipenv shell
-% pipenv install --dev -e .
+% pyenv install 3.8.2
+% pyenv install 3.7.6
+% pyenv local 3.8.2 3.7.6
+% poetry install
 ```
-### Run all tests
+### Run all sessions
 ```
-% pytest -rA
+% nox
 ```
-With simple coverage-report in output:
+### Run all tests with coverage reporting
 ```
-% pytest -rA --cov-report term-missing --cov=datacatalogtordf tests/
-```
-Wit coverage-report to html:
-```
-% pytest -rA --cov-report html --cov=datacatalogtordf tests/
+% nox -rs tests
 ```
 ### Debugging
 You can enter into [Pdb](https://docs.python.org/3/library/pdb.html) by passing `--pdb` to pytest:
 ```
-pytest --pdb -rA --cov-report term-missing --cov=datacatalogtordf tests/
+nox -rs tests -- --pdb
 ```
 You can set breakpoints directly in code by using the function `breakpoint()`.
