@@ -39,6 +39,7 @@ Pygments = "^2.6.1"
 xdoctest = {extras = ["all"], version = "^0.11.0"}
 sphinx = "^2.4.4"
 sphinx-autodoc-typehints = "^1.10.3"
+codecov = "^2.0.16"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
