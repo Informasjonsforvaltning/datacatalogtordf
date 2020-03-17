@@ -19,7 +19,7 @@ The library contains helper classes for the following dcat classes:
 ## Usage
 ### Install
 ```
-% pip install -i datacatalogtordf
+% pip install datacatalogtordf
 ```
 ### Getting started
 ```
