@@ -1,3 +1,4 @@
+[![Tests](https://github.com/Informasjonsforvaltning/datacatalogtordf/workflows/Tests/badge.svg)](https://github.com/Informasjonsforvaltning/datacatalogtordf/actions?workflow=Tests)
 # datacatalogtordf
 
 A small Python library for mapping a data catalog to rdf
