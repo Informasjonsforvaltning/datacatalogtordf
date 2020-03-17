@@ -5,6 +5,7 @@ according to the [dcat-ap-no v.2 standard](https://doc.difi.no/review/dcat-ap-no
 
 Example:
     >>> from datacatalogtordf import Catalog, Dataset
+    >>>
     >>> catalog = Catalog()
     >>> catalog.identifier = "http://example.com/catalogs/1"
     >>> catalog.title = {"en": "Title of catlog"}

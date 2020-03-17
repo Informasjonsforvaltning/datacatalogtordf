@@ -3,13 +3,15 @@
 This module contains methods for mapping a dataservice object to rdf
 according to the [dcat-ap-no v.2 standard](https://doc.difi.no/review/dcat-ap-no/)
 
-    Typical usage example:
-
-    dataservice = DataService()
-    dataservice.identifier = "http://example.com/dataservices/1"
-    dataservice.title = {"en": "Title of dataservice"}
-
-    rdf_turtle = dataservice.to_rdf()
+Example:
+    >>> from datacatalogtordf import DataService
+    >>>
+    >>> dataservice = DataService()
+    >>> dataservice.identifier = "http://example.com/dataservices/1"
+    >>> dataservice.title = {"en": "Title of dataservice"}
+    >>>
+    >>> bool(dataservice.to_rdf())
+    True
 """
 from __future__ import annotations
 

@@ -3,13 +3,15 @@
 This module contains methods for mapping a distribution object to rdf
 according to the [dcat-ap-no v.2 standard](https://doc.difi.no/review/dcat-ap-no/)
 
-    Typical usage example:
-
-    distribution = Distribution()
-    distribution.identifier = "http://example.com/dataservices/1"
-    distribution.title = {"en": "Title of distribution"}
-
-    rdf_turtle = distribution.to_rdf()
+Example:
+    >>> from datacatalogtordf import Distribution
+    >>>
+    >>> distribution = Distribution()
+    >>> distribution.identifier = "http://example.com/dataservices/1"
+    >>> distribution.title = {"en": "Title of distribution"}
+    >>>
+    >>> bool(distribution.to_rdf())
+    True
 """
 from __future__ import annotations
 

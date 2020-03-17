@@ -3,16 +3,20 @@
 This module contains methods for mapping a dataset object to rdf
 according to the [dcat-ap-no v.2 standard](https://doc.difi.no/review/dcat-ap-no/)
 
-    Typical usage example:
-
-    dataset = Dataset()
-    dataset.identifier = "http://example.com/datasets/1"
-    dataset.title = {"en": "Title of dataset"}
-
-    for distribution in listOfDistributions:
-        dataset.distributions.append(distribution)
-
-    rdf_turtle = dataservice.to_rdf()
+Example:
+    >>> from datacatalogtordf import Dataset, Distribution
+    >>>
+    >>> dataset = Dataset()
+    >>> dataset.identifier = "http://example.com/datasets/1"
+    >>> dataset.title = {"en": "Title of dataset"}
+    >>>
+    >>> a_distribution = Distribution()
+    >>> a_distribution.identifier = "http://example.com/dataservices/1"
+    >>> a_distribution.title = {"en": "Title of distribution"}
+    >>> dataset.distributions.append(a_distribution)
+    >>>
+    >>> bool(dataset.to_rdf())
+    True
 """
 from __future__ import annotations
 
