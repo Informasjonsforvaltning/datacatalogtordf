@@ -1,6 +1,7 @@
 ![Tests](https://github.com/Informasjonsforvaltning/datacatalogtordf/workflows/Tests/badge.svg)
 [![codecov](https://codecov.io/gh/Informasjonsforvaltning/datacatalogtordf/branch/master/graph/badge.svg)](https://codecov.io/gh/Informasjonsforvaltning/datacatalogtordf)
 [![PyPI](https://img.shields.io/pypi/v/datacatalogtordf.svg)](https://pypi.org/project/datacatalogtordf/)
+[![Read the Docs](https://readthedocs.org/projects/datacatalogtordf/badge/)](https://datacatalogtordf.readthedocs.io/)
 # datacatalogtordf
 
 A small Python library for mapping a data catalog to rdf
