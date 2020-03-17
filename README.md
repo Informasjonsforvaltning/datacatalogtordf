@@ -11,10 +11,10 @@ The library contains helper classes for the following dcat classes:
  - [Distribution](https://www.w3.org/TR/vocab-dcat-2/#Class:Distribution)
  - [Data Service](https://www.w3.org/TR/vocab-dcat-2/#Class:Data_Service)
 
- Other relevant classe are also supported, such as:
+ Other relevant classes are also supported, such as:
  - Contact [vcard:Kind](https://www.w3.org/TR/2014/NOTE-vcard-rdf-20140522/#d4e1819)
 
- The library will map to [the Norwegian Application Profile](https://doc.difi.no/dcat-ap-no/).
+ The library will map to [the Norwegian Application Profile](https://doc.difi.no/dcat-ap-no/) of [the DCAT standard](https://www.w3.org/TR/vocab-dcat-2/).
 
 ## Usage
 ### Install
