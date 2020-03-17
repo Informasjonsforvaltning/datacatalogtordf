@@ -27,6 +27,8 @@ class Resource(ABC):
     _identifier: str
     _publisher: str
     _title: dict
+    _accessRights: str
+    _conformsTo: str
 
     @abstractmethod
     def __init__(self) -> None:
@@ -64,6 +66,24 @@ class Resource(ABC):
     def title(self: Resource, title: dict) -> None:
         self._title = title
 
+    @property
+    def accessRights(self: Resource) -> str:
+        """Get/set for accessRights."""
+        return self._accessRights
+
+    @accessRights.setter
+    def accessRights(self: Resource, accessRights: str) -> None:
+        self._accessRights = accessRights
+
+    @property
+    def conformsTo(self: Resource) -> str:
+        """Get/set for conformsTo."""
+        return self._conformsTo
+
+    @conformsTo.setter
+    def conformsTo(self: Resource, conformsTo: str) -> None:
+        self._conformsTo = conformsTo
+
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
         """Maps the distribution to rdf.
@@ -90,16 +110,26 @@ class Resource(ABC):
             self._publisher_to_graph()
         if getattr(self, "title", None):
             self._title_to_graph()
+        if getattr(self, "accessRights", None):
+            self._accessRights_to_graph()
+        if getattr(self, "conformsTo", None):
+            self._conformsTo_to_graph()
 
         return self._g
 
     def _publisher_to_graph(self: Resource) -> None:
-
         self._g.add((URIRef(self.identifier), DCT.publisher, URIRef(self.publisher)))
 
     def _title_to_graph(self: Resource) -> None:
-
         for key in self.title:
             self._g.add(
                 (URIRef(self.identifier), DCT.title, Literal(self.title[key], lang=key))
             )
+
+    def _accessRights_to_graph(self: Resource) -> None:
+        self._g.add(
+            (URIRef(self.identifier), DCT.accessRights, URIRef(self.accessRights))
+        )
+
+    def _conformsTo_to_graph(self: Resource) -> None:
+        self._g.add((URIRef(self.identifier), DCT.conformsTo, URIRef(self.conformsTo)))

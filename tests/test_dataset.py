@@ -41,6 +41,8 @@ def test_to_graph_should_return_distribution_as_graph() -> None:
     assert _isomorphic
 
 
+# TODO: add support for dcatno:accessRightsComment
+
 # ---------------------------------------------------------------------- #
 # Utils for displaying debug information
 
