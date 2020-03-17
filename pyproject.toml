@@ -1,10 +1,7 @@
 [tool.poetry]
 name = "datacatalogtordf"
 version = "0.1.0"
-description="""
-              A small Python library for mapping a data catalog
-              to the dcat-ap-no specification
-            """
+description="A library for mapping a data catalog to rdf"
 authors = ["Stig B. Dørmænen <stigbd@gmail.com>"]
 license = "Apache-2.0"
 readme = "README.md"
