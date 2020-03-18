@@ -1,7 +1,8 @@
 """Distribution module for mapping a distribution to rdf.
 
 This module contains methods for mapping a distribution object to rdf
-according to the [dcat-ap-no v.2 standard](https://doc.difi.no/review/dcat-ap-no/)
+according to the
+`dcat-ap-no v.2 standard <https://doc.difi.no/review/dcat-ap-no/#klasse-distribusjon>`__
 
 Example:
     >>> from datacatalogtordf import Distribution
@@ -22,7 +23,15 @@ DCAT = Namespace("http://www.w3.org/ns/dcat#")
 
 
 class Distribution:
-    """A class representing dcat:Distribution."""
+    """A class representing a dcat:Distribution.
+
+    Ref: `dcat:Distribution <https://www.w3.org/TR/vocab-dcat-2/#Class:Distribution>`_
+
+    Attributes:
+        identifier: an URI uniquely identifying the resource
+        publisher: an URI uniquely identifying the publisher of the resource
+        title: a dict with title in multiple languages
+    """
 
     _identifier: str
     _publisher: str

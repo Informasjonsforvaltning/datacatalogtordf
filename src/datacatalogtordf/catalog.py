@@ -1,14 +1,15 @@
 """Catalog module for mapping a catalog to rdf.
 
 This module contains methods for mapping a catalog object to rdf
-according to the [dcat-ap-no v.2 standard](https://doc.difi.no/review/dcat-ap-no/)
+according to the
+`dcat-ap-no v.2 standard <https://doc.difi.no/review/dcat-ap-no/#klasse-katalog>`__
 
 Example:
     >>> from datacatalogtordf import Catalog, Dataset
     >>>
     >>> catalog = Catalog()
     >>> catalog.identifier = "http://example.com/catalogs/1"
-    >>> catalog.title = {"en": "Title of catlog"}
+    >>> catalog.title = {"en": "Title of catalog"}
     >>>
     >>> a_dataset = Dataset()
     >>> a_dataset.identifier = "http://example.com/datasets/1"
@@ -32,7 +33,9 @@ DCAT = Namespace("http://www.w3.org/ns/dcat#")
 
 
 class Catalog(Dataset):
-    """A class representing dcat:Catalog.
+    """A class representing a dcat:Catalog.
+
+    Ref: `dcat:Catalog <https://www.w3.org/TR/vocab-dcat-2/#Class:Catalog>`_.
 
     Attributes:
         datasets: list of datsets in catalog

@@ -1,7 +1,8 @@
 """DataService module for mapping a dataService to rdf.
 
 This module contains methods for mapping a dataservice object to rdf
-according to the [dcat-ap-no v.2 standard](https://doc.difi.no/review/dcat-ap-no/)
+according to the
+`dcat-ap-no v.2 standard <https://doc.difi.no/review/dcat-ap-no/#klasse-datatjeneste>`__
 
 Example:
     >>> from datacatalogtordf import DataService
@@ -27,7 +28,9 @@ DCAT = Namespace("http://www.w3.org/ns/dcat#")
 
 
 class DataService(Resource):
-    """A class representing dcat:DataService.
+    """A class representing a dcat:DataService.
+
+    Ref: `dcat:DataService <https://www.w3.org/TR/vocab-dcat-2/#Class:Data_Service>`_.
 
     Attributes:
         endpointURL: The root location or primary endpoint of the service

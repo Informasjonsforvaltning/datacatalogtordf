@@ -1,7 +1,8 @@
 """Resource module for mapping a sub-classes to rdf.
 
 This module contains methods for mapping a sub-class objects to rdf
-according to the [dcat-ap-no v.2 standard](https://doc.difi.no/review/dcat-ap-no/)
+according to the
+`dcat-ap-no v.2 standard <https://doc.difi.no/review/dcat-ap-no/>`_
 
 Refer to sub-class for typical usage examples.
 """
@@ -16,7 +17,9 @@ DCAT = Namespace("http://www.w3.org/ns/dcat#")
 
 
 class Resource(ABC):
-    """An abstract class representing dcat:Resource.
+    """An abstract class representing a dcat:Resource.
+
+    Ref: `dcat:Resource <https://www.w3.org/TR/vocab-dcat-2/#Class:Resource>`_.
 
     Attributes:
         identifier: an URI uniquely identifying the resource
@@ -59,11 +62,36 @@ class Resource(ABC):
 
     @property
     def title(self: Resource) -> dict:
-        """Get/set for title."""
+        """Title attribute.
+
+        Returns:
+            the title as dictionary
+
+        Example:
+            >>> from datacatalogtordf import Catalog
+            >>>
+            >>> catalog = Catalog()
+            >>> catalog.title = {"en": "Title of catalog"}
+            >>> catalog.title
+            {"en": "Title of catalog"}
+        """
         return self._title
 
     @title.setter
     def title(self: Resource, title: dict) -> None:
+        """Title attribute setter.
+
+        Args:
+            title: title of resource where key is a language code
+
+        Example:
+            >>> from datacatalogtordf import Catalog
+            >>>
+            >>> catalog = Catalog()
+            >>> catalog.title = {'en': 'Title of catalog'}
+            >>> catalog.title
+            {'en': 'Title of catalog'}
+        """
         self._title = title
 
     @property
@@ -98,6 +126,15 @@ class Resource(ABC):
 
         Returns:
             a rdf serialization as a string according to format.
+
+        Example:
+            >>> from datacatalogtordf import Catalog
+            >>>
+            >>> catalog = Catalog()
+            >>> catalog.identifier = "http://example.com/catalogs/1"
+            >>> catalog.title = {'en': 'Title of catalog'}
+            >>> bool(catalog.to_rdf())
+            True
         """
         return self._to_graph().serialize(format=format, encoding="utf-8")
 

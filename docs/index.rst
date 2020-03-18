@@ -8,6 +8,22 @@ Data catalog to RDF library
    license
    reference
 
+A small Python library for mapping a data catalog to rdf
+
+The library contains helper classes for the following dcat classes:
+
+* `Catalog <https://www.w3.org/TR/vocab-dcat-2/#Class:Catalog>`_
+* `Dataset <https://www.w3.org/TR/vocab-dcat-2/#Class:Dataset>`_
+* `Distribution <https://www.w3.org/TR/vocab-dcat-2/#Class:Distribution>`_
+* `Data Service <https://www.w3.org/TR/vocab-dcat-2/#Class:Data_Service>`_
+
+Other relevant classes are also supported, such as:
+
+* Contact (`vcard:Kind <https://www.w3.org/TR/2014/NOTE-vcard-rdf-20140522/#d4e1819>`_)
+
+The library will map to `the Norwegian Application Profile <https://doc.difi.no/dcat-ap-no/>`_ of `the DCAT standard <https://www.w3.org/TR/vocab-dcat-2/>`_.
+
+
 Installation
 ------------
 

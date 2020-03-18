@@ -11,6 +11,8 @@ datacatalogtordf.catalog
 
 .. automodule:: datacatalogtordf.catalog
    :members:
+   :show-inheritance:
+   :inherited-members:
 
 
 datacatalogtordf.dataservice
@@ -18,6 +20,8 @@ datacatalogtordf.dataservice
 
 .. automodule:: datacatalogtordf.dataservice
    :members:
+   :show-inheritance:
+   :inherited-members:
 
 
 datacatalogtordf.dataset
@@ -25,6 +29,8 @@ datacatalogtordf.dataset
 
 .. automodule:: datacatalogtordf.dataset
   :members:
+  :show-inheritance:
+  :inherited-members:
 
 
 datacatalogtordf.distribution
@@ -32,6 +38,8 @@ datacatalogtordf.distribution
 
 .. automodule:: datacatalogtordf.distribution
   :members:
+  :show-inheritance:
+  :inherited-members:
 
 
 datacatalogtordf.resource
@@ -39,3 +47,4 @@ datacatalogtordf.resource
 
 .. automodule:: datacatalogtordf.resource
   :members:
+  :show-inheritance:

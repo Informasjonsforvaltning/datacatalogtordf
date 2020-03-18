@@ -1,7 +1,8 @@
 """Dataset module for mapping a dataset to rdf.
 
 This module contains methods for mapping a dataset object to rdf
-according to the [dcat-ap-no v.2 standard](https://doc.difi.no/review/dcat-ap-no/)
+according to the
+`dcat-ap-no v.2 standard <https://doc.difi.no/review/dcat-ap-no/#klasse-dataset>`__
 
 Example:
     >>> from datacatalogtordf import Dataset, Distribution
@@ -32,7 +33,9 @@ DCAT = Namespace("http://www.w3.org/ns/dcat#")
 
 
 class Dataset(Resource):
-    """A class representing dcat:Dataset.
+    """A class representing a dcat:Dataset.
+
+    Ref: `dcat:Dataset <https://www.w3.org/TR/vocab-dcat-2/#Class:Dataset>`_.
 
     Attributes:
         distributions: a list of distributions of the dataset
