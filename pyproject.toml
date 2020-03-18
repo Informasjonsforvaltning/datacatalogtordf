@@ -7,6 +7,7 @@ license = "Apache-2.0"
 readme = "README.md"
 homepage = "https://github.com/Informasjonsforvaltning/datacatalogtordf"
 repository = "https://github.com/Informasjonsforvaltning/datacatalogtordf"
+documentation = "https://datacatalogtordf.readthedocs.io"
 classifiers=[
       "Programming Language :: Python :: 3",
       "License :: OSI Approved :: Apache Software License",
