@@ -32,6 +32,7 @@ class Resource(ABC):
     _title: dict
     _accessRights: str
     _conformsTo: str
+    _description: dict
 
     @abstractmethod
     def __init__(self) -> None:
@@ -95,6 +96,40 @@ class Resource(ABC):
         self._title = title
 
     @property
+    def description(self: Resource) -> dict:
+        """Title attribute.
+
+        Returns:
+            the description as dictionary
+
+        Example:
+            >>> from datacatalogtordf import Catalog
+            >>>
+            >>> catalog = Catalog()
+            >>> catalog.description = {"en": "Title of catalog"}
+            >>> catalog.description
+            {"en": "Title of catalog"}
+        """
+        return self._description
+
+    @description.setter
+    def description(self: Resource, description: dict) -> None:
+        """Title attribute setter.
+
+        Args:
+            description: description of resource where key is a language code
+
+        Example:
+            >>> from datacatalogtordf import Catalog
+            >>>
+            >>> catalog = Catalog()
+            >>> catalog.description = {'en': 'Title of catalog'}
+            >>> catalog.description
+            {'en': 'Title of catalog'}
+        """
+        self._description = description
+
+    @property
     def accessRights(self: Resource) -> str:
         """Get/set for accessRights."""
         return self._accessRights
@@ -151,6 +186,8 @@ class Resource(ABC):
             self._accessRights_to_graph()
         if getattr(self, "conformsTo", None):
             self._conformsTo_to_graph()
+        if getattr(self, "description", None):
+            self._description_to_graph()
 
         return self._g
 
@@ -170,3 +207,13 @@ class Resource(ABC):
 
     def _conformsTo_to_graph(self: Resource) -> None:
         self._g.add((URIRef(self.identifier), DCT.conformsTo, URIRef(self.conformsTo)))
+
+    def _description_to_graph(self: Resource) -> None:
+        for key in self.description:
+            self._g.add(
+                (
+                    URIRef(self.identifier),
+                    DCT.description,
+                    Literal(self.description[key], lang=key),
+                )
+            )

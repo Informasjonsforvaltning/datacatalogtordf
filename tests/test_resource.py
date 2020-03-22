@@ -200,11 +200,11 @@ def test_to_graph_should_return_creator() -> None:
     assert _isomorphic
 
 
-@mark.xfail(strict=True, reason="Not implemented")
 def test_to_graph_should_return_description() -> None:
     """It returns a description graph isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
+    resource.description = {"nb": "Beskrivelse", "en": "Description"}
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -213,7 +213,7 @@ def test_to_graph_should_return_description() -> None:
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
 
     <http://example.com/datasets/1> a dcat:Dataset ;
-        dct:title   "Title 1"@en, "Tittel 1"@nb ;
+        dct:description   "Description"@en, "Beskrivelse"@nb ;
         .
     """
     g1 = Graph().parse(data=resource.to_rdf(), format="turtle")
