@@ -126,7 +126,8 @@ def test_to_graph_should_return_conformsTo() -> None:
     """It returns a conformsTo graph isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
-    resource.conformsTo = "http://example.com/standards/1"
+    resource.conformsTo.append("http://example.com/standards/1")
+    resource.conformsTo.append("http://example.com/standards/2")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -135,7 +136,8 @@ def test_to_graph_should_return_conformsTo() -> None:
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
 
     <http://example.com/datasets/1> a dcat:Dataset ;
-        dct:conformsTo   <http://example.com/standards/1>
+        dct:conformsTo   <http://example.com/standards/1> ,
+                         <http://example.com/standards/2> ;
         .
     """
     g1 = Graph().parse(data=resource.to_rdf(), format="turtle")
@@ -486,11 +488,12 @@ def test_to_graph_should_return_releaseDate() -> None:
     assert _isomorphic
 
 
-@mark.xfail(strict=True, reason="Not implemented")
 def test_to_graph_should_return_theme() -> None:
     """It returns a theme graph isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
+    resource.theme.append("http://example.com/themes/1")
+    resource.theme.append("http://example.com/themes/2")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -499,7 +502,8 @@ def test_to_graph_should_return_theme() -> None:
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
 
     <http://example.com/datasets/1> a dcat:Dataset ;
-        dct:title   "Title 1"@en, "Tittel 1"@nb ;
+        dcat:theme   <http://example.com/themes/1> ,
+                     <http://example.com/themes/2> ;
         .
     """
     g1 = Graph().parse(data=resource.to_rdf(), format="turtle")

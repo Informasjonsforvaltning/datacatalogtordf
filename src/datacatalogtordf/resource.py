@@ -9,6 +9,7 @@ Refer to sub-class for typical usage examples.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from typing import List
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
 
@@ -31,14 +32,18 @@ class Resource(ABC):
     _publisher: str
     _title: dict
     _accessRights: str
-    _conformsTo: str
+    _conformsTo: List[str]
     _description: dict
+    _theme: List[str]
 
     @abstractmethod
     def __init__(self) -> None:
         """Inits an object with default values."""
         self._type = DCAT.Resource
-        # set up graph and namespaces:
+        # Initalize lists:
+        self.conformsTo = list()
+        self.theme = list()
+        # Set up graph and namespaces:
         self._g = Graph()
         self._g.bind("dct", DCT)
         self._g.bind("dcat", DCAT)
@@ -139,13 +144,22 @@ class Resource(ABC):
         self._accessRights = accessRights
 
     @property
-    def conformsTo(self: Resource) -> str:
+    def conformsTo(self: Resource) -> List[str]:
         """Get/set for conformsTo."""
         return self._conformsTo
 
     @conformsTo.setter
-    def conformsTo(self: Resource, conformsTo: str) -> None:
+    def conformsTo(self: Resource, conformsTo: List[str]) -> None:
         self._conformsTo = conformsTo
+
+    @property
+    def theme(self: Resource) -> List[str]:
+        """Get/set for theme."""
+        return self._theme
+
+    @theme.setter
+    def theme(self: Resource, theme: List[str]) -> None:
+        self._theme = theme
 
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
@@ -188,6 +202,8 @@ class Resource(ABC):
             self._conformsTo_to_graph()
         if getattr(self, "description", None):
             self._description_to_graph()
+        if getattr(self, "theme", None):
+            self._theme_to_graph()
 
         return self._g
 
@@ -206,7 +222,8 @@ class Resource(ABC):
         )
 
     def _conformsTo_to_graph(self: Resource) -> None:
-        self._g.add((URIRef(self.identifier), DCT.conformsTo, URIRef(self.conformsTo)))
+        for _c in self.conformsTo:
+            self._g.add((URIRef(self.identifier), DCT.conformsTo, URIRef(_c)))
 
     def _description_to_graph(self: Resource) -> None:
         for key in self.description:
@@ -217,3 +234,7 @@ class Resource(ABC):
                     Literal(self.description[key], lang=key),
                 )
             )
+
+    def _theme_to_graph(self: Resource) -> None:
+        for _t in self.theme:
+            self._g.add((URIRef(self.identifier), DCAT.theme, URIRef(_t)))
