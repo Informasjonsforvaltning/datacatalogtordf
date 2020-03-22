@@ -95,31 +95,32 @@ def test_to_graph_should_return_title() -> None:
 
 def test_to_graph_should_return_accessRights() -> None:
     """It returns a accessRights graph isomorphic to spec."""
-    resource = Dataset()
-    resource.identifier = "http://example.com/datasets/1"
-    accessRights = "PUBLIC"
-    resource.accessRights = (
-        f"http://publications.europa.eu/resource/authority/access-right/{accessRights}"
-    )
+    accessRights = ["PUBLIC", "RESTRICTED", "NON-PUBLIC"]
+    for _r in accessRights:
+        resource = Dataset()
+        resource.identifier = "http://example.com/datasets/1"
+        resource.accessRights = (
+            f"http://publications.europa.eu/resource/authority/access-right/{_r}"
+        )
 
-    src = (
-        "@prefix dct: <http://purl.org/dc/terms/> ."
-        "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ."
-        "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> ."
-        "@prefix dcat: <http://www.w3.org/ns/dcat#> .\n"
-        "<http://example.com/datasets/1> a dcat:Dataset ;"
-        "\tdct:accessRights\t"
-        "<http://publications.europa.eu/resource/authority/access-right/"
-        f"{accessRights}> ."
-    )
-    g1 = Graph().parse(data=resource.to_rdf(), format="turtle")
-    g2 = Graph().parse(data=src, format="turtle")
+        src = (
+            "@prefix dct: <http://purl.org/dc/terms/> ."
+            "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ."
+            "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> ."
+            "@prefix dcat: <http://www.w3.org/ns/dcat#> .\n"
+            "<http://example.com/datasets/1> a dcat:Dataset ;"
+            "\tdct:accessRights\t"
+            "<http://publications.europa.eu/resource/authority/access-right/"
+            f"{_r}> ."
+        )
+        g1 = Graph().parse(data=resource.to_rdf(), format="turtle")
+        g2 = Graph().parse(data=src, format="turtle")
 
-    _isomorphic = isomorphic(g1, g2)
-    if not _isomorphic:
-        _dump_diff(g1, g2)
-        pass
-    assert _isomorphic
+        _isomorphic = isomorphic(g1, g2)
+        if not _isomorphic:
+            _dump_diff(g1, g2)
+            pass
+        assert _isomorphic
 
 
 def test_to_graph_should_return_conformsTo() -> None:
@@ -256,7 +257,7 @@ def test_to_graph_should_return_hasPolicy() -> None:
 
 @mark.xfail(strict=True, reason="Not implemented")
 def test_to_graph_should_return_isReferencedBy() -> None:
-    """It returns a accessRights isReferencedBy isomorphic to spec."""
+    """It returns an isReferencedBy isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
 
