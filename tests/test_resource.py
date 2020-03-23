@@ -1,4 +1,5 @@
 """Test cases for the resource module."""
+from concepttordf import Contact
 import pytest
 from pytest import mark
 from rdflib import Graph
@@ -151,20 +152,38 @@ def test_to_graph_should_return_conformsTo() -> None:
     assert _isomorphic
 
 
-@mark.xfail(strict=True, reason="Not implemented")
-def test_to_graph_should_return_contactPoint() -> None:
-    """It returns a contactPoint graph isomorphic to spec."""
+def test_to_graph_should_return_contactpoint() -> None:
+    """It returns a contactpoint graph isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
+    # Create contact:
+    contact = Contact()
+    contact.name = {
+        "en": "Norwegian Digitalisation Agency",
+        "nb": "Digitaliseringsdirektoratet",
+    }
+    contact.email = "sbd@example.com"
+    contact.url = "https://digdir.no"
+    contact.telephone = "12345678"
+    # Set the contactpoint to new contact:
+    resource.contactpoint = contact
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
     @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
 
     <http://example.com/datasets/1> a dcat:Dataset ;
-        dct:title   "Title 1"@en, "Tittel 1"@nb ;
+        dcat:contactPoint    [ a               vcard:Organization ;
+                               vcard:hasEmail  <mailto:sbd@example.com> ;
+                               vcard:hasOrganizationName
+                                        "Norwegian Digitalisation Agency"@en,
+                                        "Digitaliseringsdirektoratet"@nb ;
+                               vcard:hasURL <https://digdir.no> ;
+                               vcard:hasTelephone <tel:12345678> ;
+                              ] ;
         .
     """
     g1 = Graph().parse(data=resource.to_rdf(), format="turtle")

@@ -9,9 +9,12 @@ Refer to sub-class for typical usage examples.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from datetime import date
 from typing import List
 
-from rdflib import Graph, Literal, Namespace, RDF, URIRef
+from concepttordf import Contact
+from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
+
 
 DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
@@ -28,13 +31,28 @@ class Resource(ABC):
         title: a dict with title in multiple languages
     """
 
-    _identifier: str
-    _publisher: str
-    _title: dict
-    _accessRights: str
-    _conformsTo: List[str]
-    _description: dict
-    _theme: List[str]
+    _accessRights: str  # 6.4.1
+    _conformsTo: List[str]  # 6.4.2
+    _contactpoint: Contact  # 6.4.3
+    _resource_creator: str  # 6.4.4
+    _description: dict  # 6.4.5
+    _title: dict  # 6.4.6
+    _release_date: date  # 6.4.7
+    _modification_date: date  # 6.4.8
+    _language: str  # 6.4.9
+    _publisher: str  # 6.4.10
+    _identifier: str  # 6.4.11
+    _theme: List[str]  # 6.4.12
+    _type_genre: str  # 6.4.13
+    _resource_relation: Resource  # 6.4.14
+    _qualified_relation: str  # 6.4.15
+    _keyword_tag: dict  # 6.4.16
+    _landing_page: str  # 6.4.17
+    _qualified_attribution: str  # 6.4.18
+    _license: str  # 6.4.19
+    _rights: str  # 6.4.20
+    _has_policy: str  # 6.4.21
+    _is_referenced_by: Resource  # 6.4.22
 
     @abstractmethod
     def __init__(self) -> None:
@@ -72,66 +90,25 @@ class Resource(ABC):
 
         Returns:
             the title as dictionary
-
-        Example:
-            >>> from datacatalogtordf import Catalog
-            >>>
-            >>> catalog = Catalog()
-            >>> catalog.title = {"en": "Title of catalog"}
-            >>> catalog.title
-            {"en": "Title of catalog"}
         """
         return self._title
 
     @title.setter
     def title(self: Resource, title: dict) -> None:
-        """Title attribute setter.
-
-        Args:
-            title: title of resource where key is a language code
-
-        Example:
-            >>> from datacatalogtordf import Catalog
-            >>>
-            >>> catalog = Catalog()
-            >>> catalog.title = {'en': 'Title of catalog'}
-            >>> catalog.title
-            {'en': 'Title of catalog'}
-        """
         self._title = title
 
     @property
     def description(self: Resource) -> dict:
-        """Title attribute.
+        """Description attribute.
 
         Returns:
             the description as dictionary
-
-        Example:
-            >>> from datacatalogtordf import Catalog
-            >>>
-            >>> catalog = Catalog()
-            >>> catalog.description = {"en": "Title of catalog"}
-            >>> catalog.description
-            {"en": "Title of catalog"}
         """
         return self._description
 
     @description.setter
     def description(self: Resource, description: dict) -> None:
-        """Title attribute setter.
-
-        Args:
-            description: description of resource where key is a language code
-
-        Example:
-            >>> from datacatalogtordf import Catalog
-            >>>
-            >>> catalog = Catalog()
-            >>> catalog.description = {'en': 'Title of catalog'}
-            >>> catalog.description
-            {'en': 'Title of catalog'}
-        """
+        """Title attribute setter."""
         self._description = description
 
     @property
@@ -160,6 +137,15 @@ class Resource(ABC):
     @theme.setter
     def theme(self: Resource, theme: List[str]) -> None:
         self._theme = theme
+
+    @property
+    def contactpoint(self: Resource) -> Contact:
+        """Get/set for contactpoint."""
+        return self._contactpoint
+
+    @contactpoint.setter
+    def contactpoint(self: Resource, contactpoint: Contact) -> None:
+        self._contactpoint = contactpoint
 
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
@@ -204,6 +190,7 @@ class Resource(ABC):
             self._description_to_graph()
         if getattr(self, "theme", None):
             self._theme_to_graph()
+        self._contactpoint_to_graph()
 
         return self._g
 
@@ -238,3 +225,11 @@ class Resource(ABC):
     def _theme_to_graph(self: Resource) -> None:
         for _t in self.theme:
             self._g.add((URIRef(self.identifier), DCAT.theme, URIRef(_t)))
+
+    def _contactpoint_to_graph(self: Resource) -> None:
+        if getattr(self, "contactpoint", None):
+            contact = self.contactpoint
+            contactPoint = BNode()
+            for _s, p, o in contact._to_graph().triples((None, None, None)):
+                self._g.add((contactPoint, p, o))
+            self._g.add((URIRef(self.identifier), DCAT.contactPoint, contactPoint))
