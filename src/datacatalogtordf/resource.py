@@ -34,7 +34,7 @@ class Resource(ABC):
     _accessRights: str  # 6.4.1
     _conformsTo: List[str]  # 6.4.2
     _contactpoint: Contact  # 6.4.3
-    _resource_creator: str  # 6.4.4
+    _creator: str  # 6.4.4
     _description: dict  # 6.4.5
     _title: dict  # 6.4.6
     _release_date: date  # 6.4.7
@@ -147,6 +147,15 @@ class Resource(ABC):
     def contactpoint(self: Resource, contactpoint: Contact) -> None:
         self._contactpoint = contactpoint
 
+    @property
+    def creator(self: Resource) -> str:
+        """Get/set for creator."""
+        return self._creator
+
+    @creator.setter
+    def creator(self: Resource, creator: str) -> None:
+        self._creator = creator
+
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
         """Maps the distribution to rdf.
@@ -178,53 +187,60 @@ class Resource(ABC):
 
         self._g.add((URIRef(self.identifier), RDF.type, self._type))
 
-        if getattr(self, "publisher", None):
-            self._publisher_to_graph()
-        if getattr(self, "title", None):
-            self._title_to_graph()
-        if getattr(self, "accessRights", None):
-            self._accessRights_to_graph()
-        if getattr(self, "conformsTo", None):
-            self._conformsTo_to_graph()
-        if getattr(self, "description", None):
-            self._description_to_graph()
-        if getattr(self, "theme", None):
-            self._theme_to_graph()
+        self._publisher_to_graph()
+        self._title_to_graph()
+        self._accessRights_to_graph()
+        self._conformsTo_to_graph()
+        self._description_to_graph()
+        self._theme_to_graph()
         self._contactpoint_to_graph()
+        self._creator_to_graph()
 
         return self._g
 
     def _publisher_to_graph(self: Resource) -> None:
-        self._g.add((URIRef(self.identifier), DCT.publisher, URIRef(self.publisher)))
+        if getattr(self, "publisher", None):
+            self._g.add(
+                (URIRef(self.identifier), DCT.publisher, URIRef(self.publisher))
+            )
 
     def _title_to_graph(self: Resource) -> None:
-        for key in self.title:
-            self._g.add(
-                (URIRef(self.identifier), DCT.title, Literal(self.title[key], lang=key))
-            )
+        if getattr(self, "title", None):
+            for key in self.title:
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        DCT.title,
+                        Literal(self.title[key], lang=key),
+                    )
+                )
 
     def _accessRights_to_graph(self: Resource) -> None:
-        self._g.add(
-            (URIRef(self.identifier), DCT.accessRights, URIRef(self.accessRights))
-        )
-
-    def _conformsTo_to_graph(self: Resource) -> None:
-        for _c in self.conformsTo:
-            self._g.add((URIRef(self.identifier), DCT.conformsTo, URIRef(_c)))
-
-    def _description_to_graph(self: Resource) -> None:
-        for key in self.description:
+        if getattr(self, "accessRights", None):
             self._g.add(
-                (
-                    URIRef(self.identifier),
-                    DCT.description,
-                    Literal(self.description[key], lang=key),
-                )
+                (URIRef(self.identifier), DCT.accessRights, URIRef(self.accessRights))
             )
 
+    def _conformsTo_to_graph(self: Resource) -> None:
+        if getattr(self, "conformsTo", None):
+            for _c in self.conformsTo:
+                self._g.add((URIRef(self.identifier), DCT.conformsTo, URIRef(_c)))
+
+    def _description_to_graph(self: Resource) -> None:
+        if getattr(self, "description", None):
+            for key in self.description:
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        DCT.description,
+                        Literal(self.description[key], lang=key),
+                    )
+                )
+
     def _theme_to_graph(self: Resource) -> None:
-        for _t in self.theme:
-            self._g.add((URIRef(self.identifier), DCAT.theme, URIRef(_t)))
+        if getattr(self, "theme", None):
+            for _t in self.theme:
+                self._g.add((URIRef(self.identifier), DCAT.theme, URIRef(_t)))
 
     def _contactpoint_to_graph(self: Resource) -> None:
         if getattr(self, "contactpoint", None):
@@ -233,3 +249,7 @@ class Resource(ABC):
             for _s, p, o in contact._to_graph().triples((None, None, None)):
                 self._g.add((contactPoint, p, o))
             self._g.add((URIRef(self.identifier), DCAT.contactPoint, contactPoint))
+
+    def _creator_to_graph(self: Resource) -> None:
+        if getattr(self, "creator", None):
+            self._g.add((URIRef(self.identifier), DCT.creator, URIRef(self.creator)))
