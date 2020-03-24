@@ -20,6 +20,7 @@ from .uri import URI
 
 DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
+ODRL = Namespace("http://www.w3.org/ns/odrl/2/")
 
 
 class Resource(ABC):
@@ -67,6 +68,7 @@ class Resource(ABC):
         self._g = Graph()
         self._g.bind("dct", DCT)
         self._g.bind("dcat", DCAT)
+        self._g.bind("odrl", ODRL)
 
     @property
     def identifier(self: Resource) -> str:
@@ -158,6 +160,15 @@ class Resource(ABC):
     def creator(self: Resource, creator: str) -> None:
         self._creator = URI(creator)
 
+    @property
+    def has_policy(self: Resource) -> str:
+        """Get/set for has_policy."""
+        return self._has_policy
+
+    @has_policy.setter
+    def has_policy(self: Resource, has_policy: str) -> None:
+        self._has_policy = URI(has_policy)
+
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
         """Maps the distribution to rdf.
@@ -197,6 +208,7 @@ class Resource(ABC):
         self._theme_to_graph()
         self._contactpoint_to_graph()
         self._creator_to_graph()
+        self._has_policy_to_graph()
 
         return self._g
 
@@ -257,3 +269,9 @@ class Resource(ABC):
     def _creator_to_graph(self: Resource) -> None:
         if getattr(self, "creator", None):
             self._g.add((URIRef(self.identifier), DCT.creator, URIRef(self.creator)))
+
+    def _has_policy_to_graph(self: Resource) -> None:
+        if getattr(self, "has_policy", None):
+            self._g.add(
+                (URIRef(self.identifier), ODRL.hasPolicy, URIRef(self.has_policy))
+            )

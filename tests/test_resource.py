@@ -248,20 +248,21 @@ def test_to_graph_should_return_description() -> None:
     assert _isomorphic
 
 
-@mark.xfail(strict=True, reason="Not implemented")
 def test_to_graph_should_return_hasPolicy() -> None:
     """It returns a hasPolicy graph isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
+    resource.has_policy = "http://example.com/policies/1"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
     @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix odrl: <http://www.w3.org/ns/odrl/2/> .
 
     <http://example.com/datasets/1> a dcat:Dataset ;
-        dct:title   "Title 1"@en, "Tittel 1"@nb ;
+        odrl:hasPolicy   <http://example.com/policies/1> ;
         .
     """
     g1 = Graph().parse(data=resource.to_rdf(), format="turtle")
