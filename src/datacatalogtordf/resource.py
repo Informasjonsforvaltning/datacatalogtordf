@@ -15,6 +15,8 @@ from typing import List
 from concepttordf import Contact
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 
+from .uri import URI
+
 
 DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
@@ -73,7 +75,7 @@ class Resource(ABC):
 
     @identifier.setter
     def identifier(self: Resource, identifier: str) -> None:
-        self._identifier = identifier
+        self._identifier = URI(identifier)
 
     @property
     def publisher(self: Resource) -> str:
@@ -82,7 +84,7 @@ class Resource(ABC):
 
     @publisher.setter
     def publisher(self: Resource, publisher: str) -> None:
-        self._publisher = publisher
+        self._publisher = URI(publisher)
 
     @property
     def title(self: Resource) -> dict:
@@ -118,7 +120,7 @@ class Resource(ABC):
 
     @accessRights.setter
     def accessRights(self: Resource, accessRights: str) -> None:
-        self._accessRights = accessRights
+        self._accessRights = URI(accessRights)
 
     @property
     def conformsTo(self: Resource) -> List[str]:
@@ -154,7 +156,7 @@ class Resource(ABC):
 
     @creator.setter
     def creator(self: Resource, creator: str) -> None:
-        self._creator = creator
+        self._creator = URI(creator)
 
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
@@ -224,7 +226,8 @@ class Resource(ABC):
     def _conformsTo_to_graph(self: Resource) -> None:
         if getattr(self, "conformsTo", None):
             for _c in self.conformsTo:
-                self._g.add((URIRef(self.identifier), DCT.conformsTo, URIRef(_c)))
+                _uri = URI(_c)
+                self._g.add((URIRef(self.identifier), DCT.conformsTo, URIRef(_uri)))
 
     def _description_to_graph(self: Resource) -> None:
         if getattr(self, "description", None):
@@ -240,7 +243,8 @@ class Resource(ABC):
     def _theme_to_graph(self: Resource) -> None:
         if getattr(self, "theme", None):
             for _t in self.theme:
-                self._g.add((URIRef(self.identifier), DCAT.theme, URIRef(_t)))
+                _uri = URI(_t)
+                self._g.add((URIRef(self.identifier), DCAT.theme, URIRef(_uri)))
 
     def _contactpoint_to_graph(self: Resource) -> None:
         if getattr(self, "contactpoint", None):

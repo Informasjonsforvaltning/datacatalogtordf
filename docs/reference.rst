@@ -6,6 +6,14 @@ Reference
     :backlinks: none
 
 
+datacatalogtordf.resource
+-------------------------
+
+.. automodule:: datacatalogtordf.resource
+  :members:
+  :show-inheritance:
+
+
 datacatalogtordf.catalog
 ------------------------
 
@@ -42,9 +50,9 @@ datacatalogtordf.distribution
   :inherited-members:
 
 
-datacatalogtordf.resource
--------------------------
+datacatalogtordf.uri
+--------------------
 
-.. automodule:: datacatalogtordf.resource
+.. automodule:: datacatalogtordf.uri
   :members:
   :show-inheritance:

@@ -1,0 +1,1 @@
+ - [x] Add validation of identifiers. Use rdflib serializer (n3) to do so. (If it cannot be serialized by rdflib, it is not a valid uri.)

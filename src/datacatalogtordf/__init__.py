@@ -22,3 +22,4 @@ from .dataservice import DataService
 from .dataset import Dataset
 from .distribution import Distribution
 from .resource import Resource
+from .uri import InvalidURIError, URI
