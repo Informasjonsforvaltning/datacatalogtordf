@@ -485,20 +485,21 @@ def test_to_graph_should_return_qualifiedRelation() -> None:
     assert _isomorphic
 
 
-@mark.xfail(strict=True, reason="Not implemented")
-def test_to_graph_should_return_releaseDate() -> None:
-    """It returns a releaseDate graph isomorphic to spec."""
+def test_to_graph_should_return_release_date() -> None:
+    """It returns a issued graph isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
+    resource.release_date = "2020-03-24"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
     @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
     <http://example.com/datasets/1> a dcat:Dataset ;
-        dct:title   "Title 1"@en, "Tittel 1"@nb ;
+        dct:issued   "2020-03-24"^^xsd:date ;
         .
     """
     g1 = Graph().parse(data=resource.to_rdf(), format="turtle")
@@ -565,20 +566,21 @@ def test_to_graph_should_return_type() -> None:
     assert _isomorphic
 
 
-@mark.xfail(strict=True, reason="Not implemented")
-def test_to_graph_should_return_modificationDate() -> None:
-    """It returns a modificationDate graph isomorphic to spec."""
+def test_to_graph_should_return_modification_date() -> None:
+    """It returns a modified graph isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
+    resource.modification_date = "2020-03-24"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
     @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
     <http://example.com/datasets/1> a dcat:Dataset ;
-        dct:title   "Title 1"@en, "Tittel 1"@nb ;
+        dct:modified   "2020-03-24"^^xsd:date ;
         .
     """
     g1 = Graph().parse(data=resource.to_rdf(), format="turtle")

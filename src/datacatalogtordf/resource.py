@@ -21,6 +21,7 @@ from .uri import URI
 DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
 ODRL = Namespace("http://www.w3.org/ns/odrl/2/")
+XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
 
 
 class Resource(ABC):
@@ -70,6 +71,7 @@ class Resource(ABC):
         self._g.bind("dct", DCT)
         self._g.bind("dcat", DCAT)
         self._g.bind("odrl", ODRL)
+        self._g.bind("xsd", XSD)
 
     @property
     def identifier(self: Resource) -> str:
@@ -179,6 +181,24 @@ class Resource(ABC):
     def is_referenced_by(self: Resource, is_referenced_by: List[Resource]) -> None:
         self._is_referenced_by = is_referenced_by
 
+    @property
+    def release_date(self: Resource) -> date:
+        """Get/set for release_date."""
+        return self._release_date
+
+    @release_date.setter
+    def release_date(self: Resource, release_date: date) -> None:
+        self._release_date = URI(release_date)
+
+    @property
+    def modification_date(self: Resource) -> date:
+        """Get/set for modification_date."""
+        return self._modification_date
+
+    @modification_date.setter
+    def modification_date(self: Resource, modification_date: date) -> None:
+        self._modification_date = URI(modification_date)
+
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
         """Maps the distribution to rdf.
@@ -220,6 +240,8 @@ class Resource(ABC):
         self._creator_to_graph()
         self._has_policy_to_graph()
         self._is_referenced_by_to_graph()
+        self._release_date_to_graph()
+        self._modification_date_to_graph()
 
         return self._g
 
@@ -292,3 +314,23 @@ class Resource(ABC):
             for _i in self.is_referenced_by:
                 _uri = URI(_i)
                 self._g.add((URIRef(self.identifier), DCT.isReferencedBy, URIRef(_uri)))
+
+    def _release_date_to_graph(self: Resource) -> None:
+        if getattr(self, "release_date", None):
+            self._g.add(
+                (
+                    URIRef(self.identifier),
+                    DCT.issued,
+                    Literal(self.release_date, datatype=XSD.date),
+                )
+            )
+
+    def _modification_date_to_graph(self: Resource) -> None:
+        if getattr(self, "modification_date", None):
+            self._g.add(
+                (
+                    URIRef(self.identifier),
+                    DCT.modified,
+                    Literal(self.modification_date, datatype=XSD.date),
+                )
+            )
