@@ -275,11 +275,12 @@ def test_to_graph_should_return_hasPolicy() -> None:
     assert _isomorphic
 
 
-@mark.xfail(strict=True, reason="Not implemented")
-def test_to_graph_should_return_isReferencedBy() -> None:
+def test_to_graph_should_return_is_Referenced_By() -> None:
     """It returns an isReferencedBy isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
+    resource.is_referenced_by.append("http://example.com/datasets/1")
+    resource.is_referenced_by.append("http://example.com/datasets/2")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -288,7 +289,8 @@ def test_to_graph_should_return_isReferencedBy() -> None:
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
 
     <http://example.com/datasets/1> a dcat:Dataset ;
-        dct:title   "Title 1"@en, "Tittel 1"@nb ;
+        dct:isReferencedBy  <http://example.com/datasets/1> ,
+                            <http://example.com/datasets/2> ;
         .
     """
     g1 = Graph().parse(data=resource.to_rdf(), format="turtle")

@@ -55,7 +55,7 @@ class Resource(ABC):
     _license: str  # 6.4.19
     _rights: str  # 6.4.20
     _has_policy: str  # 6.4.21
-    _is_referenced_by: Resource  # 6.4.22
+    _is_referenced_by: List[Resource]  # 6.4.22
 
     @abstractmethod
     def __init__(self) -> None:
@@ -64,6 +64,7 @@ class Resource(ABC):
         # Initalize lists:
         self.conformsTo = list()
         self.theme = list()
+        self.is_referenced_by = list()
         # Set up graph and namespaces:
         self._g = Graph()
         self._g.bind("dct", DCT)
@@ -169,6 +170,15 @@ class Resource(ABC):
     def has_policy(self: Resource, has_policy: str) -> None:
         self._has_policy = URI(has_policy)
 
+    @property
+    def is_referenced_by(self: Resource) -> List[Resource]:
+        """Get/set for is_referenced_by."""
+        return self._is_referenced_by
+
+    @is_referenced_by.setter
+    def is_referenced_by(self: Resource, is_referenced_by: List[Resource]) -> None:
+        self._is_referenced_by = is_referenced_by
+
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
         """Maps the distribution to rdf.
@@ -209,6 +219,7 @@ class Resource(ABC):
         self._contactpoint_to_graph()
         self._creator_to_graph()
         self._has_policy_to_graph()
+        self._is_referenced_by_to_graph()
 
         return self._g
 
@@ -275,3 +286,9 @@ class Resource(ABC):
             self._g.add(
                 (URIRef(self.identifier), ODRL.hasPolicy, URIRef(self.has_policy))
             )
+
+    def _is_referenced_by_to_graph(self: Resource) -> None:
+        if getattr(self, "is_referenced_by", None):
+            for _i in self.is_referenced_by:
+                _uri = URI(_i)
+                self._g.add((URIRef(self.identifier), DCT.isReferencedBy, URIRef(_uri)))
