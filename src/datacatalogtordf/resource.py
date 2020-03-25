@@ -9,7 +9,6 @@ Refer to sub-class for typical usage examples.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from datetime import date
 from typing import List
 
 from concepttordf import Contact
@@ -41,8 +40,8 @@ class Resource(ABC):
     _creator: str  # 6.4.4
     _description: dict  # 6.4.5
     _title: dict  # 6.4.6
-    _release_date: date  # 6.4.7
-    _modification_date: date  # 6.4.8
+    _release_date: str  # 6.4.7
+    _modification_date: str  # 6.4.8
     _language: str  # 6.4.9
     _publisher: str  # 6.4.10
     _identifier: str  # 6.4.11
@@ -182,22 +181,24 @@ class Resource(ABC):
         self._is_referenced_by = is_referenced_by
 
     @property
-    def release_date(self: Resource) -> date:
+    def release_date(self: Resource) -> str:
         """Get/set for release_date."""
+        # TODO: enforce simple validation of str to check if it is a date
         return self._release_date
 
     @release_date.setter
-    def release_date(self: Resource, release_date: date) -> None:
-        self._release_date = URI(release_date)
+    def release_date(self: Resource, release_date: str) -> None:
+        # TODO: enforce simple validation of str to check if it is a date
+        self._release_date = release_date
 
     @property
-    def modification_date(self: Resource) -> date:
+    def modification_date(self: Resource) -> str:
         """Get/set for modification_date."""
         return self._modification_date
 
     @modification_date.setter
-    def modification_date(self: Resource, modification_date: date) -> None:
-        self._modification_date = URI(modification_date)
+    def modification_date(self: Resource, modification_date: str) -> None:
+        self._modification_date = modification_date
 
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
@@ -312,7 +313,7 @@ class Resource(ABC):
     def _is_referenced_by_to_graph(self: Resource) -> None:
         if getattr(self, "is_referenced_by", None):
             for _i in self.is_referenced_by:
-                _uri = URI(_i)
+                _uri = URI(_i.identifier)
                 self._g.add((URIRef(self.identifier), DCT.isReferencedBy, URIRef(_uri)))
 
     def _release_date_to_graph(self: Resource) -> None:

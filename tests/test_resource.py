@@ -1,4 +1,5 @@
 """Test cases for the resource module."""
+
 from concepttordf import Contact
 import pytest
 from pytest import mark
@@ -279,8 +280,12 @@ def test_to_graph_should_return_is_Referenced_By() -> None:
     """It returns an isReferencedBy isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
-    resource.is_referenced_by.append("http://example.com/datasets/1")
-    resource.is_referenced_by.append("http://example.com/datasets/2")
+    other = Dataset()
+    other.identifier = "http://example.com/datasets/1"
+    resource.is_referenced_by.append(other)
+    another = Dataset()
+    another.identifier = "http://example.com/datasets/2"
+    resource.is_referenced_by.append(another)
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
