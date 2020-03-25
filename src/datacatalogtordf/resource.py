@@ -9,6 +9,7 @@ Refer to sub-class for typical usage examples.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from datetime import datetime
 from typing import List
 
 from concepttordf import Contact
@@ -21,6 +22,22 @@ DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
 ODRL = Namespace("http://www.w3.org/ns/odrl/2/")
 XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
+
+
+class InvalidDateError(Exception):
+    """Exception raised for errors in the input.
+
+    Attributes:
+        str -- input str in which the error occurred
+        message -- explanation of the error
+    """
+
+    __slots__ = ()
+
+    def __init__(self, string: str, message: str) -> None:
+        """Inits the exception."""
+        self.str = str
+        self.message = message
 
 
 class Resource(ABC):
@@ -183,13 +200,16 @@ class Resource(ABC):
     @property
     def release_date(self: Resource) -> str:
         """Get/set for release_date."""
-        # TODO: enforce simple validation of str to check if it is a date
         return self._release_date
 
     @release_date.setter
     def release_date(self: Resource, release_date: str) -> None:
-        # TODO: enforce simple validation of str to check if it is a date
-        self._release_date = release_date
+        # Try to convert release_date to date:
+        try:
+            _date = datetime.strptime(release_date, "%Y-%m-%d")
+            self._release_date = _date.strftime("%Y-%m-%d")
+        except ValueError:
+            raise InvalidDateError(release_date, "String is not a date")
 
     @property
     def modification_date(self: Resource) -> str:
@@ -198,7 +218,12 @@ class Resource(ABC):
 
     @modification_date.setter
     def modification_date(self: Resource, modification_date: str) -> None:
-        self._modification_date = modification_date
+        # Try to convert release_date to date:
+        try:
+            _date = datetime.strptime(modification_date, "%Y-%m-%d")
+            self._modification_date = _date.strftime("%Y-%m-%d")
+        except Exception:
+            raise InvalidDateError(modification_date, "String is not a date")
 
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
