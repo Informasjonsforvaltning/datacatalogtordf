@@ -562,11 +562,11 @@ def test_to_graph_should_return_theme() -> None:
     assert _isomorphic
 
 
-@mark.xfail(strict=True, reason="Not implemented")
 def test_to_graph_should_return_type() -> None:
     """It returns a type graph isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
+    resource.type_genre = "http://example.com/concepts/1"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -575,7 +575,7 @@ def test_to_graph_should_return_type() -> None:
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
 
     <http://example.com/datasets/1> a dcat:Dataset ;
-        dct:title   "Title 1"@en, "Tittel 1"@nb ;
+        dct:type   <http://example.com/concepts/1> ;
         .
     """
     g1 = Graph().parse(data=resource.to_rdf(), format="turtle")

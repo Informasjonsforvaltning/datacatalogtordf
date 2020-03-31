@@ -13,7 +13,7 @@ from datetime import datetime
 from typing import List
 
 from concepttordf import Contact
-from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
+from rdflib import BNode, Graph, Literal, Namespace, URIRef
 
 from .uri import URI
 
@@ -225,6 +225,15 @@ class Resource(ABC):
         except Exception:
             raise InvalidDateError(modification_date, "String is not a date")
 
+    @property
+    def type_genre(self: Resource) -> str:
+        """Get/set for type_genre."""
+        return self._type_genre
+
+    @type_genre.setter
+    def type_genre(self: Resource, type_genre: str) -> None:
+        self._type_genre = URI(type_genre)
+
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
         """Maps the distribution to rdf.
@@ -254,8 +263,6 @@ class Resource(ABC):
     # -
     def _to_graph(self: Resource) -> Graph:
 
-        self._g.add((URIRef(self.identifier), RDF.type, self._type))
-
         self._publisher_to_graph()
         self._title_to_graph()
         self._accessRights_to_graph()
@@ -268,6 +275,7 @@ class Resource(ABC):
         self._is_referenced_by_to_graph()
         self._release_date_to_graph()
         self._modification_date_to_graph()
+        self._type_genre_to_graph()
 
         return self._g
 
@@ -360,3 +368,7 @@ class Resource(ABC):
                     Literal(self.modification_date, datatype=XSD.date),
                 )
             )
+
+    def _type_genre_to_graph(self: Resource) -> None:
+        if getattr(self, "type_genre", None):
+            self._g.add((URIRef(self.identifier), DCT.type, URIRef(self.type_genre)))
