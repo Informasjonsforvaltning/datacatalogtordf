@@ -615,21 +615,32 @@ def test_to_graph_should_return_modification_date() -> None:
     assert _isomorphic
 
 
-@mark.xfail(strict=True, reason="Not implemented")
 def test_to_graph_should_return_qualifiedAttribution() -> None:
     """It returns a qualifiedAttribution graph isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
+    qualified_attribution = {}
+    qualified_attribution["agent"] = "http://example.com/agents/1"
+    qualified_attribution[
+        "hadrole"
+    ] = "http://registry.it.csiro.au/def/isotc211/CI_RoleCode/distributor"
+    resource.qualified_attributions.append(qualified_attribution)
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
     @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix prov: <http://www.w3.org/ns/prov#> .
 
     <http://example.com/datasets/1> a dcat:Dataset ;
-        dct:title   "Title 1"@en, "Tittel 1"@nb ;
-        .
+        prov:qualifiedAttribution   [
+            a prov:Attribution ;
+            prov:agent <http://example.com/agents/1> ;
+            dcat:hadRole
+                <http://registry.it.csiro.au/def/isotc211/CI_RoleCode/distributor>
+        ] ;
+    .
     """
     g1 = Graph().parse(data=resource.to_rdf(), format="turtle")
     g2 = Graph().parse(data=src, format="turtle")

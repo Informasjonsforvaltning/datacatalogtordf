@@ -13,7 +13,7 @@ from datetime import datetime
 from typing import List
 
 from concepttordf import Contact
-from rdflib import BNode, Graph, Literal, Namespace, URIRef
+from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 
 from .uri import URI
 
@@ -22,6 +22,7 @@ DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
 ODRL = Namespace("http://www.w3.org/ns/odrl/2/")
 XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
+PROV = Namespace("http://www.w3.org/ns/prov#")
 
 
 class InvalidDateError(Exception):
@@ -51,6 +52,34 @@ class Resource(ABC):
         title: a dict with title in multiple languages
     """
 
+    # Use slots to save memory, faster access and restrict attribute creation
+    __slots__ = (
+        "_g",
+        "_accessRights",
+        "_conformsTo",
+        "_contactpoint",
+        "_creator",
+        "_description",
+        "_title",
+        "_release_date",
+        "_modification_date",
+        "_language",
+        "_publisher",
+        "_identifier",
+        "_theme",
+        "_type_genre",
+        "_resource_relation",
+        "_qualified_relation",
+        "_keyword_tag",
+        "_landing_page",
+        "_qualified_attributions",
+        "_license",
+        "_rights",
+        "_has_policy",
+        "_is_referenced_by",
+    )
+
+    # Types
     _accessRights: str  # 6.4.1
     _conformsTo: List[str]  # 6.4.2
     _contactpoint: Contact  # 6.4.3
@@ -68,7 +97,7 @@ class Resource(ABC):
     _qualified_relation: str  # 6.4.15
     _keyword_tag: dict  # 6.4.16
     _landing_page: str  # 6.4.17
-    _qualified_attribution: str  # 6.4.18
+    _qualified_attributions: List[dict]  # 6.4.18
     _license: str  # 6.4.19
     _rights: str  # 6.4.20
     _has_policy: str  # 6.4.21
@@ -82,12 +111,14 @@ class Resource(ABC):
         self.conformsTo = list()
         self.theme = list()
         self.is_referenced_by = list()
+        self.qualified_attributions = list()
         # Set up graph and namespaces:
         self._g = Graph()
         self._g.bind("dct", DCT)
         self._g.bind("dcat", DCAT)
         self._g.bind("odrl", ODRL)
         self._g.bind("xsd", XSD)
+        self._g.bind("prov", PROV)
 
     @property
     def identifier(self: Resource) -> str:
@@ -234,6 +265,17 @@ class Resource(ABC):
     def type_genre(self: Resource, type_genre: str) -> None:
         self._type_genre = URI(type_genre)
 
+    @property
+    def qualified_attributions(self: Resource) -> List[dict]:
+        """Get/set for qualified_attributions."""
+        return self._qualified_attributions
+
+    @qualified_attributions.setter
+    def qualified_attributions(
+        self: Resource, qualified_attributions: List[dict]
+    ) -> None:
+        self._qualified_attributions = qualified_attributions
+
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
         """Maps the distribution to rdf.
@@ -276,6 +318,7 @@ class Resource(ABC):
         self._release_date_to_graph()
         self._modification_date_to_graph()
         self._type_genre_to_graph()
+        self._qualified_attributions_to_graph()
 
         return self._g
 
@@ -372,3 +415,14 @@ class Resource(ABC):
     def _type_genre_to_graph(self: Resource) -> None:
         if getattr(self, "type_genre", None):
             self._g.add((URIRef(self.identifier), DCT.type, URIRef(self.type_genre)))
+
+    def _qualified_attributions_to_graph(self: Resource) -> None:
+        if getattr(self, "qualified_attributions", None):
+            qa = BNode()
+            for _qa in self.qualified_attributions:
+                self._g.add((qa, RDF.type, PROV.Attribution))
+                _uri = URI(_qa["agent"])
+                self._g.add((qa, PROV.agent, URIRef(_uri)))
+                _uri = URI(_qa["hadrole"])
+                self._g.add((qa, DCAT.hadRole, URIRef(_uri)))
+                self._g.add((URIRef(self.identifier), PROV.qualifiedAttribution, qa))

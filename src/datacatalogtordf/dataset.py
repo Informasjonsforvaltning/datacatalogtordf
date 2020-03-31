@@ -41,6 +41,9 @@ class Dataset(Resource):
         distributions: a list of distributions of the dataset
     """
 
+    __slots__ = ("_distributions", "_type")
+
+    # Types
     _distributions: List
 
     def __init__(self) -> None:
