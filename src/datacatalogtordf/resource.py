@@ -88,12 +88,12 @@ class Resource(ABC):
     _title: dict  # 6.4.6
     _release_date: str  # 6.4.7
     _modification_date: str  # 6.4.8
-    _language: str  # 6.4.9
+    _language: List[str]  # 6.4.9
     _publisher: str  # 6.4.10
     _identifier: str  # 6.4.11
     _theme: List[str]  # 6.4.12
     _type_genre: str  # 6.4.13
-    _resource_relation: Resource  # 6.4.14
+    _resource_relation: List[str]  # 6.4.14
     _qualified_relation: List[str]  # 6.4.15
     _keyword_tag: dict  # 6.4.16
     _landing_page: List[str]  # 6.4.17
@@ -315,6 +315,15 @@ class Resource(ABC):
     def resource_relation(self: Resource, resource_relation: List[str]) -> None:
         self._resource_relation = resource_relation
 
+    @property
+    def rights(self: Resource) -> str:
+        """Get/set for rights."""
+        return self._rights
+
+    @rights.setter
+    def rights(self: Resource, rights: str) -> None:
+        self._rights = URI(rights)
+
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
         """Maps the distribution to rdf.
@@ -362,6 +371,8 @@ class Resource(ABC):
         self._license_to_graph()
         self._language_to_graph()
         self._resource_relation_to_graph()
+        self._license_to_graph()
+        self._rights_to_graph()
 
         return self._g
 
@@ -491,3 +502,7 @@ class Resource(ABC):
             for _l in self.resource_relation:
                 _uri = URI(_l)
                 self._g.add((URIRef(self.identifier), DCT.relation, URIRef(_uri)))
+
+    def _rights_to_graph(self: Resource) -> None:
+        if getattr(self, "rights", None):
+            self._g.add((URIRef(self.identifier), DCT.rights, URIRef(self.rights)))

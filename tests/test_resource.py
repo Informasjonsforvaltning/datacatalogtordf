@@ -445,11 +445,11 @@ def test_to_graph_should_return_relation() -> None:
     assert _isomorphic
 
 
-@mark.xfail(strict=True, reason="Not implemented")
 def test_to_graph_should_return_rights() -> None:
     """It returns a rights graph isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
+    resource.rights = "http://example.com/rights/1"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -458,7 +458,7 @@ def test_to_graph_should_return_rights() -> None:
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
 
     <http://example.com/datasets/1> a dcat:Dataset ;
-        dct:title   "Title 1"@en, "Tittel 1"@nb ;
+        dct:rights   <http://example.com/rights/1> ;
         .
     """
     g1 = Graph().parse(data=resource.to_rdf(), format="turtle")
