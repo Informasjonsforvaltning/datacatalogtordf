@@ -70,7 +70,7 @@ class Resource(ABC):
         "_type_genre",
         "_resource_relation",
         "_qualified_relation",
-        "_keyword_tag",
+        "_keyword",
         "_landing_page",
         "_qualified_attributions",
         "_license",
@@ -95,7 +95,7 @@ class Resource(ABC):
     _type_genre: str  # 6.4.13
     _resource_relation: List[str]  # 6.4.14
     _qualified_relation: List[str]  # 6.4.15
-    _keyword_tag: dict  # 6.4.16
+    _keyword: dict  # 6.4.16
     _landing_page: List[str]  # 6.4.17
     _qualified_attributions: List[dict]  # 6.4.18
     _license: str  # 6.4.19
@@ -143,11 +143,7 @@ class Resource(ABC):
 
     @property
     def title(self: Resource) -> dict:
-        """Title attribute.
-
-        Returns:
-            the title as dictionary
-        """
+        """Title attribute."""
         return self._title
 
     @title.setter
@@ -324,6 +320,15 @@ class Resource(ABC):
     def rights(self: Resource, rights: str) -> None:
         self._rights = URI(rights)
 
+    @property
+    def keyword(self: Resource) -> dict:
+        """Title attribute."""
+        return self._keyword
+
+    @keyword.setter
+    def keyword(self: Resource, keyword: dict) -> None:
+        self._keyword = keyword
+
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
         """Maps the distribution to rdf.
@@ -373,6 +378,7 @@ class Resource(ABC):
         self._resource_relation_to_graph()
         self._license_to_graph()
         self._rights_to_graph()
+        self._keyword_to_graph()
 
         return self._g
 
@@ -506,3 +512,14 @@ class Resource(ABC):
     def _rights_to_graph(self: Resource) -> None:
         if getattr(self, "rights", None):
             self._g.add((URIRef(self.identifier), DCT.rights, URIRef(self.rights)))
+
+    def _keyword_to_graph(self: Resource) -> None:
+        if getattr(self, "keyword", None):
+            for key in self.keyword:
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        DCAT.keyword,
+                        Literal(self.keyword[key], lang=key),
+                    )
+                )

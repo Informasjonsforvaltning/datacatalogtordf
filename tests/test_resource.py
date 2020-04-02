@@ -309,11 +309,15 @@ def test_to_graph_should_return_is_Referenced_By() -> None:
     assert _isomorphic
 
 
-@mark.xfail(strict=True, reason="Not implemented")
 def test_to_graph_should_return_keyword() -> None:
     """It returns a keyword graph isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
+    _keyword = {}
+    _keyword["nb"] = "Etnøkkelord"
+    _keyword["nn"] = "Eitnøkkelord"
+    _keyword["en"] = "Akeyword"
+    resource.keyword = _keyword
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -322,7 +326,7 @@ def test_to_graph_should_return_keyword() -> None:
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
 
     <http://example.com/datasets/1> a dcat:Dataset ;
-        dct:title   "Title 1"@en, "Tittel 1"@nb ;
+        dcat:keyword   "Akeyword"@en, "Etnøkkelord"@nb, "Eitnøkkelord"@nn ;
         .
     """
     g1 = Graph().parse(data=resource.to_rdf(), format="turtle")
