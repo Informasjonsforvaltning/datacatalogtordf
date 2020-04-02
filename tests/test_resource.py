@@ -363,11 +363,11 @@ def test_to_graph_should_return_landingPage() -> None:
     assert _isomorphic
 
 
-@mark.xfail(strict=True, reason="Not implemented")
 def test_to_graph_should_return_license() -> None:
     """It returns a license graph isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
+    resource.license = "http://example.com/licenses/1"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -376,8 +376,8 @@ def test_to_graph_should_return_license() -> None:
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
 
     <http://example.com/datasets/1> a dcat:Dataset ;
-        dct:title   "Title 1"@en, "Tittel 1"@nb ;
-        .
+        dct:license    <http://example.com/licenses/1>
+    .
     """
     g1 = Graph().parse(data=resource.to_rdf(), format="turtle")
     g2 = Graph().parse(data=src, format="turtle")

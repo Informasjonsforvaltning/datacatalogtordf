@@ -286,6 +286,15 @@ class Resource(ABC):
     def landing_page(self: Resource, landing_page: List[str]) -> None:
         self._landing_page = landing_page
 
+    @property
+    def license(self: Resource) -> str:
+        """Get/set for license."""
+        return self._license
+
+    @license.setter
+    def license(self: Resource, license: str) -> None:
+        self._license = URI(license)
+
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
         """Maps the distribution to rdf.
@@ -330,6 +339,7 @@ class Resource(ABC):
         self._type_genre_to_graph()
         self._qualified_attributions_to_graph()
         self._landing_page_to_graph()
+        self._license_to_graph()
 
         return self._g
 
@@ -443,3 +453,7 @@ class Resource(ABC):
             for _lp in self.landing_page:
                 _uri = URI(_lp)
                 self._g.add((URIRef(self.identifier), DCAT.landingPage, URIRef(_uri)))
+
+    def _license_to_graph(self: Resource) -> None:
+        if getattr(self, "license", None):
+            self._g.add((URIRef(self.identifier), DCT.license, URIRef(self.license)))
