@@ -96,7 +96,7 @@ class Resource(ABC):
     _resource_relation: Resource  # 6.4.14
     _qualified_relation: str  # 6.4.15
     _keyword_tag: dict  # 6.4.16
-    _landing_page: str  # 6.4.17
+    _landing_page: List[str]  # 6.4.17
     _qualified_attributions: List[dict]  # 6.4.18
     _license: str  # 6.4.19
     _rights: str  # 6.4.20
@@ -112,6 +112,7 @@ class Resource(ABC):
         self.theme = list()
         self.is_referenced_by = list()
         self.qualified_attributions = list()
+        self.landing_page = list()
         # Set up graph and namespaces:
         self._g = Graph()
         self._g.bind("dct", DCT)
@@ -276,6 +277,15 @@ class Resource(ABC):
     ) -> None:
         self._qualified_attributions = qualified_attributions
 
+    @property
+    def landing_page(self: Resource) -> List[str]:
+        """Get/set for landing_page."""
+        return self._landing_page
+
+    @landing_page.setter
+    def landing_page(self: Resource, landing_page: List[str]) -> None:
+        self._landing_page = landing_page
+
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
         """Maps the distribution to rdf.
@@ -319,6 +329,7 @@ class Resource(ABC):
         self._modification_date_to_graph()
         self._type_genre_to_graph()
         self._qualified_attributions_to_graph()
+        self._landing_page_to_graph()
 
         return self._g
 
@@ -426,3 +437,9 @@ class Resource(ABC):
                 _uri = URI(_qa["hadrole"])
                 self._g.add((qa, DCAT.hadRole, URIRef(_uri)))
                 self._g.add((URIRef(self.identifier), PROV.qualifiedAttribution, qa))
+
+    def _landing_page_to_graph(self: Resource) -> None:
+        if getattr(self, "landing_page", None):
+            for _lp in self.landing_page:
+                _uri = URI(_lp)
+                self._g.add((URIRef(self.identifier), DCAT.landingPage, URIRef(_uri)))
