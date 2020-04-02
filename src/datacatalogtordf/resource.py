@@ -113,6 +113,7 @@ class Resource(ABC):
         self.is_referenced_by = list()
         self.qualified_attributions = list()
         self.landing_page = list()
+        self.language = list()
         # Set up graph and namespaces:
         self._g = Graph()
         self._g.bind("dct", DCT)
@@ -295,6 +296,15 @@ class Resource(ABC):
     def license(self: Resource, license: str) -> None:
         self._license = URI(license)
 
+    @property
+    def language(self: Resource) -> List[str]:
+        """Get/set for language."""
+        return self._language
+
+    @language.setter
+    def language(self: Resource, language: List[str]) -> None:
+        self._language = language
+
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
         """Maps the distribution to rdf.
@@ -340,6 +350,7 @@ class Resource(ABC):
         self._qualified_attributions_to_graph()
         self._landing_page_to_graph()
         self._license_to_graph()
+        self._language_to_graph()
 
         return self._g
 
@@ -457,3 +468,9 @@ class Resource(ABC):
     def _license_to_graph(self: Resource) -> None:
         if getattr(self, "license", None):
             self._g.add((URIRef(self.identifier), DCT.license, URIRef(self.license)))
+
+    def _language_to_graph(self: Resource) -> None:
+        if getattr(self, "language", None):
+            for _l in self.language:
+                _uri = URI(_l)
+                self._g.add((URIRef(self.identifier), DCT.language, URIRef(_uri)))
