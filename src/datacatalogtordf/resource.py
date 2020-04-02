@@ -94,7 +94,7 @@ class Resource(ABC):
     _theme: List[str]  # 6.4.12
     _type_genre: str  # 6.4.13
     _resource_relation: Resource  # 6.4.14
-    _qualified_relation: str  # 6.4.15
+    _qualified_relation: List[str]  # 6.4.15
     _keyword_tag: dict  # 6.4.16
     _landing_page: List[str]  # 6.4.17
     _qualified_attributions: List[dict]  # 6.4.18
@@ -114,6 +114,7 @@ class Resource(ABC):
         self.qualified_attributions = list()
         self.landing_page = list()
         self.language = list()
+        self.resource_relation = list()
         # Set up graph and namespaces:
         self._g = Graph()
         self._g.bind("dct", DCT)
@@ -305,6 +306,15 @@ class Resource(ABC):
     def language(self: Resource, language: List[str]) -> None:
         self._language = language
 
+    @property
+    def resource_relation(self: Resource) -> List[str]:
+        """Get/set for resource_relation."""
+        return self._resource_relation
+
+    @resource_relation.setter
+    def resource_relation(self: Resource, resource_relation: List[str]) -> None:
+        self._resource_relation = resource_relation
+
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
         """Maps the distribution to rdf.
@@ -351,6 +361,7 @@ class Resource(ABC):
         self._landing_page_to_graph()
         self._license_to_graph()
         self._language_to_graph()
+        self._resource_relation_to_graph()
 
         return self._g
 
@@ -474,3 +485,9 @@ class Resource(ABC):
             for _l in self.language:
                 _uri = URI(_l)
                 self._g.add((URIRef(self.identifier), DCT.language, URIRef(_uri)))
+
+    def _resource_relation_to_graph(self: Resource) -> None:
+        if getattr(self, "resource_relation", None):
+            for _l in self.resource_relation:
+                _uri = URI(_l)
+                self._g.add((URIRef(self.identifier), DCT.relation, URIRef(_uri)))
