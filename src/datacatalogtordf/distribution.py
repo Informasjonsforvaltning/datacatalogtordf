@@ -36,7 +36,6 @@ class Distribution:
     _identifier: str
     _publisher: str
     _title: dict
-    _type: URIRef
 
     def __init__(self) -> None:
         """Inits an object with default values."""

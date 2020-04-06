@@ -10,12 +10,15 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import List
+from typing import List, TYPE_CHECKING
 
 from concepttordf import Contact
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 
 from .uri import URI
+
+if TYPE_CHECKING:  # pragma: no cover
+    from .relationship import Relationship  # pytype: disable=pyi-error
 
 
 DCT = Namespace("http://purl.org/dc/terms/")
@@ -94,7 +97,7 @@ class Resource(ABC):
     _theme: List[str]  # 6.4.12
     _type_genre: str  # 6.4.13
     _resource_relation: List[str]  # 6.4.14
-    _qualified_relation: List[str]  # 6.4.15
+    _qualified_relation: List[Relationship]  # 6.4.15
     _keyword: dict  # 6.4.16
     _landing_page: List[str]  # 6.4.17
     _qualified_attributions: List[dict]  # 6.4.18
@@ -115,6 +118,7 @@ class Resource(ABC):
         self.landing_page = list()
         self.language = list()
         self.resource_relation = list()
+        self.qualified_relation = list()
         # Set up graph and namespaces:
         self._g = Graph()
         self._g.bind("dct", DCT)
@@ -329,6 +333,17 @@ class Resource(ABC):
     def keyword(self: Resource, keyword: dict) -> None:
         self._keyword = keyword
 
+    @property
+    def qualified_relation(self: Resource) -> List[Relationship]:
+        """Get/set for qualified_relation."""
+        return self._qualified_relation
+
+    @qualified_relation.setter
+    def qualified_relation(
+        self: Resource, qualified_relation: List[Relationship]
+    ) -> None:
+        self._qualified_relation = qualified_relation
+
     # -
     def to_rdf(self: Resource, format: str = "turtle") -> str:
         """Maps the distribution to rdf.
@@ -379,6 +394,7 @@ class Resource(ABC):
         self._license_to_graph()
         self._rights_to_graph()
         self._keyword_to_graph()
+        self._qualified_relation_to_graph()
 
         return self._g
 
@@ -522,4 +538,15 @@ class Resource(ABC):
                         DCAT.keyword,
                         Literal(self.keyword[key], lang=key),
                     )
+                )
+
+    def _qualified_relation_to_graph(self: Resource) -> None:
+        if getattr(self, "qualified_relation", None):
+            for _qr in self.qualified_relation:
+                _relation = _qr
+                _relationship = BNode()
+                for _s, p, o in _relation._to_graph().triples((None, None, None)):
+                    self._g.add((_relationship, p, o))
+                self._g.add(
+                    (URIRef(self.identifier), DCAT.qualifiedRelation, _relationship)
                 )

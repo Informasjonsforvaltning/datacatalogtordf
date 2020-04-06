@@ -21,5 +21,6 @@ from .catalog import Catalog
 from .dataservice import DataService
 from .dataset import Dataset
 from .distribution import Distribution
+from .relationship import Relationship
 from .resource import Resource
 from .uri import InvalidURIError, URI

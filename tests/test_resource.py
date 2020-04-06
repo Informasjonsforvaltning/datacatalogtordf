@@ -2,11 +2,10 @@
 
 from concepttordf import Contact
 import pytest
-from pytest import mark
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
-from datacatalogtordf import Dataset, Resource
+from datacatalogtordf import Dataset, Relationship, Resource
 from datacatalogtordf.resource import InvalidDateError
 
 """
@@ -475,11 +474,20 @@ def test_to_graph_should_return_rights() -> None:
     assert _isomorphic
 
 
-@mark.xfail(strict=True, reason="Not implemented")
 def test_to_graph_should_return_qualifiedRelation() -> None:
     """It returns a qualifiedRelation graph isomorphic to spec."""
+    # Create the dataset to be related to:
+    _dataset = Dataset()
+    _dataset.identifier = "http://example.org/Original987"
+    # Create the relationship:
+    _relationship = Relationship()
+    _relationship.identifier = "http://example.com/relationships/1"
+    _relationship.relation = _dataset
+    _relationship.had_role = "http://www.iana.org/assignments/relation/original"
+    # Add relationship to resource (dataset):
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
+    resource.qualified_relation.append(_relationship)
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -488,8 +496,12 @@ def test_to_graph_should_return_qualifiedRelation() -> None:
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
 
     <http://example.com/datasets/1> a dcat:Dataset ;
-        dct:title   "Title 1"@en, "Tittel 1"@nb ;
-        .
+        dcat:qualifiedRelation [
+            a dcat:Relationship ;
+            dct:relation <http://example.org/Original987> ;
+            dcat:hadRole <http://www.iana.org/assignments/relation/original>
+        ] ;
+    .
     """
     g1 = Graph().parse(data=resource.to_rdf(), format="turtle")
     g2 = Graph().parse(data=src, format="turtle")
