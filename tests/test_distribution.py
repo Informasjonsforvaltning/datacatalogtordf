@@ -1,10 +1,9 @@
 """Test cases for the distribution module."""
+from pytest import mark
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
 from datacatalogtordf import Distribution
-
-# import pytest
 
 
 def test_to_graph_should_return_title_as_graph() -> None:
@@ -31,6 +30,114 @@ def test_to_graph_should_return_title_as_graph() -> None:
         _dump_diff(g1, g2)
         pass
     assert _isomorphic
+
+
+@mark.xfail(strict=False, reason="Not implemented")
+def test_to_graph_should_return_description() -> None:
+    """It returns a description graph isomorphic to spec."""
+    AssertionError()
+
+
+@mark.xfail(strict=False, reason="Not implemented")
+def test_to_graph_should_return_release_date() -> None:
+    """It returns a release date graph isomorphic to spec."""
+    AssertionError()
+
+
+@mark.xfail(strict=False, reason="Not implemented")
+def test_to_graph_should_return_modification_date() -> None:
+    """It returns a modification date graph isomorphic to spec."""
+    AssertionError()
+
+
+@mark.xfail(strict=False, reason="Not implemented")
+def test_to_graph_should_return_license() -> None:
+    """It returns a license graph isomorphic to spec."""
+    AssertionError()
+
+
+@mark.xfail(strict=False, reason="Not implemented")
+def test_to_graph_should_return_access_rights() -> None:
+    """It returns a access rights graph isomorphic to spec."""
+    AssertionError()
+
+
+@mark.xfail(strict=False, reason="Not implemented")
+def test_to_graph_should_return_rights() -> None:
+    """It returns a rights graph isomorphic to spec."""
+    AssertionError()
+
+
+@mark.xfail(strict=False, reason="Not implemented")
+def test_to_graph_should_return_has_policy() -> None:
+    """It returns a has_policy graph isomorphic to spec."""
+    AssertionError()
+
+
+@mark.xfail(strict=False, reason="Not implemented")
+def test_to_graph_should_return_access_URL() -> None:
+    """It returns a access URL graph isomorphic to spec."""
+    AssertionError()
+
+
+@mark.xfail(strict=False, reason="Not implemented")
+def test_to_graph_should_return_access_service() -> None:
+    """It returns a access service graph isomorphic to spec."""
+    AssertionError()
+
+
+@mark.xfail(strict=False, reason="Not implemented")
+def test_to_graph_should_return_download_URL() -> None:
+    """It returns a download URL graph isomorphic to spec."""
+    AssertionError()
+
+
+@mark.xfail(strict=False, reason="Not implemented")
+def test_to_graph_should_return_byte_size() -> None:
+    """It returns a byte size graph isomorphic to spec."""
+    AssertionError()
+
+
+@mark.xfail(strict=False, reason="Not implemented")
+def test_to_graph_should_return_spatial_resolution() -> None:
+    """It returns a spatial resolution graph isomorphic to spec."""
+    AssertionError()
+
+
+@mark.xfail(strict=False, reason="Not implemented")
+def test_to_graph_should_return_temporal_resolution() -> None:
+    """It returns a temporal resolution graph isomorphic to spec."""
+    AssertionError()
+
+
+@mark.xfail(strict=False, reason="Not implemented")
+def test_to_graph_should_return_conforms_to() -> None:
+    """It returns a conforms to graph isomorphic to spec."""
+    AssertionError()
+
+
+@mark.xfail(strict=False, reason="Not implemented")
+def test_to_graph_should_return_media_type() -> None:
+    """It returns a media type graph isomorphic to spec."""
+    AssertionError()
+
+
+@mark.xfail(strict=False, reason="Not implemented")
+def test_to_graph_should_return_format() -> None:
+    """It returns a format graph isomorphic to spec."""
+    AssertionError()
+
+
+@mark.xfail(strict=False, reason="Not implemented")
+def test_to_graph_should_return_compression_format() -> None:
+    """It returns a compression format graph isomorphic to spec."""
+    AssertionError()
+
+
+@mark.xfail(strict=False, reason="Not implemented")
+def test_to_graph_should_return_packaging_format() -> None:
+    """It returns a packaging format graph isomorphic to spec."""
+    AssertionError()
 
 
 # ---------------------------------------------------------------------- #

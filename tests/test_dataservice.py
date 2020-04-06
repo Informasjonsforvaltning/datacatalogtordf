@@ -4,8 +4,6 @@ from rdflib.compare import graph_diff, isomorphic
 
 from datacatalogtordf import DataService, Dataset
 
-# import pytest
-
 
 def test_to_graph_should_return_endpointURL_as_graph() -> None:
     """It returns a endpointURL graph isomorphic to spec."""
