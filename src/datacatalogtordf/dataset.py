@@ -27,6 +27,7 @@ from rdflib import Graph, Namespace, RDF, URIRef
 
 from .distribution import Distribution
 from .resource import Resource
+from .uri import URI
 
 DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
@@ -41,10 +42,11 @@ class Dataset(Resource):
         distributions: a list of distributions of the dataset
     """
 
-    __slots__ = ("_distributions", "_type")
+    __slots__ = ("_distributions", "_type", "_frequency")
 
     # Types
     _distributions: List
+    _frequency: str
 
     def __init__(self) -> None:
         """Inits an object with default values."""
@@ -61,6 +63,15 @@ class Dataset(Resource):
     def distributions(self: Dataset, distributions: List[Distribution]) -> None:
         self._distributions = distributions
 
+    @property
+    def frequency(self: Dataset) -> str:
+        """Get/set for identifier."""
+        return self._frequency
+
+    @frequency.setter
+    def frequency(self: Dataset, frequency: str) -> None:
+        self._frequency = URI(frequency)
+
     # -
     def _to_graph(self: Dataset) -> Graph:
 
@@ -68,18 +79,28 @@ class Dataset(Resource):
 
         self._g.add((URIRef(self.identifier), RDF.type, self._type))
 
-        if hasattr(self, "distributions"):
-            self._distributions_to_graph()
+        self._distributions_to_graph()
+        self._frequency_to_graph()
 
         return self._g
 
     def _distributions_to_graph(self: Dataset) -> None:
+        if getattr(self, "distributions", None):
+            for distribution in self._distributions:
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        DCAT.distribution,
+                        URIRef(distribution.identifier),
+                    )
+                )
 
-        for distribution in self._distributions:
+    def _frequency_to_graph(self: Dataset) -> None:
+        if getattr(self, "frequency", None):
             self._g.add(
                 (
                     URIRef(self.identifier),
-                    DCAT.distribution,
-                    URIRef(distribution.identifier),
+                    DCT.accrualPeriodicity,
+                    URIRef(self.frequency),
                 )
             )
