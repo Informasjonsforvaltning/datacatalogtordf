@@ -223,10 +223,9 @@ def test_to_graph_should_return_was_generated_by() -> None:
 
 def test_to_graph_should_return_access_rights_comment() -> None:
     """It returns a access rights comment graph isomorphic to spec."""
-    # TODO: add support for dcatno:accessRightsComment
     dataset = Dataset()
     dataset.identifier = "http://example.com/datasets/1"
-    dataset.access_rights_comment = "http://example.com/concepts/1"
+    dataset.access_rights_comments.append("http://example.com/concepts/1")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -234,7 +233,7 @@ def test_to_graph_should_return_access_rights_comment() -> None:
     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
     @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
-    @prefix dcatno: <http://data.norge.no/vocabulary/dcatno#> .
+    @prefix dcatno: <https://data.norge.no/vocabulary/dcatno#> .
 
     <http://example.com/datasets/1> a dcat:Dataset ;
             dcatno:accessRightsComment <http://example.com/concepts/1> ;

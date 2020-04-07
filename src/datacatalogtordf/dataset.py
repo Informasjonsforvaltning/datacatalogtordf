@@ -36,7 +36,7 @@ DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
 XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
 PROV = Namespace("http://www.w3.org/ns/prov#")
-DCATNO = Namespace("http://data.norge.no/vocabulary/dcatno#")
+DCATNO = Namespace("https://data.norge.no/vocabulary/dcatno#")
 
 
 class Dataset(Resource):
@@ -57,7 +57,7 @@ class Dataset(Resource):
         "_period_of_time",
         "_temporal_resolution",
         "_was_generated_by",
-        "_access_rights_comment",
+        "_access_rights_comments",
     )
 
     # Types
@@ -68,13 +68,15 @@ class Dataset(Resource):
     _period_of_time: PeriodOfTime
     _temporal_resolution: str
     _was_generated_by: str
-    _access_rights_comment: str
+    _access_rights_comments: List[str]
 
     def __init__(self) -> None:
         """Inits an object with default values."""
         super().__init__()
         self._type = DCAT.Dataset
         self.distributions = []
+        self.access_rights_comments = []
+        self._g.bind("dcatno", DCATNO)
 
     @property
     def distributions(self: Dataset) -> List[Distribution]:
@@ -140,13 +142,15 @@ class Dataset(Resource):
         self._was_generated_by = URI(was_generated_by)
 
     @property
-    def access_rights_comment(self: Dataset) -> str:
-        """Get/set for access_rights_comment."""
-        return self._access_rights_comment
+    def access_rights_comments(self: Dataset) -> List[str]:
+        """Get/set for access_rights_comments."""
+        return self._access_rights_comments
 
-    @access_rights_comment.setter
-    def access_rights_comment(self: Dataset, access_rights_comment: str) -> None:
-        self._access_rights_comment = URI(access_rights_comment)
+    @access_rights_comments.setter
+    def access_rights_comments(
+        self: Dataset, access_rights_comments: List[str]
+    ) -> None:
+        self._access_rights_comments = access_rights_comments
 
     # -
     def _to_graph(self: Dataset) -> Graph:
@@ -162,7 +166,7 @@ class Dataset(Resource):
         self._period_of_time_to_graph()
         self._temporal_resolution_to_graph()
         self._was_generated_by_to_graph()
-        self._access_rights_comment_to_graph()
+        self._access_rights_comments_to_graph()
 
         return self._g
 
@@ -233,12 +237,13 @@ class Dataset(Resource):
                 )
             )
 
-    def _access_rights_comment_to_graph(self: Dataset) -> None:
-        if getattr(self, "access_rights_comment", None):
-            self._g.add(
-                (
-                    URIRef(self.identifier),
-                    DCATNO.accessRightsComment,
-                    URIRef(self.access_rights_comment),
+    def _access_rights_comments_to_graph(self: Dataset) -> None:
+        if getattr(self, "access_rights_comments", None):
+            for _access_rights_comment in self._access_rights_comments:
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        DCATNO.accessRightsComment,
+                        URIRef(_access_rights_comment),
+                    )
                 )
-            )
