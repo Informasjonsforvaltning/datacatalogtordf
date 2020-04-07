@@ -23,9 +23,10 @@ from __future__ import annotations
 
 from typing import List
 
-from rdflib import Graph, Namespace, RDF, URIRef
+from rdflib import BNode, Graph, Namespace, RDF, URIRef
 
 from .distribution import Distribution
+from .location import Location
 from .resource import Resource
 from .uri import URI
 
@@ -42,11 +43,12 @@ class Dataset(Resource):
         distributions: a list of distributions of the dataset
     """
 
-    __slots__ = ("_distributions", "_type", "_frequency")
+    __slots__ = ("_distributions", "_type", "_frequency", "_spatial_coverage")
 
     # Types
     _distributions: List
     _frequency: str
+    _spatial_coverage: Location
 
     def __init__(self) -> None:
         """Inits an object with default values."""
@@ -72,6 +74,15 @@ class Dataset(Resource):
     def frequency(self: Dataset, frequency: str) -> None:
         self._frequency = URI(frequency)
 
+    @property
+    def spatial_coverage(self: Dataset) -> Location:
+        """Get/set for identifier."""
+        return self._spatial_coverage
+
+    @spatial_coverage.setter
+    def spatial_coverage(self: Dataset, spatial_coverage: Location) -> None:
+        self._spatial_coverage = spatial_coverage
+
     # -
     def _to_graph(self: Dataset) -> Graph:
 
@@ -81,6 +92,7 @@ class Dataset(Resource):
 
         self._distributions_to_graph()
         self._frequency_to_graph()
+        self._spatial_coverage_to_graph()
 
         return self._g
 
@@ -104,3 +116,12 @@ class Dataset(Resource):
                     URIRef(self.frequency),
                 )
             )
+
+    def _spatial_coverage_to_graph(self: Dataset) -> None:
+        if getattr(self, "spatial_coverage", None):
+            _location = BNode()
+            for _s, p, o in self._spatial_coverage._to_graph().triples(
+                (None, None, None)
+            ):
+                self._g.add((_location, p, o))
+            self._g.add((URIRef(self.identifier), DCT.spatial, _location))
