@@ -40,11 +40,12 @@ class Relationship:
         had_role: an URI identifying the role
     """
 
-    slots = ("_identifier", "_relation", "_had_role")
+    slots = ("_identifier", "_relation", "_had_role", "_ref")
 
     _identifier: str
     _relation: Resource
     _had_role: str
+    _ref: URIRef
 
     def __init__(self) -> None:
         """Inits an object with default values."""
@@ -60,7 +61,7 @@ class Relationship:
 
     @identifier.setter
     def identifier(self: Relationship, identifier: str) -> None:
-        self._identifier = identifier
+        self._identifier = URI(identifier)
 
     @property
     def had_role(self: Relationship) -> str:
@@ -96,10 +97,10 @@ class Relationship:
     def _to_graph(self: Relationship) -> Graph:
 
         if getattr(self, "identifier", None):
-            self._URIRef = URIRef(self.identifier)
+            self._ref = URIRef(self.identifier)
         else:
-            self._URIRef = BNode()
-        self._g.add((self._URIRef, RDF.type, DCAT.Relationship))
+            self._ref = BNode()
+        self._g.add((self._ref, RDF.type, DCAT.Relationship))
 
         if getattr(self, "relation", None):
             self._relation_to_graph()
@@ -111,8 +112,8 @@ class Relationship:
 
     def _relation_to_graph(self: Relationship) -> None:
 
-        self._g.add((self._URIRef, DCT.relation, URIRef(self.relation.identifier),))
+        self._g.add((self._ref, DCT.relation, URIRef(self.relation.identifier),))
 
     def _had_role_to_graph(self: Relationship) -> None:
 
-        self._g.add((self._URIRef, DCAT.hadRole, URIRef(self.had_role),))
+        self._g.add((self._ref, DCAT.hadRole, URIRef(self.had_role),))

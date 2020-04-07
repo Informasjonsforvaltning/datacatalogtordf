@@ -42,6 +42,7 @@ class Location:
     _geometry: str
     _bounding_box: str
     _centroid: str
+    _ref: URIRef
 
     def __init__(self) -> None:
         """Inits an object with default values."""
@@ -104,10 +105,10 @@ class Location:
     def _to_graph(self: Location) -> Graph:
 
         if getattr(self, "identifier", None):
-            self._URIRef = URIRef(self.identifier)
+            self._ref = URIRef(self.identifier)
         else:
-            self._URIRef = BNode()
-        self._g.add((self._URIRef, RDF.type, DCT.Location))
+            self._ref = BNode()
+        self._g.add((self._ref, RDF.type, DCT.Location))
 
         self._geometry_to_graph()
         self._bounding_box_to_graph()
@@ -120,7 +121,7 @@ class Location:
         if getattr(self, "geometry", None):
             self._g.add(
                 (
-                    self._URIRef,
+                    self._ref,
                     LOCN.geometry,
                     Literal(self.geometry, datatype=GEOSPARQL.asWKT),
                 )
@@ -130,7 +131,7 @@ class Location:
         if getattr(self, "bounding_box", None):
             self._g.add(
                 (
-                    self._URIRef,
+                    self._ref,
                     DCAT.bbox,
                     Literal(self.bounding_box, datatype=GEOSPARQL.asWKT),
                 )
@@ -140,7 +141,7 @@ class Location:
         if getattr(self, "centroid", None):
             self._g.add(
                 (
-                    self._URIRef,
+                    self._ref,
                     DCAT.centroid,
                     Literal(self.centroid, datatype=GEOSPARQL.asWKT),
                 )
