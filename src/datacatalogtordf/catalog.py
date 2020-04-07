@@ -26,10 +26,12 @@ from typing import List
 from rdflib import Graph, Namespace, RDF, URIRef
 
 from .dataset import Dataset
+from .uri import URI
 
 
 DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
+FOAF = Namespace("http://xmlns.com/foaf/0.1/")
 
 
 class Catalog(Dataset):
@@ -39,9 +41,12 @@ class Catalog(Dataset):
 
     Attributes:
         datasets: list of datsets in catalog
+        homepage: link to a homepage for the catalog
     """
 
+    __slots__ = ("_datasets", "_homepage")
     _datasets: List
+    _homepage: str
 
     def __init__(self) -> None:
         """Inits catalog object with default values."""
@@ -58,6 +63,15 @@ class Catalog(Dataset):
     def datasets(self: Catalog, datasets: List[Dataset]) -> None:
         self._datasets = datasets
 
+    @property
+    def homepage(self: Catalog) -> str:
+        """Get/set for homepage."""
+        return self._homepage
+
+    @homepage.setter
+    def homepage(self: Catalog, homepage: str) -> None:
+        self._homepage = URI(homepage)
+
     # -
     def _to_graph(self: Catalog) -> Graph:
 
@@ -65,14 +79,20 @@ class Catalog(Dataset):
 
         self._g.add((URIRef(self.identifier), RDF.type, self._type))
 
-        if hasattr(self, "datasets"):
-            self._datasets_to_graph()
+        self._datasets_to_graph()
+        self._homepage_to_graph()
 
         return self._g
 
     def _datasets_to_graph(self: Catalog) -> None:
 
-        for dataset in self._datasets:
-            self._g.add(
-                (URIRef(self.identifier), DCAT.dataset, URIRef(dataset.identifier))
-            )
+        if getattr(self, "datasets", None):
+            for dataset in self._datasets:
+                self._g.add(
+                    (URIRef(self.identifier), DCAT.dataset, URIRef(dataset.identifier))
+                )
+
+    def _homepage_to_graph(self: Catalog) -> None:
+
+        if getattr(self, "homepage", None):
+            self._g.add((URIRef(self.identifier), FOAF.homepage, URIRef(self.homepage)))
