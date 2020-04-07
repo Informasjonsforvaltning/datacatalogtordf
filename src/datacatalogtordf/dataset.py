@@ -35,6 +35,7 @@ from .uri import URI
 DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
 XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
+PROV = Namespace("http://www.w3.org/ns/prov#")
 
 
 class Dataset(Resource):
@@ -54,6 +55,7 @@ class Dataset(Resource):
         "_spatial_resolution",
         "_period_of_time",
         "_temporal_resolution",
+        "_was_generated_by",
     )
 
     # Types
@@ -63,6 +65,7 @@ class Dataset(Resource):
     _spatial_resolution: Decimal
     _period_of_time: PeriodOfTime
     _temporal_resolution: str
+    _was_generated_by: str
 
     def __init__(self) -> None:
         """Inits an object with default values."""
@@ -124,6 +127,15 @@ class Dataset(Resource):
     def temporal_resolution(self: Dataset, temporal_resolution: str) -> None:
         self._temporal_resolution = temporal_resolution
 
+    @property
+    def was_generated_by(self: Dataset) -> str:
+        """Get/set for was_generated_by."""
+        return self._was_generated_by
+
+    @was_generated_by.setter
+    def was_generated_by(self: Dataset, was_generated_by: str) -> None:
+        self._was_generated_by = URI(was_generated_by)
+
     # -
     def _to_graph(self: Dataset) -> Graph:
 
@@ -137,6 +149,7 @@ class Dataset(Resource):
         self._spatial_resolution_to_graph()
         self._period_of_time_to_graph()
         self._temporal_resolution_to_graph()
+        self._was_generated_by_to_graph()
 
         return self._g
 
@@ -194,5 +207,15 @@ class Dataset(Resource):
                     URIRef(self.identifier),
                     DCAT.temporalResolution,
                     Literal(self.temporal_resolution, datatype=XSD.duration),
+                )
+            )
+
+    def _was_generated_by_to_graph(self: Dataset) -> None:
+        if getattr(self, "was_generated_by", None):
+            self._g.add(
+                (
+                    URIRef(self.identifier),
+                    PROV.wasGeneratedBy,
+                    URIRef(self.was_generated_by),
                 )
             )
