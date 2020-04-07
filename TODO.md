@@ -1,6 +1,6 @@
  - [x] Add validation of identifiers. Use rdflib serializer (n3) to do so. (If it cannot be serialized by rdflib, it is not a valid uri.)
  - [x] Add support for all resource properties
- - [ ] Add support for all dataset properties
+ - [x] Add support for all dataset properties
  - [ ] Add support for all catalog properties
  - [ ] Add support for all distribution properties
  - [x] Add support for all dataservice properties

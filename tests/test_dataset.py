@@ -1,7 +1,6 @@
 """Test cases for the dataset module."""
 from decimal import Decimal
 
-from pytest import mark
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
@@ -222,11 +221,33 @@ def test_to_graph_should_return_was_generated_by() -> None:
     assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
-def test_to_graph_should_return_accessRightsComment() -> None:
-    """It returns a accessRights comment graph isomorphic to spec."""
+def test_to_graph_should_return_access_rights_comment() -> None:
+    """It returns a access rights comment graph isomorphic to spec."""
     # TODO: add support for dcatno:accessRightsComment
-    AssertionError()
+    dataset = Dataset()
+    dataset.identifier = "http://example.com/datasets/1"
+    dataset.access_rights_comment = "http://example.com/concepts/1"
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+    @prefix dcatno: <http://data.norge.no/vocabulary/dcatno#> .
+
+    <http://example.com/datasets/1> a dcat:Dataset ;
+            dcatno:accessRightsComment <http://example.com/concepts/1> ;
+    .
+    """
+    g1 = Graph().parse(data=dataset.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
 # ---------------------------------------------------------------------- #
