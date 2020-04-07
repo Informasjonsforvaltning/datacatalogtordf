@@ -1,9 +1,11 @@
 """Test cases for the dataset module."""
+from decimal import Decimal
+
 from pytest import mark
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
-from datacatalogtordf import Dataset, Distribution, Location
+from datacatalogtordf import Dataset, Distribution, Location, PeriodOfTime
 
 
 def test_to_graph_should_return_distribution_as_graph() -> None:
@@ -104,8 +106,8 @@ def test_to_graph_should_return_spatial_resolution() -> None:
     """It returns a spatial resolution graph isomorphic to spec."""
     dataset = Dataset()
     dataset.identifier = "http://example.com/datasets/1"
-    # spatial resolution is an xsd:desmial:
-    dataset.spatial_resolution = 30.0
+    # spatial resolution is an xsd:decimal:
+    dataset.spatial_resolution = Decimal(30.0)
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -128,10 +130,39 @@ def test_to_graph_should_return_spatial_resolution() -> None:
     assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_temporal_coverage() -> None:
     """It returns a temporal coverage graph isomorphic to spec."""
-    AssertionError()
+    dataset = Dataset()
+    dataset.identifier = "http://example.com/datasets/1"
+    # Create PeriodOfTime:
+    period_of_time = PeriodOfTime()
+    period_of_time.start_date = "2019-12-31"
+    period_of_time.end_date = "2020-12-31"
+    # Add period_of_time to dataset:
+    dataset.period_of_time = period_of_time
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+    <http://example.com/datasets/1> a dcat:Dataset ;
+        dct:temporal [ a dct:PeriodOfTime ;
+            dcat:startDate "2019-12-31"^^xsd:date ;
+            dcat:endDate   "2020-12-31"^^xsd:date ;
+        ]
+    .
+    """
+    g1 = Graph().parse(data=dataset.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
 @mark.xfail(strict=False, reason="Not implemented")

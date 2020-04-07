@@ -28,6 +28,7 @@ from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 
 from .distribution import Distribution
 from .location import Location
+from .periodoftime import PeriodOfTime
 from .resource import Resource
 from .uri import URI
 
@@ -51,6 +52,7 @@ class Dataset(Resource):
         "_frequency",
         "_spatial_coverage",
         "_spatial_resolution",
+        "_period_of_time",
     )
 
     # Types
@@ -58,6 +60,7 @@ class Dataset(Resource):
     _frequency: str
     _spatial_coverage: Location
     _spatial_resolution: Decimal
+    _period_of_time: PeriodOfTime
 
     def __init__(self) -> None:
         """Inits an object with default values."""
@@ -101,6 +104,15 @@ class Dataset(Resource):
     def spatial_resolution(self: Dataset, spatial_resolution: Decimal) -> None:
         self._spatial_resolution = spatial_resolution
 
+    @property
+    def period_of_time(self: Dataset) -> PeriodOfTime:
+        """Get/set for period_of_time."""
+        return self._period_of_time
+
+    @period_of_time.setter
+    def period_of_time(self: Dataset, period_of_time: PeriodOfTime) -> None:
+        self._period_of_time = period_of_time
+
     # -
     def _to_graph(self: Dataset) -> Graph:
 
@@ -112,6 +124,7 @@ class Dataset(Resource):
         self._frequency_to_graph()
         self._spatial_coverage_to_graph()
         self._spatial_resolution_to_graph()
+        self._period_of_time_to_graph()
 
         return self._g
 
@@ -139,7 +152,7 @@ class Dataset(Resource):
     def _spatial_coverage_to_graph(self: Dataset) -> None:
         if getattr(self, "spatial_coverage", None):
             _location = BNode()
-            for _s, p, o in self._spatial_coverage._to_graph().triples(
+            for _s, p, o in self.spatial_coverage._to_graph().triples(
                 (None, None, None)
             ):
                 self._g.add((_location, p, o))
@@ -154,3 +167,10 @@ class Dataset(Resource):
                     Literal(self.spatial_resolution, datatype=XSD.decimal),
                 )
             )
+
+    def _period_of_time_to_graph(self: Dataset) -> None:
+        if getattr(self, "period_of_time", None):
+            _temporal = BNode()
+            for _s, p, o in self.period_of_time._to_graph().triples((None, None, None)):
+                self._g.add((_temporal, p, o))
+            self._g.add((URIRef(self.identifier), DCT.temporal, _temporal,))
