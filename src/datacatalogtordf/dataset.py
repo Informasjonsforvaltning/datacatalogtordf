@@ -53,6 +53,7 @@ class Dataset(Resource):
         "_spatial_coverage",
         "_spatial_resolution",
         "_period_of_time",
+        "_temporal_resolution",
     )
 
     # Types
@@ -61,6 +62,7 @@ class Dataset(Resource):
     _spatial_coverage: Location
     _spatial_resolution: Decimal
     _period_of_time: PeriodOfTime
+    _temporal_resolution: str
 
     def __init__(self) -> None:
         """Inits an object with default values."""
@@ -113,6 +115,15 @@ class Dataset(Resource):
     def period_of_time(self: Dataset, period_of_time: PeriodOfTime) -> None:
         self._period_of_time = period_of_time
 
+    @property
+    def temporal_resolution(self: Dataset) -> str:
+        """Get/set for temporal_resolution."""
+        return self._temporal_resolution
+
+    @temporal_resolution.setter
+    def temporal_resolution(self: Dataset, temporal_resolution: str) -> None:
+        self._temporal_resolution = temporal_resolution
+
     # -
     def _to_graph(self: Dataset) -> Graph:
 
@@ -125,6 +136,7 @@ class Dataset(Resource):
         self._spatial_coverage_to_graph()
         self._spatial_resolution_to_graph()
         self._period_of_time_to_graph()
+        self._temporal_resolution_to_graph()
 
         return self._g
 
@@ -174,3 +186,13 @@ class Dataset(Resource):
             for _s, p, o in self.period_of_time._to_graph().triples((None, None, None)):
                 self._g.add((_temporal, p, o))
             self._g.add((URIRef(self.identifier), DCT.temporal, _temporal,))
+
+    def _temporal_resolution_to_graph(self: Dataset) -> None:
+        if getattr(self, "temporal_resolution", None):
+            self._g.add(
+                (
+                    URIRef(self.identifier),
+                    DCAT.temporalResolution,
+                    Literal(self.temporal_resolution, datatype=XSD.duration),
+                )
+            )

@@ -168,7 +168,29 @@ def test_to_graph_should_return_temporal_coverage() -> None:
 @mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_temporal_resolution() -> None:
     """It returns a temporal resolution graph isomorphic to spec."""
-    AssertionError()
+    dataset = Dataset()
+    dataset.identifier = "http://example.com/datasets/1"
+    dataset.temporal_resolution = "PT15M"
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+    <http://example.com/datasets/1> a dcat:Dataset ;
+            dcat:temporalResolution "PT15M"^^xsd:duration ;
+    .
+    """
+    g1 = Graph().parse(data=dataset.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
 @mark.xfail(strict=False, reason="Not implemented")
