@@ -18,7 +18,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from rdflib import Graph, Namespace, RDF, URIRef
+from rdflib import BNode, Graph, Namespace, RDF, URIRef
 
 from .uri import URI
 
@@ -96,7 +96,10 @@ class Relationship:
     def _to_graph(self: Relationship) -> Graph:
 
         if getattr(self, "identifier", None):
-            self._g.add((URIRef(self.identifier), RDF.type, DCAT.Relationship))
+            self._URIRef = URIRef(self.identifier)
+        else:
+            self._URIRef = BNode()
+        self._g.add((self._URIRef, RDF.type, DCAT.Relationship))
 
         if getattr(self, "relation", None):
             self._relation_to_graph()
@@ -108,10 +111,8 @@ class Relationship:
 
     def _relation_to_graph(self: Relationship) -> None:
 
-        self._g.add(
-            (URIRef(self.identifier), DCT.relation, URIRef(self.relation.identifier),)
-        )
+        self._g.add((self._URIRef, DCT.relation, URIRef(self.relation.identifier),))
 
     def _had_role_to_graph(self: Relationship) -> None:
 
-        self._g.add((URIRef(self.identifier), DCAT.hadRole, URIRef(self.had_role),))
+        self._g.add((self._URIRef, DCAT.hadRole, URIRef(self.had_role),))

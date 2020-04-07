@@ -481,7 +481,7 @@ def test_to_graph_should_return_qualifiedRelation() -> None:
     _dataset.identifier = "http://example.org/Original987"
     # Create the relationship:
     _relationship = Relationship()
-    _relationship.identifier = "http://example.com/relationships/1"
+    # _relationship.identifier = "http://example.com/relationships/1"
     _relationship.relation = _dataset
     _relationship.had_role = "http://www.iana.org/assignments/relation/original"
     # Add relationship to resource (dataset):
