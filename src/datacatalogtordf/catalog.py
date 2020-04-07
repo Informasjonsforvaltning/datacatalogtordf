@@ -47,15 +47,24 @@ class Catalog(Dataset):
         has_part: An item that is listed in the catalog.
         datasets: A collection of data that is listed in the catalog.
         services: A collection of sites or end-points that is listed in the catalog.
+        catalogs: Catalogs that are of interest in the context of this catalog.
     """
 
-    __slots__ = ("_homepage", "_themes", "_has_parts", "_datasets", "_services")
+    __slots__ = (
+        "_homepage",
+        "_themes",
+        "_has_parts",
+        "_datasets",
+        "_services",
+        "_catalogs",
+    )
 
     _homepage: str
     _themes: List[str]
     _has_parts: List[Resource]
     _datasets: List[Dataset]
     _services: List[DataService]
+    _catalogs: List[Catalog]
 
     def __init__(self) -> None:
         """Inits catalog object with default values."""
@@ -65,6 +74,7 @@ class Catalog(Dataset):
         self.has_parts = []
         self.datasets = []
         self.services = []
+        self.catalogs = []
 
     @property
     def homepage(self: Catalog) -> str:
@@ -111,6 +121,15 @@ class Catalog(Dataset):
     def services(self: Catalog, services: List[DataService]) -> None:
         self._services = services
 
+    @property
+    def catalogs(self: Catalog) -> List[Catalog]:
+        """Get/set for catalogs."""
+        return self._catalogs
+
+    @catalogs.setter
+    def catalogs(self: Catalog, catalogs: List[Catalog]) -> None:
+        self._catalogs = catalogs
+
     # -
     def _to_graph(self: Catalog) -> Graph:
 
@@ -123,6 +142,7 @@ class Catalog(Dataset):
         self._has_parts_to_graph()
         self._datasets_to_graph()
         self._services_to_graph()
+        self._catalogs_to_graph()
 
         return self._g
 
@@ -156,4 +176,11 @@ class Catalog(Dataset):
             for _service in self._services:
                 self._g.add(
                     (URIRef(self.identifier), DCAT.service, URIRef(_service.identifier))
+                )
+
+    def _catalogs_to_graph(self: Catalog) -> None:
+        if getattr(self, "catalogs", None):
+            for _catalog in self._catalogs:
+                self._g.add(
+                    (URIRef(self.identifier), DCAT.catalog, URIRef(_catalog.identifier))
                 )
