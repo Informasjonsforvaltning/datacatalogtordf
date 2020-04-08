@@ -25,6 +25,7 @@ from typing import List
 
 from rdflib import Graph, Namespace, RDF, URIRef
 
+from .catalogrecord import CatalogRecord
 from .dataservice import DataService
 from .dataset import Dataset
 from .resource import Resource
@@ -57,6 +58,7 @@ class Catalog(Dataset):
         "_datasets",
         "_services",
         "_catalogs",
+        "_catalogrecords",
     )
 
     _homepage: str
@@ -65,6 +67,7 @@ class Catalog(Dataset):
     _datasets: List[Dataset]
     _services: List[DataService]
     _catalogs: List[Catalog]
+    _catalogrecords: List[CatalogRecord]
 
     def __init__(self) -> None:
         """Inits catalog object with default values."""
@@ -75,6 +78,7 @@ class Catalog(Dataset):
         self.datasets = []
         self.services = []
         self.catalogs = []
+        self.catalogrecords = []
 
     @property
     def homepage(self: Catalog) -> str:
@@ -130,6 +134,15 @@ class Catalog(Dataset):
     def catalogs(self: Catalog, catalogs: List[Catalog]) -> None:
         self._catalogs = catalogs
 
+    @property
+    def catalogrecords(self: Catalog) -> List[CatalogRecord]:
+        """Get/set for catalogrecords."""
+        return self._catalogrecords
+
+    @catalogrecords.setter
+    def catalogrecords(self: Catalog, catalogrecords: List[CatalogRecord]) -> None:
+        self._catalogrecords = catalogrecords
+
     # -
     def _to_graph(self: Catalog) -> Graph:
 
@@ -143,6 +156,7 @@ class Catalog(Dataset):
         self._datasets_to_graph()
         self._services_to_graph()
         self._catalogs_to_graph()
+        self._catalogrecords_to_graph()
 
         return self._g
 
@@ -183,4 +197,15 @@ class Catalog(Dataset):
             for _catalog in self._catalogs:
                 self._g.add(
                     (URIRef(self.identifier), DCAT.catalog, URIRef(_catalog.identifier))
+                )
+
+    def _catalogrecords_to_graph(self: Catalog) -> None:
+        if getattr(self, "catalogrecords", None):
+            for _catalogrecord in self._catalogrecords:
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        DCAT.record,
+                        URIRef(_catalogrecord.identifier),
+                    )
                 )

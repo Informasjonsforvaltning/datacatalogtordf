@@ -18,6 +18,7 @@ except PackageNotFoundError:  # pragma: no cover
     __version__ = "unknown"
 
 from .catalog import Catalog
+from .catalogrecord import CatalogRecord
 from .dataservice import DataService
 from .dataset import Dataset
 from .distribution import Distribution
