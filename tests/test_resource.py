@@ -95,13 +95,13 @@ def test_to_graph_should_return_title() -> None:
     assert _isomorphic
 
 
-def test_to_graph_should_return_accessRights() -> None:
-    """It returns a accessRights graph isomorphic to spec."""
-    accessRights = ["PUBLIC", "RESTRICTED", "NON-PUBLIC"]
-    for _r in accessRights:
+def test_to_graph_should_return_access_rights() -> None:
+    """It returns a access_rights graph isomorphic to spec."""
+    access_rights = ["PUBLIC", "RESTRICTED", "NON-PUBLIC"]
+    for _r in access_rights:
         resource = Dataset()
         resource.identifier = "http://example.com/datasets/1"
-        resource.accessRights = (
+        resource.access_rights = (
             f"http://publications.europa.eu/resource/authority/access-right/{_r}"
         )
 

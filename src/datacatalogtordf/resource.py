@@ -58,7 +58,7 @@ class Resource(ABC):
     # Use slots to save memory, faster access and restrict attribute creation
     __slots__ = (
         "_g",
-        "_accessRights",
+        "_access_rights",
         "_conformsTo",
         "_contactpoint",
         "_creator",
@@ -83,7 +83,7 @@ class Resource(ABC):
     )
 
     # Types
-    _accessRights: str  # 6.4.1
+    _access_rights: str  # 6.4.1
     _conformsTo: List[str]  # 6.4.2
     _contactpoint: Contact  # 6.4.3
     _creator: str  # 6.4.4
@@ -169,13 +169,13 @@ class Resource(ABC):
         self._description = description
 
     @property
-    def accessRights(self: Resource) -> str:
-        """Get/set for accessRights."""
-        return self._accessRights
+    def access_rights(self: Resource) -> str:
+        """Get/set for access_rights."""
+        return self._access_rights
 
-    @accessRights.setter
-    def accessRights(self: Resource, accessRights: str) -> None:
-        self._accessRights = URI(accessRights)
+    @access_rights.setter
+    def access_rights(self: Resource, access_rights: str) -> None:
+        self._access_rights = URI(access_rights)
 
     @property
     def conformsTo(self: Resource) -> List[str]:
@@ -375,7 +375,7 @@ class Resource(ABC):
 
         self._publisher_to_graph()
         self._title_to_graph()
-        self._accessRights_to_graph()
+        self._access_rights_to_graph()
         self._conformsTo_to_graph()
         self._description_to_graph()
         self._theme_to_graph()
@@ -414,10 +414,10 @@ class Resource(ABC):
                     )
                 )
 
-    def _accessRights_to_graph(self: Resource) -> None:
-        if getattr(self, "accessRights", None):
+    def _access_rights_to_graph(self: Resource) -> None:
+        if getattr(self, "access_rights", None):
             self._g.add(
-                (URIRef(self.identifier), DCT.accessRights, URIRef(self.accessRights))
+                (URIRef(self.identifier), DCT.accessRights, URIRef(self.access_rights))
             )
 
     def _conformsTo_to_graph(self: Resource) -> None:
