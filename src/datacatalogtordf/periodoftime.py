@@ -28,6 +28,32 @@ DCAT = Namespace("http://www.w3.org/ns/dcat#")
 XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
 
 
+class Date(str):
+    """A helper class to validate a Date.
+
+    If the string is a valid of the format "%Y-%m-%d",
+    it is valid. Otherwise not.
+
+    Raises:
+        InvalidDateError: If the str does not represent a valid date
+    """
+
+    def __init__(self, link: str) -> None:
+        """Validate a Date object."""
+        try:
+            self._is_valid_date(link)
+        except Exception as err:
+            raise InvalidDateError(link, str(err))
+
+    # -
+    def _is_valid_date(self: Date, date: str) -> None:
+        """Perform basic validation of str as date."""
+        try:
+            _ = datetime.strptime(date, "%Y-%m-%d")
+        except ValueError:
+            raise InvalidDateError(date, "String is not a valid date")
+
+
 class PeriodOfTime:
     """A class representing a dcat:PeriodOfTime.
 
@@ -36,6 +62,10 @@ class PeriodOfTime:
     Attributes:
         start_date: date signfying the start of the period
         end_date: date signfying the end of the period
+
+    Raises:
+        InvalidDateIntervalError: If the interval is "negative", i.e. \
+            start date is after the end date
     """
 
     slots = ("_identifier", "_start_date", "_end_date")
@@ -59,19 +89,14 @@ class PeriodOfTime:
 
     @start_date.setter
     def start_date(self: PeriodOfTime, start_date: str) -> None:
-        _start_date = None
-        # Try to convert start_date to date:
-        try:
-            _start_date = datetime.strptime(start_date, "%Y-%m-%d")
-            self._start_date = _start_date.strftime("%Y-%m-%d")
-        except ValueError:
-            raise InvalidDateError(start_date, "String is not a date")
+        _date = Date(start_date)
         # Check for invalid interval:
         if getattr(self, "end_date", None):
-            if _start_date > datetime.strptime(self.end_date, "%Y-%m-%d"):
+            if not self._is_valid_interval(start_date, self.end_date):
                 raise InvalidDateIntervalError(
                     start_date, self.end_date, "start_date after end_date"
                 )
+        self._start_date = _date
 
     @property
     def end_date(self: PeriodOfTime) -> str:
@@ -80,19 +105,14 @@ class PeriodOfTime:
 
     @end_date.setter
     def end_date(self: PeriodOfTime, end_date: str) -> None:
-        _end_date = None
-        # Try to convert end_date to date:
-        try:
-            _end_date = datetime.strptime(end_date, "%Y-%m-%d")
-            self._end_date = _end_date.strftime("%Y-%m-%d")
-        except ValueError:
-            raise InvalidDateError(end_date, "String is not a date")
+        _date = Date(end_date)
         # Check for invalid interval:
         if getattr(self, "start_date", None):
-            if _end_date < datetime.strptime(self.start_date, "%Y-%m-%d"):
+            if not self._is_valid_interval(self.start_date, end_date):
                 raise InvalidDateIntervalError(
-                    end_date, self.start_date, "end_date before start date"
+                    end_date, self.start_date, "start_date after end_date"
                 )
+        self._end_date = _date
 
     # -
     def to_rdf(self: PeriodOfTime, format: str = "turtle") -> str:
@@ -133,3 +153,11 @@ class PeriodOfTime:
             self._g.add(
                 (self._ref, DCAT.endDate, Literal(self.end_date, datatype=XSD.date),)
             )
+
+    # - helpers
+    def _is_valid_interval(self: PeriodOfTime, start_date: str, end_date: str) -> bool:
+        if datetime.strptime(start_date, "%Y-%m-%d") > datetime.strptime(
+            end_date, "%Y-%m-%d"
+        ):
+            return False
+        return True

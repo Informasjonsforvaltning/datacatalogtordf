@@ -75,16 +75,16 @@ def test_invalid_end_date() -> None:
 def test_invalid_interval_start_date() -> None:
     """It does raise an InvalidDateIntervalError."""
     _period_of_time = PeriodOfTime()
+    _period_of_time.start_date = "2020-04-07"
     with pytest.raises(InvalidDateIntervalError):
-        _period_of_time.start_date = "2020-04-07"
         _period_of_time.end_date = "2020-04-06"
 
 
 def test_invalid_interval_end_date() -> None:
     """It does raise an InvalidDateIntervalError."""
     _period_of_time = PeriodOfTime()
+    _period_of_time.end_date = "2020-04-06"
     with pytest.raises(InvalidDateIntervalError):
-        _period_of_time.end_date = "2020-04-06"
         _period_of_time.start_date = "2020-04-07"
 
 
