@@ -391,7 +391,6 @@ class Resource(ABC):
         self._license_to_graph()
         self._language_to_graph()
         self._resource_relation_to_graph()
-        self._license_to_graph()
         self._rights_to_graph()
         self._keyword_to_graph()
         self._qualified_relation_to_graph()
