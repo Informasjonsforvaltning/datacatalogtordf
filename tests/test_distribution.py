@@ -1,8 +1,11 @@
 """Test cases for the distribution module."""
+from decimal import Decimal
+
 from pytest import mark
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
+from datacatalogtordf import DataService
 from datacatalogtordf import Distribution
 
 
@@ -32,94 +35,413 @@ def test_to_graph_should_return_title_as_graph() -> None:
     assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_description() -> None:
     """It returns a description graph isomorphic to spec."""
-    AssertionError()
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    distribution.description = {"nb": "Beskrivelse", "en": "Description"}
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/distributions/1> a dcat:Distribution ;
+        dct:description   "Description"@en, "Beskrivelse"@nb ;
+        .
+    """
+    g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_release_date() -> None:
     """It returns a release date graph isomorphic to spec."""
-    AssertionError()
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    distribution.release_date = "2019-12-31"
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+    <http://example.com/distributions/1> a dcat:Distribution ;
+        dct:issued "2019-12-31"^^xsd:date ;
+    .
+    """
+    g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_modification_date() -> None:
     """It returns a modification date graph isomorphic to spec."""
-    AssertionError()
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    distribution.modification_date = "2019-12-31"
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+    <http://example.com/distributions/1> a dcat:Distribution ;
+        dct:modified "2019-12-31"^^xsd:date ;
+    .
+    """
+    g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_license() -> None:
     """It returns a license graph isomorphic to spec."""
-    AssertionError()
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    distribution.license = "http://example.com/licenses/1"
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/distributions/1> a dcat:Distribution ;
+        dct:license    <http://example.com/licenses/1>
+    .
+    """
+    g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_access_rights() -> None:
     """It returns a access rights graph isomorphic to spec."""
-    AssertionError()
+    access_rights = ["PUBLIC", "RESTRICTED", "NON-PUBLIC"]
+    for _r in access_rights:
+        distribution = Distribution()
+        distribution.identifier = "http://example.com/distributions/1"
+        distribution.access_rights = (
+            f"http://publications.europa.eu/distribution/authority/access-right/{_r}"
+        )
+
+        src = (
+            "@prefix dct: <http://purl.org/dc/terms/> ."
+            "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ."
+            "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> ."
+            "@prefix dcat: <http://www.w3.org/ns/dcat#> .\n"
+            "<http://example.com/distributions/1> a dcat:Distribution ;"
+            "\tdct:accessRights\t"
+            "<http://publications.europa.eu/distribution/authority/access-right/"
+            f"{_r}> ."
+        )
+        g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+        g2 = Graph().parse(data=src, format="turtle")
+
+        _isomorphic = isomorphic(g1, g2)
+        if not _isomorphic:
+            _dump_diff(g1, g2)
+            pass
+        assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_rights() -> None:
     """It returns a rights graph isomorphic to spec."""
-    AssertionError()
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    distribution.rights = "http://example.com/rights/1"
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/distributions/1> a dcat:Distribution ;
+        dct:rights   <http://example.com/rights/1> ;
+        .
+    """
+    g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_has_policy() -> None:
     """It returns a has_policy graph isomorphic to spec."""
-    AssertionError()
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    distribution.has_policy = "http://example.com/policies/1"
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix odrl: <http://www.w3.org/ns/odrl/2/> .
+
+    <http://example.com/distributions/1> a dcat:Distribution ;
+        odrl:hasPolicy   <http://example.com/policies/1> ;
+        .
+    """
+    g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_access_URL() -> None:
     """It returns a access URL graph isomorphic to spec."""
-    AssertionError()
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    distribution.access_URL = "http://example.com/someendpoint"
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/distributions/1> a dcat:Distribution ;
+        dcat:accessURL  <http://example.com/someendpoint> ;
+        .
+    """
+    g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_access_service() -> None:
     """It returns a access service graph isomorphic to spec."""
-    AssertionError()
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    service = DataService()
+    service.identifier = "http://example.com/dataservices/1"
+    distribution.access_service = service
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/distributions/1> a dcat:Distribution ;
+        dcat:accessService  <http://example.com/dataservices/1> ;
+        .
+    """
+    g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_download_URL() -> None:
     """It returns a download URL graph isomorphic to spec."""
-    AssertionError()
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    distribution.download_URL = "http://example.com/download"
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/distributions/1> a dcat:Distribution ;
+        dcat:downloadURL  <http://example.com/download> ;
+        .
+    """
+    g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_byte_size() -> None:
     """It returns a byte size graph isomorphic to spec."""
-    AssertionError()
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    # byte_size is an xsd:decimal:
+    distribution.byte_size = Decimal(5120.0)
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+    <http://example.com/distributions/1> a dcat:Distribution ;
+        dcat:byteSize  "5120.0"^^xsd:decimal ;
+    .
+    """
+    g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_spatial_resolution() -> None:
     """It returns a spatial resolution graph isomorphic to spec."""
-    AssertionError()
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    # spatial resolution is an xsd:decimal:
+    distribution.spatial_resolution = Decimal(30.0)
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+    <http://example.com/distributions/1> a dcat:Distribution ;
+        dcat:spatialResolutionInMeters  "30.0"^^xsd:decimal
+    .
+    """
+    g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_temporal_resolution() -> None:
     """It returns a temporal resolution graph isomorphic to spec."""
-    AssertionError()
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    distribution.temporal_resolution = "PT15M"
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+    <http://example.com/distributions/1> a dcat:Distribution ;
+            dcat:temporalResolution "PT15M"^^xsd:duration ;
+    .
+    """
+    g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_conforms_to() -> None:
     """It returns a conforms to graph isomorphic to spec."""
-    AssertionError()
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    distribution.conforms_to.append("http://example.com/standards/1")
+    distribution.conforms_to.append("http://example.com/standards/2")
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/distributions/1> a dcat:Distribution ;
+        dct:conformsTo   <http://example.com/standards/1> ,
+                         <http://example.com/standards/2> ;
+        .
+    """
+    g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_media_type() -> None:
     """It returns a media type graph isomorphic to spec."""
-    AssertionError()
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    distribution.media_types.append(
+        "https://www.iana.org/assignments/media-types/application/ld+json"
+    )
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/distributions/1> a dcat:Distribution ;
+        dcat:mediaType \
+        <https://www.iana.org/assignments/media-types/application/ld+json> ;
+        .
+    """
+    g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
 @mark.xfail(strict=False, reason="Not implemented")
