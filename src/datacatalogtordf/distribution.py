@@ -20,6 +20,7 @@ from decimal import Decimal
 from typing import List, TYPE_CHECKING
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
+from rdflib.namespace import DCTERMS
 
 from .periodoftime import Date
 from .uri import URI
@@ -62,6 +63,9 @@ class Distribution:
         "_temporal_resolution",
         "_conforms_to",
         "_media_types",
+        "_formats",
+        "_compression_format",
+        "_package_format",
     )
 
     _identifier: str
@@ -81,11 +85,15 @@ class Distribution:
     _temporal_resolution: str
     _conforms_to: List[str]
     _media_types: List[str]
+    _formats: List[str]
+    _compression_format: str
+    _package_format: str
 
     def __init__(self) -> None:
         """Inits an object with default values."""
         self.conforms_to = []
         self.media_types = []
+        self.formats = []
         # set up graph and namespaces:
         self._g = Graph()
         self._g.bind("dct", DCT)
@@ -245,6 +253,33 @@ class Distribution:
     def media_types(self: Distribution, media_types: List[str]) -> None:
         self._media_types = media_types
 
+    @property
+    def formats(self: Distribution) -> List[str]:
+        """Get/set for formats."""
+        return self._formats
+
+    @formats.setter
+    def formats(self: Distribution, formats: List[str]) -> None:
+        self._formats = formats
+
+    @property
+    def compression_format(self: Distribution) -> str:
+        """Get/set for compression_format."""
+        return self._compression_format
+
+    @compression_format.setter
+    def compression_format(self: Distribution, compression_format: str) -> None:
+        self._compression_format = URI(compression_format)
+
+    @property
+    def package_format(self: Distribution) -> str:
+        """Get/set for package_format."""
+        return self._package_format
+
+    @package_format.setter
+    def package_format(self: Distribution, package_format: str) -> None:
+        self._package_format = URI(package_format)
+
     # -
     def to_rdf(self: Distribution, format: str = "turtle") -> str:
         """Maps the distribution to rdf.
@@ -278,6 +313,9 @@ class Distribution:
         self._temporal_resolution_to_graph()
         self._conforms_to_to_graph()
         self._media_types_to_graph()
+        self._formats_to_graph()
+        self._compression_format_to_graph()
+        self._package_format_to_graph()
 
         return self._g
 
@@ -408,3 +446,36 @@ class Distribution:
                 self._g.add(
                     (URIRef(self.identifier), DCAT.mediaType, URIRef(_media_type),)
                 )
+
+    def _formats_to_graph(self: Distribution) -> None:
+        if getattr(self, "formats", None):
+            for _format in self.formats:
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        DCTERMS[
+                            "format"
+                        ],  # https://github.com/RDFLib/rdflib/issues/932
+                        URIRef(_format),
+                    )
+                )
+
+    def _compression_format_to_graph(self: Distribution) -> None:
+        if getattr(self, "compression_format", None):
+            self._g.add(
+                (
+                    URIRef(self.identifier),
+                    DCAT.compressFormat,
+                    URIRef(self._compression_format),
+                )
+            )
+
+    def _package_format_to_graph(self: Distribution) -> None:
+        if getattr(self, "package_format", None):
+            self._g.add(
+                (
+                    URIRef(self.identifier),
+                    DCAT.packageFormat,
+                    URIRef(self._package_format),
+                )
+            )

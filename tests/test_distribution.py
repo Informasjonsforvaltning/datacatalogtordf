@@ -1,7 +1,6 @@
 """Test cases for the distribution module."""
 from decimal import Decimal
 
-from pytest import mark
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
@@ -444,22 +443,90 @@ def test_to_graph_should_return_media_type() -> None:
     assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_format() -> None:
     """It returns a format graph isomorphic to spec."""
-    AssertionError()
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    distribution.formats.append(
+        "https://www.iana.org/assignments/media-types/application/pdf"
+    )
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/distributions/1> a dcat:Distribution ;
+        dct:format <https://www.iana.org/assignments/media-types/application/pdf> ;
+        .
+    """
+    g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_compression_format() -> None:
     """It returns a compression format graph isomorphic to spec."""
-    AssertionError()
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    distribution.compression_format = (
+        "http://www.iana.org/assignments/media-types/application/gzip"
+    )
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/distributions/1> a dcat:Distribution ;
+        dcat:compressFormat \
+            <http://www.iana.org/assignments/media-types/application/gzip>
+        .
+    """
+    g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
-@mark.xfail(strict=False, reason="Not implemented")
 def test_to_graph_should_return_packaging_format() -> None:
     """It returns a packaging format graph isomorphic to spec."""
-    AssertionError()
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    distribution.package_format = (
+        "http://publications.europa.eu/resource/authority/file-type/TAR"
+    )
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/distributions/1> a dcat:Distribution ;
+        dcat:packageFormat \
+            <http://publications.europa.eu/resource/authority/file-type/TAR>
+        .
+    """
+    g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
 # ---------------------------------------------------------------------- #

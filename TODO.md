@@ -2,7 +2,7 @@
  - [x] Add support for all resource properties
  - [x] Add support for all dataset properties
  - [x] Add support for all catalog properties
- - [ ] Add support for all distribution properties
+ - [x] Add support for all distribution properties
  - [x] Add support for all dataservice properties
  - [ ] Consider validating temporal_resolution
  - [ ] Check that multiplicities are in accordance with DCAT-AP-NO
