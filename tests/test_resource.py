@@ -6,7 +6,6 @@ from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
 from datacatalogtordf import Dataset, Relationship, Resource
-from datacatalogtordf.resource import InvalidDateError
 
 """
 A test class for testing the _abstract_ class Resource.
@@ -538,22 +537,6 @@ def test_to_graph_should_return_release_date() -> None:
         _dump_diff(g1, g2)
         pass
     assert _isomorphic
-
-
-def test_to_graph_should_not_return_release_date() -> None:
-    """It should fail with invalid date."""
-    with pytest.raises(InvalidDateError):
-        resource = Dataset()
-        resource.identifier = "http://example.com/datasets/1"
-        resource.release_date = "2020-03-33"
-
-
-def test_to_graph_should_not_return_modification_date() -> None:
-    """It should fail with invalid date."""
-    with pytest.raises(InvalidDateError):
-        resource = Dataset()
-        resource.identifier = "http://example.com/datasets/1"
-        resource.modification_date = "2020-03-33"
 
 
 def test_to_graph_should_return_theme() -> None:

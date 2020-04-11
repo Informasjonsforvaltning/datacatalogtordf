@@ -9,4 +9,4 @@
  - [x] Add support for catalog record properties
  - [x] Ensure that Errors are imported from exceptions module
  - [x] Refactor validation of date and interval into one function in periodoftime module
- - [ ] Use validation of date and interval from periodoftime module
+ - [x] Use validation of date and interval from periodoftime module

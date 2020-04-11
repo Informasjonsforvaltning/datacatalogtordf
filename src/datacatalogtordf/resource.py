@@ -9,13 +9,12 @@ Refer to sub-class for typical usage examples.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from datetime import datetime
 from typing import List, TYPE_CHECKING
 
 from concepttordf import Contact
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 
-from .exceptions import InvalidDateError
+from .periodoftime import Date
 from .uri import URI
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -223,12 +222,7 @@ class Resource(ABC):
 
     @release_date.setter
     def release_date(self: Resource, release_date: str) -> None:
-        # Try to convert release_date to date:
-        try:
-            _date = datetime.strptime(release_date, "%Y-%m-%d")
-            self._release_date = _date.strftime("%Y-%m-%d")
-        except ValueError:
-            raise InvalidDateError(release_date, "String is not a date")
+        self._release_date = Date(release_date)
 
     @property
     def modification_date(self: Resource) -> str:
@@ -237,12 +231,7 @@ class Resource(ABC):
 
     @modification_date.setter
     def modification_date(self: Resource, modification_date: str) -> None:
-        # Try to convert release_date to date:
-        try:
-            _date = datetime.strptime(modification_date, "%Y-%m-%d")
-            self._modification_date = _date.strftime("%Y-%m-%d")
-        except Exception:
-            raise InvalidDateError(modification_date, "String is not a date")
+        self._modification_date = Date(modification_date)
 
     @property
     def type_genre(self: Resource) -> str:
