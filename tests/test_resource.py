@@ -657,6 +657,24 @@ def test_to_graph_should_return_qualifiedAttribution() -> None:
     assert _isomorphic
 
 
+def test_serialization_formats_that_should_work() -> None:
+    """It returns no exception."""
+    dataset = Dataset()
+    dataset.identifier = "http://example.com/datasets/1"
+    TURTLE = "text/turtle"
+    XML = "application/rdf+xml"
+    JSONLD = "application/ld+json"
+    NT = "application/n-triples"
+    N3 = "text/n3"
+
+    _g = Graph()
+    _g.parse(data=dataset.to_rdf(format=TURTLE), format=TURTLE)
+    _g.parse(data=dataset.to_rdf(format=XML), format=XML)
+    _g.parse(data=dataset.to_rdf(format=JSONLD), format=JSONLD)
+    _g.parse(data=dataset.to_rdf(format=NT), format=NT)
+    _g.parse(data=dataset.to_rdf(format=N3), format=N3)
+
+
 # ---------------------------------------------------------------------- #
 # Utils for displaying debug information
 
