@@ -15,6 +15,7 @@ from typing import List, TYPE_CHECKING
 from concepttordf import Contact
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 
+from .exceptions import InvalidDateError
 from .uri import URI
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -26,22 +27,6 @@ DCAT = Namespace("http://www.w3.org/ns/dcat#")
 ODRL = Namespace("http://www.w3.org/ns/odrl/2/")
 XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
 PROV = Namespace("http://www.w3.org/ns/prov#")
-
-
-class InvalidDateError(Exception):
-    """Exception raised for errors in the input.
-
-    Attributes:
-        str -- input str in which the error occurred
-        message -- explanation of the error
-    """
-
-    __slots__ = ()
-
-    def __init__(self, string: str, message: str) -> None:
-        """Inits the exception."""
-        self.str = str
-        self.message = message
 
 
 class Resource(ABC):

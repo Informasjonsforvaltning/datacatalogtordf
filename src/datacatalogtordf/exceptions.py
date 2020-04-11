@@ -45,3 +45,19 @@ class InvalidDateIntervalError(Error):
         self.start_date = start_date
         self.end_date = end_date
         self.message = msg
+
+
+class InvalidURIError(Error):
+    """Exception raised for errors in the input.
+
+    Attributes:
+        str -- input str in which the error occurred
+        message -- explanation of the error
+    """
+
+    __slots__ = ()
+
+    def __init__(self, string: str, message: str) -> None:
+        """Inits the exception."""
+        self.str = str
+        self.message = message

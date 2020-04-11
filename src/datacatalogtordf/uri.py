@@ -3,21 +3,7 @@ from __future__ import annotations
 
 from rdflib import Graph, Literal, RDF, URIRef
 
-
-class InvalidURIError(Exception):
-    """Exception raised for errors in the input.
-
-    Attributes:
-        str -- input str in which the error occurred
-        message -- explanation of the error
-    """
-
-    __slots__ = ()
-
-    def __init__(self, string: str, message: str) -> None:
-        """Inits the exception."""
-        self.str = str
-        self.message = message
+from .exceptions import InvalidURIError
 
 
 class URI(str):

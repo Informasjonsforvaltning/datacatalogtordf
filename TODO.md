@@ -7,6 +7,6 @@
  - [ ] Consider validating temporal_resolution
  - [ ] Check that multiplicities are in accordance with DCAT-AP-NO
  - [x] Add support for catalog record properties
- - [ ] Ensure that Errors are imported from exceptions module
+ - [x] Ensure that Errors are imported from exceptions module
  - [x] Refactor validation of date and interval into one function in periodoftime module
  - [ ] Use validation of date and interval from periodoftime module
