@@ -61,13 +61,13 @@ class Dataset(Resource):
     )
 
     # Types
-    _distributions: List
-    _frequency: str
+    _distributions: List[Distribution]
+    _frequency: URI
     _spatial_coverage: Location
     _spatial_resolution: Decimal
     _period_of_time: PeriodOfTime
     _temporal_resolution: str
-    _was_generated_by: str
+    _was_generated_by: URI
     _access_rights_comments: List[str]
 
     def __init__(self) -> None:

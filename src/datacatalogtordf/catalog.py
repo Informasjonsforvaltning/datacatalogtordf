@@ -61,7 +61,7 @@ class Catalog(Dataset):
         "_catalogrecords",
     )
 
-    _homepage: str
+    _homepage: URI
     _themes: List[str]
     _has_parts: List[Resource]
     _datasets: List[Dataset]

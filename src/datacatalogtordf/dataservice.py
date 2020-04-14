@@ -22,6 +22,7 @@ from rdflib import Graph, Namespace, RDF, URIRef
 
 from .dataset import Dataset
 from .resource import Resource
+from .uri import URI
 
 DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
@@ -39,8 +40,8 @@ class DataService(Resource):
         the end-points, including their operations, parameters etc.
     """
 
-    _endpointURL: str
-    _endpointDescription: str
+    _endpointURL: URI
+    _endpointDescription: URI
     _servesdatasets: List
 
     def __init__(self) -> None:
@@ -56,7 +57,7 @@ class DataService(Resource):
 
     @endpointURL.setter
     def endpointURL(self: DataService, endpointURL: str) -> None:
-        self._endpointURL = endpointURL
+        self._endpointURL = URI(endpointURL)
 
     @property
     def endpointDescription(self: DataService) -> str:
@@ -65,7 +66,7 @@ class DataService(Resource):
 
     @endpointDescription.setter
     def endpointDescription(self: DataService, endpointDescription: str) -> None:
-        self._endpointDescription = endpointDescription
+        self._endpointDescription = URI(endpointDescription)
 
     @property
     def servesdatasets(self: DataService) -> List[Dataset]:

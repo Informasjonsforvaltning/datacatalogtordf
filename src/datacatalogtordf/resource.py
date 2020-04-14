@@ -67,27 +67,27 @@ class Resource(ABC):
     )
 
     # Types
-    _access_rights: str  # 6.4.1
+    _access_rights: URI  # 6.4.1
     _conformsTo: List[str]  # 6.4.2
     _contactpoint: Contact  # 6.4.3
-    _creator: str  # 6.4.4
+    _creator: URI  # 6.4.4
     _description: dict  # 6.4.5
     _title: dict  # 6.4.6
-    _release_date: str  # 6.4.7
-    _modification_date: str  # 6.4.8
+    _release_date: Date  # 6.4.7
+    _modification_date: Date  # 6.4.8
     _language: List[str]  # 6.4.9
-    _publisher: str  # 6.4.10
-    _identifier: str  # 6.4.11
+    _publisher: URI  # 6.4.10
+    _identifier: URI  # 6.4.11
     _theme: List[str]  # 6.4.12
-    _type_genre: str  # 6.4.13
+    _type_genre: URI  # 6.4.13
     _resource_relation: List[str]  # 6.4.14
     _qualified_relation: List[Relationship]  # 6.4.15
     _keyword: dict  # 6.4.16
     _landing_page: List[str]  # 6.4.17
     _qualified_attributions: List[dict]  # 6.4.18
-    _license: str  # 6.4.19
-    _rights: str  # 6.4.20
-    _has_policy: str  # 6.4.21
+    _license: URI  # 6.4.19
+    _rights: URI  # 6.4.20
+    _has_policy: URI  # 6.4.21
     _is_referenced_by: List[Resource]  # 6.4.22
 
     @abstractmethod
@@ -140,11 +140,7 @@ class Resource(ABC):
 
     @property
     def description(self: Resource) -> dict:
-        """Description attribute.
-
-        Returns:
-            the description as dictionary
-        """
+        """Description attribute."""
         return self._description
 
     @description.setter

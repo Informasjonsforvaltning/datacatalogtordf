@@ -42,9 +42,9 @@ class Relationship:
 
     slots = ("_identifier", "_relation", "_had_role", "_ref")
 
-    _identifier: str
+    _identifier: URI
     _relation: Resource
-    _had_role: str
+    _had_role: URI
     _ref: URIRef
 
     def __init__(self) -> None:

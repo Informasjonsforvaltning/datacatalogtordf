@@ -68,26 +68,26 @@ class Distribution:
         "_package_format",
     )
 
-    _identifier: str
+    _identifier: URI
     _title: dict
     _description: dict
-    _release_date: str
-    _modification_date: str
-    _license: str
-    _access_rights: str
-    _rights: str
-    _has_policy: str
-    _access_URL: str
+    _release_date: Date
+    _modification_date: Date
+    _license: URI
+    _access_rights: URI
+    _rights: URI
+    _has_policy: URI
+    _access_URL: URI
     _access_service: DataService
-    _download_URL: str
+    _download_URL: URI
     _byte_size: Decimal
     _spatial_resolution: Decimal
     _temporal_resolution: str
     _conforms_to: List[str]
     _media_types: List[str]
     _formats: List[str]
-    _compression_format: str
-    _package_format: str
+    _compression_format: URI
+    _package_format: URI
 
     def __init__(self) -> None:
         """Inits an object with default values."""

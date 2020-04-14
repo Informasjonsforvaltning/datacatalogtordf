@@ -56,11 +56,11 @@ class CatalogRecord:
         "_conforms_to",
     )
 
-    _identifier: str
+    _identifier: URI
     _title: dict
     _description: dict
-    _listing_date: str
-    _modification_date: str
+    _listing_date: Date
+    _modification_date: Date
     _primary_topic: Resource
     _conforms_to: List[str]
 
