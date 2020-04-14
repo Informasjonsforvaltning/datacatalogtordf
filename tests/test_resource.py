@@ -5,7 +5,7 @@ import pytest
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
-from datacatalogtordf import Dataset, Date, Relationship, Resource, URI
+from datacatalogtordf import Dataset, Relationship, Resource
 
 """
 A test class for testing the _abstract_ class Resource.
@@ -22,7 +22,7 @@ def test_instantiate_resource_should_fail_with_TypeError() -> None:
 def test_to_graph_should_return_identifier() -> None:
     """It returns an identifier graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
+    resource.identifier = "http://example.com/datasets/1"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -45,8 +45,8 @@ def test_to_graph_should_return_identifier() -> None:
 def test_to_graph_should_return_publisher() -> None:
     """It returns a publisher graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
-    resource.publisher = URI("http://example.com/publisher/1")
+    resource.identifier = "http://example.com/datasets/1"
+    resource.publisher = "http://example.com/publisher/1"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -71,7 +71,7 @@ def test_to_graph_should_return_publisher() -> None:
 def test_to_graph_should_return_title() -> None:
     """It returns a title graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
+    resource.identifier = "http://example.com/datasets/1"
     resource.title = {"nb": "Tittel 1", "en": "Title 1"}
 
     src = """
@@ -99,8 +99,8 @@ def test_to_graph_should_return_access_rights() -> None:
     access_rights = ["PUBLIC", "RESTRICTED", "NON-PUBLIC"]
     for _r in access_rights:
         resource = Dataset()
-        resource.identifier = URI("http://example.com/datasets/1")
-        resource.access_rights = URI(
+        resource.identifier = "http://example.com/datasets/1"
+        resource.access_rights = (
             f"http://publications.europa.eu/resource/authority/access-right/{_r}"
         )
 
@@ -127,9 +127,9 @@ def test_to_graph_should_return_access_rights() -> None:
 def test_to_graph_should_return_conformsTo() -> None:
     """It returns a conformsTo graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
-    resource.conformsTo.append(URI("http://example.com/standards/1"))
-    resource.conformsTo.append(URI("http://example.com/standards/2"))
+    resource.identifier = "http://example.com/datasets/1"
+    resource.conformsTo.append("http://example.com/standards/1")
+    resource.conformsTo.append("http://example.com/standards/2")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -155,7 +155,7 @@ def test_to_graph_should_return_conformsTo() -> None:
 def test_to_graph_should_return_contactpoint() -> None:
     """It returns a contactpoint graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
+    resource.identifier = "http://example.com/datasets/1"
     # Create contact:
     contact = Contact()
     contact.name = {
@@ -199,8 +199,8 @@ def test_to_graph_should_return_contactpoint() -> None:
 def test_to_graph_should_return_creator() -> None:
     """It returns a creator graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
-    resource.creator = URI("http://example.com/creator/1")
+    resource.identifier = "http://example.com/datasets/1"
+    resource.creator = "http://example.com/creator/1"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -225,7 +225,7 @@ def test_to_graph_should_return_creator() -> None:
 def test_to_graph_should_return_description() -> None:
     """It returns a description graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
+    resource.identifier = "http://example.com/datasets/1"
     resource.description = {"nb": "Beskrivelse", "en": "Description"}
 
     src = """
@@ -251,8 +251,8 @@ def test_to_graph_should_return_description() -> None:
 def test_to_graph_should_return_hasPolicy() -> None:
     """It returns a hasPolicy graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
-    resource.has_policy = URI("http://example.com/policies/1")
+    resource.identifier = "http://example.com/datasets/1"
+    resource.has_policy = "http://example.com/policies/1"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -278,12 +278,12 @@ def test_to_graph_should_return_hasPolicy() -> None:
 def test_to_graph_should_return_is_Referenced_By() -> None:
     """It returns an isReferencedBy isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
+    resource.identifier = "http://example.com/datasets/1"
     other = Dataset()
-    other.identifier = URI("http://example.com/datasets/1")
+    other.identifier = "http://example.com/datasets/1"
     resource.is_referenced_by.append(other)
     another = Dataset()
-    another.identifier = URI("http://example.com/datasets/2")
+    another.identifier = "http://example.com/datasets/2"
     resource.is_referenced_by.append(another)
 
     src = """
@@ -310,7 +310,7 @@ def test_to_graph_should_return_is_Referenced_By() -> None:
 def test_to_graph_should_return_keyword() -> None:
     """It returns a keyword graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
+    resource.identifier = "http://example.com/datasets/1"
     _keyword = {}
     _keyword["nb"] = "Etnøkkelord"
     _keyword["nn"] = "Eitnøkkelord"
@@ -340,9 +340,9 @@ def test_to_graph_should_return_keyword() -> None:
 def test_to_graph_should_return_landingPage() -> None:
     """It returns a landingPage graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
-    resource.landing_page.append(URI("http://example.com/landingpages/1"))
-    resource.landing_page.append(URI("http://example.com/landingpages/2"))
+    resource.identifier = "http://example.com/datasets/1"
+    resource.landing_page.append("http://example.com/landingpages/1")
+    resource.landing_page.append("http://example.com/landingpages/2")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -368,8 +368,8 @@ def test_to_graph_should_return_landingPage() -> None:
 def test_to_graph_should_return_license() -> None:
     """It returns a license graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
-    resource.license = URI("http://example.com/licenses/1")
+    resource.identifier = "http://example.com/datasets/1"
+    resource.license = "http://example.com/licenses/1"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -394,9 +394,9 @@ def test_to_graph_should_return_license() -> None:
 def test_to_graph_should_return_language() -> None:
     """It returns a language graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
-    resource.language.append(URI("http://id.loc.gov/vocabulary/iso639-1/en"))
-    resource.language.append(URI("http://id.loc.gov/vocabulary/iso639-1/nb"))
+    resource.identifier = "http://example.com/datasets/1"
+    resource.language.append("http://id.loc.gov/vocabulary/iso639-1/en")
+    resource.language.append("http://id.loc.gov/vocabulary/iso639-1/nb")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -422,9 +422,9 @@ def test_to_graph_should_return_language() -> None:
 def test_to_graph_should_return_relation() -> None:
     """It returns a relation graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
-    resource.resource_relation.append(URI("http://example/resources/1"))
-    resource.resource_relation.append(URI("http://example/resources/2"))
+    resource.identifier = "http://example.com/datasets/1"
+    resource.resource_relation.append("http://example/resources/1")
+    resource.resource_relation.append("http://example/resources/2")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -450,8 +450,8 @@ def test_to_graph_should_return_relation() -> None:
 def test_to_graph_should_return_rights() -> None:
     """It returns a rights graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
-    resource.rights = URI("http://example.com/rights/1")
+    resource.identifier = "http://example.com/datasets/1"
+    resource.rights = "http://example.com/rights/1"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -477,15 +477,15 @@ def test_to_graph_should_return_qualifiedRelation() -> None:
     """It returns a qualifiedRelation graph isomorphic to spec."""
     # Create the dataset to be related to:
     _dataset = Dataset()
-    _dataset.identifier = URI("http://example.org/Original987")
+    _dataset.identifier = "http://example.org/Original987"
     # Create the relationship:
     _relationship = Relationship()
     # _relationship.identifier = "http://example.com/relationships/1"
     _relationship.relation = _dataset
-    _relationship.had_role = URI("http://www.iana.org/assignments/relation/original")
+    _relationship.had_role = "http://www.iana.org/assignments/relation/original"
     # Add relationship to resource (dataset):
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
+    resource.identifier = "http://example.com/datasets/1"
     resource.qualified_relation.append(_relationship)
 
     src = """
@@ -515,8 +515,8 @@ def test_to_graph_should_return_qualifiedRelation() -> None:
 def test_to_graph_should_return_release_date() -> None:
     """It returns a issued graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
-    resource.release_date = Date("2020-03-24")
+    resource.identifier = "http://example.com/datasets/1"
+    resource.release_date = "2020-03-24"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -542,9 +542,9 @@ def test_to_graph_should_return_release_date() -> None:
 def test_to_graph_should_return_theme() -> None:
     """It returns a theme graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
-    resource.theme.append(URI("http://example.com/themes/1"))
-    resource.theme.append(URI("http://example.com/themes/2"))
+    resource.identifier = "http://example.com/datasets/1"
+    resource.theme.append("http://example.com/themes/1")
+    resource.theme.append("http://example.com/themes/2")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -570,8 +570,8 @@ def test_to_graph_should_return_theme() -> None:
 def test_to_graph_should_return_type() -> None:
     """It returns a type graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
-    resource.type_genre = URI("http://example.com/concepts/1")
+    resource.identifier = "http://example.com/datasets/1"
+    resource.type_genre = "http://example.com/concepts/1"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -596,8 +596,8 @@ def test_to_graph_should_return_type() -> None:
 def test_to_graph_should_return_modification_date() -> None:
     """It returns a modified graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
-    resource.modification_date = Date("2020-03-24")
+    resource.identifier = "http://example.com/datasets/1"
+    resource.modification_date = "2020-03-24"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -623,12 +623,12 @@ def test_to_graph_should_return_modification_date() -> None:
 def test_to_graph_should_return_qualifiedAttribution() -> None:
     """It returns a qualifiedAttribution graph isomorphic to spec."""
     resource = Dataset()
-    resource.identifier = URI("http://example.com/datasets/1")
+    resource.identifier = "http://example.com/datasets/1"
     qualified_attribution = {}
-    qualified_attribution["agent"] = URI("http://example.com/agents/1")
-    qualified_attribution["hadrole"] = URI(
-        "http://registry.it.csiro.au/def/isotc211/CI_RoleCode/distributor"
-    )
+    qualified_attribution["agent"] = "http://example.com/agents/1"
+    qualified_attribution[
+        "hadrole"
+    ] = "http://registry.it.csiro.au/def/isotc211/CI_RoleCode/distributor"
     resource.qualified_attributions.append(qualified_attribution)
 
     src = """
@@ -660,7 +660,7 @@ def test_to_graph_should_return_qualifiedAttribution() -> None:
 def test_serialization_formats_that_should_work() -> None:
     """It returns no exception."""
     dataset = Dataset()
-    dataset.identifier = URI("http://example.com/datasets/1")
+    dataset.identifier = "http://example.com/datasets/1"
     TURTLE = "text/turtle"
     XML = "application/rdf+xml"
     JSONLD = "application/ld+json"
@@ -671,7 +671,7 @@ def test_serialization_formats_that_should_work() -> None:
     _g.parse(data=dataset.to_rdf(format=TURTLE), format=TURTLE)
     _g.parse(data=dataset.to_rdf(format=XML), format=XML)
     _g.parse(data=dataset.to_rdf(format=JSONLD), format=JSONLD)
-    _g.parse(data=dataset.to_rdf(format=NT, encoding=None), format=NT)
+    _g.parse(data=dataset.to_rdf(format=NT), format=NT)
     _g.parse(data=dataset.to_rdf(format=N3), format=N3)
 
 

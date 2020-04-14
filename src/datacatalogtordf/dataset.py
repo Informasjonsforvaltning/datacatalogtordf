@@ -61,14 +61,14 @@ class Dataset(Resource):
     )
 
     # Types
-    _distributions: List[Distribution]
-    _frequency: URI
+    _distributions: List
+    _frequency: str
     _spatial_coverage: Location
     _spatial_resolution: Decimal
     _period_of_time: PeriodOfTime
     _temporal_resolution: str
-    _was_generated_by: URI
-    _access_rights_comments: List[URI]
+    _was_generated_by: str
+    _access_rights_comments: List[str]
 
     def __init__(self) -> None:
         """Inits an object with default values."""
@@ -88,13 +88,13 @@ class Dataset(Resource):
         self._distributions = distributions
 
     @property
-    def frequency(self: Dataset) -> URI:
+    def frequency(self: Dataset) -> str:
         """Get/set for frequency."""
         return self._frequency
 
     @frequency.setter
-    def frequency(self: Dataset, frequency: URI) -> None:
-        self._frequency = frequency
+    def frequency(self: Dataset, frequency: str) -> None:
+        self._frequency = URI(frequency)
 
     @property
     def spatial_coverage(self: Dataset) -> Location:
@@ -133,22 +133,22 @@ class Dataset(Resource):
         self._temporal_resolution = temporal_resolution
 
     @property
-    def was_generated_by(self: Dataset) -> URI:
+    def was_generated_by(self: Dataset) -> str:
         """Get/set for was_generated_by."""
         return self._was_generated_by
 
     @was_generated_by.setter
-    def was_generated_by(self: Dataset, was_generated_by: URI) -> None:
-        self._was_generated_by = was_generated_by
+    def was_generated_by(self: Dataset, was_generated_by: str) -> None:
+        self._was_generated_by = URI(was_generated_by)
 
     @property
-    def access_rights_comments(self: Dataset) -> List[URI]:
+    def access_rights_comments(self: Dataset) -> List[str]:
         """Get/set for access_rights_comments."""
         return self._access_rights_comments
 
     @access_rights_comments.setter
     def access_rights_comments(
-        self: Dataset, access_rights_comments: List[URI]
+        self: Dataset, access_rights_comments: List[str]
     ) -> None:
         self._access_rights_comments = access_rights_comments
 

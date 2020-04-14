@@ -2,14 +2,14 @@
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
-from datacatalogtordf import DataService, Dataset, URI
+from datacatalogtordf import DataService, Dataset
 
 
 def test_to_graph_should_return_endpointURL_as_graph() -> None:
     """It returns a endpointURL graph isomorphic to spec."""
     dataService = DataService()
-    dataService.identifier = URI("http://example.com/dataservices/1")
-    dataService.endpointURL.append(URI("http://example.com/endpoints/1"))
+    dataService.identifier = "http://example.com/dataservices/1"
+    dataService.endpointURL = "http://example.com/endpoints/1"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -34,10 +34,8 @@ def test_to_graph_should_return_endpointURL_as_graph() -> None:
 def test_to_graph_should_return_endpointDescription_as_graph() -> None:
     """It returns a endpointDescription graph isomorphic to spec."""
     dataService = DataService()
-    dataService.identifier = URI("http://example.com/dataservices/1")
-    dataService.endpointDescription.append(
-        URI("http://example.com/endpointdescription/1")
-    )
+    dataService.identifier = "http://example.com/dataservices/1"
+    dataService.endpointDescription = "http://example.com/endpointdescription/1"
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
     @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -61,14 +59,14 @@ def test_to_graph_should_return_endpointDescription_as_graph() -> None:
 def test_to_graph_should_return_servesDataset_as_graph() -> None:
     """It returns a servesDataset graph isomorphic to spec."""
     dataService = DataService()
-    dataService.identifier = URI("http://example.com/dataservices/1")
+    dataService.identifier = "http://example.com/dataservices/1"
 
     dataset1 = Dataset()
-    dataset1.identifier = URI("http://example.com/datasets/1")
+    dataset1.identifier = "http://example.com/datasets/1"
     dataService.servesdatasets.append(dataset1)
 
     dataset2 = Dataset()
-    dataset2.identifier = URI("http://example.com/datasets/2")
+    dataset2.identifier = "http://example.com/datasets/2"
     dataService.servesdatasets.append(dataset2)
 
     src = """

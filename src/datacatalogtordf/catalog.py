@@ -61,8 +61,8 @@ class Catalog(Dataset):
         "_catalogrecords",
     )
 
-    _homepage: URI
-    _themes: List[URI]
+    _homepage: str
+    _themes: List[str]
     _has_parts: List[Resource]
     _datasets: List[Dataset]
     _services: List[DataService]
@@ -81,21 +81,21 @@ class Catalog(Dataset):
         self.catalogrecords = []
 
     @property
-    def homepage(self: Catalog) -> URI:
+    def homepage(self: Catalog) -> str:
         """Get/set for homepage."""
         return self._homepage
 
     @homepage.setter
-    def homepage(self: Catalog, homepage: URI) -> None:
-        self._homepage = homepage
+    def homepage(self: Catalog, homepage: str) -> None:
+        self._homepage = URI(homepage)
 
     @property
-    def themes(self: Catalog) -> List[URI]:
+    def themes(self: Catalog) -> List[str]:
         """Get/set for themes."""
         return self._themes
 
     @themes.setter
-    def themes(self: Catalog, themes: List[URI]) -> None:
+    def themes(self: Catalog, themes: List[str]) -> None:
         self._themes = themes
 
     @property

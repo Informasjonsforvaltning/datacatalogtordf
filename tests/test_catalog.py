@@ -2,14 +2,14 @@
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
-from datacatalogtordf import Catalog, CatalogRecord, DataService, Dataset, URI
+from datacatalogtordf import Catalog, CatalogRecord, DataService, Dataset
 
 
 def test_to_graph_should_return_homepage() -> None:
     """It returns a homepage graph isomorphic to spec."""
     catalog = Catalog()
-    catalog.identifier = URI("http://example.com/catalogs/1")
-    catalog.homepage = URI("http://example.org/catalog")
+    catalog.identifier = "http://example.com/catalogs/1"
+    catalog.homepage = "http://example.org/catalog"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -35,8 +35,8 @@ def test_to_graph_should_return_homepage() -> None:
 def test_to_graph_should_return_themes() -> None:
     """It returns a themes graph isomorphic to spec."""
     catalog = Catalog()
-    catalog.identifier = URI("http://example.com/catalogs/1")
-    catalog.themes.append(URI("http://example.org/sometheme"))
+    catalog.identifier = "http://example.com/catalogs/1"
+    catalog.themes.append("http://example.org/sometheme")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -61,9 +61,9 @@ def test_to_graph_should_return_themes() -> None:
 def test_to_graph_should_return_has_part() -> None:
     """It returns a has part graph isomorphic to spec."""
     catalog = Catalog()
-    catalog.identifier = URI("http://example.com/catalogs/1")
+    catalog.identifier = "http://example.com/catalogs/1"
     part = Catalog()
-    part.identifier = URI("http://example.com/catalogs/2")
+    part.identifier = "http://example.com/catalogs/2"
     catalog.has_parts.append(part)
 
     src = """
@@ -89,14 +89,14 @@ def test_to_graph_should_return_has_part() -> None:
 def test_to_graph_should_return_dataset_as_graph() -> None:
     """It returns a dataset graph isomorphic to spec."""
     catalog = Catalog()
-    catalog.identifier = URI("http://example.com/catalogs/1")
+    catalog.identifier = "http://example.com/catalogs/1"
 
     dataset1 = Dataset()
-    dataset1.identifier = URI("http://example.com/datasets/1")
+    dataset1.identifier = "http://example.com/datasets/1"
     catalog.datasets.append(dataset1)
 
     dataset2 = Dataset()
-    dataset2.identifier = URI("http://example.com/datasets/2")
+    dataset2.identifier = "http://example.com/datasets/2"
     catalog.datasets.append(dataset2)
 
     src = """
@@ -124,14 +124,14 @@ def test_to_graph_should_return_service() -> None:
     """It returns a service graph isomorphic to spec."""
     """It returns a dataset graph isomorphic to spec."""
     catalog = Catalog()
-    catalog.identifier = URI("http://example.com/catalogs/1")
+    catalog.identifier = "http://example.com/catalogs/1"
 
     service1 = DataService()
-    service1.identifier = URI("http://example.com/services/1")
+    service1.identifier = "http://example.com/services/1"
     catalog.services.append(service1)
 
     service2 = DataService()
-    service2.identifier = URI("http://example.com/services/2")
+    service2.identifier = "http://example.com/services/2"
     catalog.services.append(service2)
 
     src = """
@@ -158,9 +158,9 @@ def test_to_graph_should_return_service() -> None:
 def test_to_graph_should_return_catalog() -> None:
     """It returns a catalog graph isomorphic to spec."""
     catalog = Catalog()
-    catalog.identifier = URI("http://example.com/catalogs/1")
+    catalog.identifier = "http://example.com/catalogs/1"
     another_catalog = Catalog()
-    another_catalog.identifier = URI("http://example.com/catalogs/2")
+    another_catalog.identifier = "http://example.com/catalogs/2"
     catalog.catalogs.append(another_catalog)
 
     src = """
@@ -186,9 +186,9 @@ def test_to_graph_should_return_catalog() -> None:
 def test_to_graph_should_return_catalog_record() -> None:
     """It returns a catalog record graph isomorphic to spec."""
     catalog = Catalog()
-    catalog.identifier = URI("http://example.com/catalogs/1")
+    catalog.identifier = "http://example.com/catalogs/1"
     a_catalogrecord = CatalogRecord()
-    a_catalogrecord.identifier = URI("http://example.com/catalogrecords/1")
+    a_catalogrecord.identifier = "http://example.com/catalogrecords/1"
     catalog.catalogrecords.append(a_catalogrecord)
 
     src = """

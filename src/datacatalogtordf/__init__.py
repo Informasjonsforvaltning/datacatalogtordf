@@ -24,7 +24,7 @@ from .dataset import Dataset
 from .distribution import Distribution
 from .exceptions import InvalidDateError, InvalidDateIntervalError
 from .location import Location
-from .periodoftime import Date, PeriodOfTime
+from .periodoftime import PeriodOfTime
 from .relationship import Relationship
 from .resource import Resource
 from .uri import InvalidURIError, URI
