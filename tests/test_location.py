@@ -2,13 +2,13 @@
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
-from datacatalogtordf import Location
+from datacatalogtordf import Location, URI
 
 
 def test_to_graph_should_return_geometry_as_graph() -> None:
     """It returns a title graph isomorphic to spec."""
     location = Location()
-    location.identifier = "http://example.com/locations/1"
+    location.identifier = URI("http://example.com/locations/1")
     location.geometry = """POLYGON ((
           4.8842353 52.375108 , 4.884276 52.375153 ,
           4.8842567 52.375159 , 4.883981 52.375254 ,
@@ -54,7 +54,7 @@ def test_to_graph_should_return_geometry_as_graph() -> None:
 def test_to_graph_should_return_bounding_box_as_graph() -> None:
     """It returns a bounding box graph isomorphic to spec."""
     location = Location()
-    location.identifier = "http://example.com/locations/1"
+    location.identifier = URI("http://example.com/locations/1")
     location.bounding_box = """POLYGON ((
                 3.053 47.975 , 7.24  47.975 ,
                 7.24  53.504 , 3.053 53.504 ,
@@ -90,7 +90,7 @@ def test_to_graph_should_return_bounding_box_as_graph() -> None:
 def test_to_graph_should_return_centroid_as_graph() -> None:
     """It returns a centroid graph isomorphic to spec."""
     location = Location()
-    location.identifier = "http://example.com/locations/1"
+    location.identifier = URI("http://example.com/locations/1")
     location.centroid = "POINT(4.88412 52.37509)"
 
     src = """

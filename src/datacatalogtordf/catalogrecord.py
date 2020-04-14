@@ -56,13 +56,13 @@ class CatalogRecord:
         "_conforms_to",
     )
 
-    _identifier: str
+    _identifier: URI
     _title: dict
     _description: dict
-    _listing_date: str
-    _modification_date: str
+    _listing_date: Date
+    _modification_date: Date
     _primary_topic: Resource
-    _conforms_to: List[str]
+    _conforms_to: List[URI]
 
     def __init__(self) -> None:
         """Inits catalogrecord object with default values."""
@@ -75,13 +75,13 @@ class CatalogRecord:
         self._g.bind("foaf", FOAF)
 
     @property
-    def identifier(self: CatalogRecord) -> str:
+    def identifier(self: CatalogRecord) -> URI:
         """Get/set for identifier."""
         return self._identifier
 
     @identifier.setter
-    def identifier(self: CatalogRecord, identifier: str) -> None:
-        self._identifier = URI(identifier)
+    def identifier(self: CatalogRecord, identifier: URI) -> None:
+        self._identifier = identifier
 
     @property
     def title(self: CatalogRecord) -> dict:
@@ -102,22 +102,22 @@ class CatalogRecord:
         self._description = description
 
     @property
-    def listing_date(self: CatalogRecord) -> str:
+    def listing_date(self: CatalogRecord) -> Date:
         """Get/set for listing_date."""
         return self._listing_date
 
     @listing_date.setter
-    def listing_date(self: CatalogRecord, listing_date: str) -> None:
-        self._listing_date = Date(listing_date)
+    def listing_date(self: CatalogRecord, listing_date: Date) -> None:
+        self._listing_date = listing_date
 
     @property
-    def modification_date(self: CatalogRecord) -> str:
+    def modification_date(self: CatalogRecord) -> Date:
         """Get/set for modification_date."""
         return self._modification_date
 
     @modification_date.setter
-    def modification_date(self: CatalogRecord, modification_date: str) -> None:
-        self._modification_date = Date(modification_date)
+    def modification_date(self: CatalogRecord, modification_date: Date) -> None:
+        self._modification_date = modification_date
 
     @property
     def primary_topic(self: CatalogRecord) -> Resource:
@@ -129,12 +129,12 @@ class CatalogRecord:
         self._primary_topic = primary_topic
 
     @property
-    def conforms_to(self: CatalogRecord) -> List[str]:
+    def conforms_to(self: CatalogRecord) -> List[URI]:
         """Get/set for conforms_to."""
         return self._conforms_to
 
     @conforms_to.setter
-    def conforms_to(self: CatalogRecord, conforms_to: List[str]) -> None:
+    def conforms_to(self: CatalogRecord, conforms_to: List[URI]) -> None:
         self._conforms_to = conforms_to
 
     # -

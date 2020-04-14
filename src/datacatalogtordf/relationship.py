@@ -42,9 +42,9 @@ class Relationship:
 
     slots = ("_identifier", "_relation", "_had_role", "_ref")
 
-    _identifier: str
+    _identifier: URI
     _relation: Resource
-    _had_role: str
+    _had_role: URI
     _ref: URIRef
 
     def __init__(self) -> None:
@@ -55,22 +55,22 @@ class Relationship:
         self._g.bind("dcat", DCAT)
 
     @property
-    def identifier(self: Relationship) -> str:
+    def identifier(self: Relationship) -> URI:
         """Get/set for identifier."""
         return self._identifier
 
     @identifier.setter
-    def identifier(self: Relationship, identifier: str) -> None:
-        self._identifier = URI(identifier)
+    def identifier(self: Relationship, identifier: URI) -> None:
+        self._identifier = identifier
 
     @property
-    def had_role(self: Relationship) -> str:
+    def had_role(self: Relationship) -> URI:
         """Get/set for had_role."""
         return self._had_role
 
     @had_role.setter
-    def had_role(self: Relationship, had_role: str) -> None:
-        self._had_role = URI(had_role)
+    def had_role(self: Relationship, had_role: URI) -> None:
+        self._had_role = had_role
 
     @property
     def relation(self: Relationship) -> Resource:

@@ -68,26 +68,26 @@ class Distribution:
         "_package_format",
     )
 
-    _identifier: str
+    _identifier: URI
     _title: dict
     _description: dict
-    _release_date: str
-    _modification_date: str
-    _license: str
-    _access_rights: str
-    _rights: str
-    _has_policy: str
-    _access_URL: str
+    _release_date: Date
+    _modification_date: Date
+    _license: URI
+    _access_rights: URI
+    _rights: URI
+    _has_policy: URI
+    _access_URL: URI
     _access_service: DataService
-    _download_URL: str
+    _download_URL: URI
     _byte_size: Decimal
     _spatial_resolution: Decimal
     _temporal_resolution: str
-    _conforms_to: List[str]
-    _media_types: List[str]
-    _formats: List[str]
-    _compression_format: str
-    _package_format: str
+    _conforms_to: List[URI]
+    _media_types: List[URI]
+    _formats: List[URI]
+    _compression_format: URI
+    _package_format: URI
 
     def __init__(self) -> None:
         """Inits an object with default values."""
@@ -101,13 +101,13 @@ class Distribution:
         self._g.bind("xsd", XSD)
 
     @property
-    def identifier(self: Distribution) -> str:
+    def identifier(self: Distribution) -> URI:
         """Get/set for identifier."""
         return self._identifier
 
     @identifier.setter
-    def identifier(self: Distribution, identifier: str) -> None:
-        self._identifier = URI(identifier)
+    def identifier(self: Distribution, identifier: URI) -> None:
+        self._identifier = identifier
 
     @property
     def title(self: Distribution) -> dict:
@@ -128,67 +128,67 @@ class Distribution:
         self._description = description
 
     @property
-    def release_date(self: Distribution) -> str:
+    def release_date(self: Distribution) -> Date:
         """Get/set for release_date."""
         return self._release_date
 
     @release_date.setter
-    def release_date(self: Distribution, release_date: str) -> None:
-        self._release_date = Date(release_date)
+    def release_date(self: Distribution, release_date: Date) -> None:
+        self._release_date = release_date
 
     @property
-    def modification_date(self: Distribution) -> str:
+    def modification_date(self: Distribution) -> Date:
         """Get/set for modification_date."""
         return self._modification_date
 
     @modification_date.setter
-    def modification_date(self: Distribution, modification_date: str) -> None:
-        self._modification_date = Date(modification_date)
+    def modification_date(self: Distribution, modification_date: Date) -> None:
+        self._modification_date = modification_date
 
     @property
-    def license(self: Distribution) -> str:
+    def license(self: Distribution) -> URI:
         """Get/set for license."""
         return self._license
 
     @license.setter
-    def license(self: Distribution, license: str) -> None:
-        self._license = URI(license)
+    def license(self: Distribution, license: URI) -> None:
+        self._license = license
 
     @property
-    def access_rights(self: Distribution) -> str:
+    def access_rights(self: Distribution) -> URI:
         """Get/set for access_rights."""
         return self._access_rights
 
     @access_rights.setter
-    def access_rights(self: Distribution, access_rights: str) -> None:
-        self._access_rights = URI(access_rights)
+    def access_rights(self: Distribution, access_rights: URI) -> None:
+        self._access_rights = access_rights
 
     @property
-    def rights(self: Distribution) -> str:
+    def rights(self: Distribution) -> URI:
         """Get/set for rights."""
         return self._rights
 
     @rights.setter
-    def rights(self: Distribution, rights: str) -> None:
-        self._rights = URI(rights)
+    def rights(self: Distribution, rights: URI) -> None:
+        self._rights = rights
 
     @property
-    def has_policy(self: Distribution) -> str:
+    def has_policy(self: Distribution) -> URI:
         """Get/set for has_policy."""
         return self._has_policy
 
     @has_policy.setter
-    def has_policy(self: Distribution, has_policy: str) -> None:
-        self._has_policy = URI(has_policy)
+    def has_policy(self: Distribution, has_policy: URI) -> None:
+        self._has_policy = has_policy
 
     @property
-    def access_URL(self: Distribution) -> str:
+    def access_URL(self: Distribution) -> URI:
         """Get/set for access_URL."""
         return self._access_URL
 
     @access_URL.setter
-    def access_URL(self: Distribution, access_URL: str) -> None:
-        self._access_URL = URI(access_URL)
+    def access_URL(self: Distribution, access_URL: URI) -> None:
+        self._access_URL = access_URL
 
     @property
     def access_service(self: Distribution) -> DataService:
@@ -200,13 +200,13 @@ class Distribution:
         self._access_service = access_service
 
     @property
-    def download_URL(self: Distribution) -> str:
+    def download_URL(self: Distribution) -> URI:
         """Get/set for download_URL."""
         return self._download_URL
 
     @download_URL.setter
-    def download_URL(self: Distribution, download_URL: str) -> None:
-        self._download_URL = URI(download_URL)
+    def download_URL(self: Distribution, download_URL: URI) -> None:
+        self._download_URL = download_URL
 
     @property
     def byte_size(self: Distribution) -> Decimal:
@@ -236,49 +236,49 @@ class Distribution:
         self._temporal_resolution = temporal_resolution
 
     @property
-    def conforms_to(self: Distribution) -> List[str]:
+    def conforms_to(self: Distribution) -> List[URI]:
         """Get/set for conforms_to."""
         return self._conforms_to
 
     @conforms_to.setter
-    def conforms_to(self: Distribution, conforms_to: List[str]) -> None:
+    def conforms_to(self: Distribution, conforms_to: List[URI]) -> None:
         self._conforms_to = conforms_to
 
     @property
-    def media_types(self: Distribution) -> List[str]:
+    def media_types(self: Distribution) -> List[URI]:
         """Get/set for media_types."""
         return self._media_types
 
     @media_types.setter
-    def media_types(self: Distribution, media_types: List[str]) -> None:
+    def media_types(self: Distribution, media_types: List[URI]) -> None:
         self._media_types = media_types
 
     @property
-    def formats(self: Distribution) -> List[str]:
+    def formats(self: Distribution) -> List[URI]:
         """Get/set for formats."""
         return self._formats
 
     @formats.setter
-    def formats(self: Distribution, formats: List[str]) -> None:
+    def formats(self: Distribution, formats: List[URI]) -> None:
         self._formats = formats
 
     @property
-    def compression_format(self: Distribution) -> str:
+    def compression_format(self: Distribution) -> URI:
         """Get/set for compression_format."""
         return self._compression_format
 
     @compression_format.setter
-    def compression_format(self: Distribution, compression_format: str) -> None:
-        self._compression_format = URI(compression_format)
+    def compression_format(self: Distribution, compression_format: URI) -> None:
+        self._compression_format = compression_format
 
     @property
-    def package_format(self: Distribution) -> str:
+    def package_format(self: Distribution) -> URI:
         """Get/set for package_format."""
         return self._package_format
 
     @package_format.setter
-    def package_format(self: Distribution, package_format: str) -> None:
-        self._package_format = URI(package_format)
+    def package_format(self: Distribution, package_format: URI) -> None:
+        self._package_format = package_format
 
     # -
     def to_rdf(self: Distribution, format: str = "turtle") -> str:

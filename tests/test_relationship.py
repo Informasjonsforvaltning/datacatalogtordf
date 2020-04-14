@@ -2,19 +2,16 @@
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
-from datacatalogtordf import Dataset
-from datacatalogtordf import Relationship
-
-# import pytest
+from datacatalogtordf import Dataset, Relationship, URI
 
 
 def test_to_graph_should_return_relation_as_graph() -> None:
     """It returns a title graph isomorphic to spec."""
     relationship = Relationship()
-    relationship.identifier = "http://example.com/relationships/1"
-    relationship.had_role = "http://www.iana.org/assignments/relation/original"
+    relationship.identifier = URI("http://example.com/relationships/1")
+    relationship.had_role = URI("http://www.iana.org/assignments/relation/original")
     dataset = Dataset()
-    dataset.identifier = "http://example.com/datasets/1"
+    dataset.identifier = URI("http://example.com/datasets/1")
     relationship.relation = dataset
 
     src = """

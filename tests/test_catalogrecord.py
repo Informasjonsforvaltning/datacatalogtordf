@@ -2,14 +2,13 @@
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
-from datacatalogtordf import CatalogRecord
-from datacatalogtordf import Dataset
+from datacatalogtordf import CatalogRecord, Dataset, Date, URI
 
 
 def test_to_graph_should_return_identifier() -> None:
     """It returns an identifier graph isomorphic to spec."""
     catalogrecord = CatalogRecord()
-    catalogrecord.identifier = "http://example.com/datasets/1"
+    catalogrecord.identifier = URI("http://example.com/catalogrecords/1")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -17,7 +16,7 @@ def test_to_graph_should_return_identifier() -> None:
     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
 
-    <http://example.com/datasets/1> a dcat:CatalogRecord .
+    <http://example.com/catalogrecords/1> a dcat:CatalogRecord .
     """
     g1 = Graph().parse(data=catalogrecord.to_rdf(), format="turtle")
     g2 = Graph().parse(data=src, format="turtle")
@@ -33,7 +32,7 @@ def test_to_graph_should_return_title() -> None:
     """It returns a title graph isomorphic to spec."""
     """It returns an identifier graph isomorphic to spec."""
     catalogrecord = CatalogRecord()
-    catalogrecord.identifier = "http://example.com/catalogrecords/1"
+    catalogrecord.identifier = URI("http://example.com/catalogrecords/1")
     catalogrecord.title = {"nb": "Tittel 1", "en": "Title 1"}
 
     src = """
@@ -59,7 +58,7 @@ def test_to_graph_should_return_title() -> None:
 def test_to_graph_should_return_description() -> None:
     """It returns a description graph isomorphic to spec."""
     catalogrecord = CatalogRecord()
-    catalogrecord.identifier = "http://example.com/catalogrecords/1"
+    catalogrecord.identifier = URI("http://example.com/catalogrecords/1")
     catalogrecord.description = {"nb": "Beskrivelse", "en": "Description"}
 
     src = """
@@ -85,8 +84,8 @@ def test_to_graph_should_return_description() -> None:
 def test_to_graph_should_return_listing_date() -> None:
     """It returns a listing_date graph isomorphic to spec."""
     catalogrecord = CatalogRecord()
-    catalogrecord.identifier = "http://example.com/catalogrecords/1"
-    catalogrecord.listing_date = "2019-12-31"
+    catalogrecord.identifier = URI("http://example.com/catalogrecords/1")
+    catalogrecord.listing_date = Date("2019-12-31")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -112,8 +111,8 @@ def test_to_graph_should_return_listing_date() -> None:
 def test_to_graph_should_return_modification_date() -> None:
     """It returns a modification_date graph isomorphic to spec."""
     catalogrecord = CatalogRecord()
-    catalogrecord.identifier = "http://example.com/catalogrecords/1"
-    catalogrecord.modification_date = "2019-12-31"
+    catalogrecord.identifier = URI("http://example.com/catalogrecords/1")
+    catalogrecord.modification_date = Date("2019-12-31")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -139,9 +138,9 @@ def test_to_graph_should_return_modification_date() -> None:
 def test_to_graph_should_return_primary_topic() -> None:
     """It returns a primary_topic graph isomorphic to spec."""
     catalogrecord = CatalogRecord()
-    catalogrecord.identifier = "http://example.com/catalogrecords/1"
+    catalogrecord.identifier = URI("http://example.com/catalogrecords/1")
     dataset = Dataset()
-    dataset.identifier = "http://example.com/datasets/1"
+    dataset.identifier = URI("http://example.com/datasets/1")
     catalogrecord.primary_topic = dataset
 
     src = """
@@ -169,9 +168,9 @@ def test_to_graph_should_return_primary_topic() -> None:
 def test_to_graph_should_return_conforms_to() -> None:
     """It returns a conforms_to graph isomorphic to spec."""
     catalogrecord = CatalogRecord()
-    catalogrecord.identifier = "http://example.com/catalogrecords/1"
-    catalogrecord.conforms_to.append("http://example.com/standards/1")
-    catalogrecord.conforms_to.append("http://example.com/standards/2")
+    catalogrecord.identifier = URI("http://example.com/catalogrecords/1")
+    catalogrecord.conforms_to.append(URI("http://example.com/standards/1"))
+    catalogrecord.conforms_to.append(URI("http://example.com/standards/2"))
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .

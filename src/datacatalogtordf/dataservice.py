@@ -22,6 +22,7 @@ from rdflib import Graph, Namespace, RDF, URIRef
 
 from .dataset import Dataset
 from .resource import Resource
+from .uri import URI
 
 DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
@@ -39,32 +40,34 @@ class DataService(Resource):
         the end-points, including their operations, parameters etc.
     """
 
-    _endpointURL: str
-    _endpointDescription: str
-    _servesdatasets: List
+    _endpointURL: List[URI]
+    _endpointDescription: List[URI]
+    _servesdatasets: List[Dataset]
 
     def __init__(self) -> None:
         """Inits DataService with default values."""
         super().__init__()
         self._type = DCAT.DataService
+        self.endpointURL = []
+        self.endpointDescription = []
         self.servesdatasets = []
 
     @property
-    def endpointURL(self: DataService) -> str:
+    def endpointURL(self: DataService) -> List[URI]:
         """Get/set for endpointURL."""
         return self._endpointURL
 
     @endpointURL.setter
-    def endpointURL(self: DataService, endpointURL: str) -> None:
+    def endpointURL(self: DataService, endpointURL: List[URI]) -> None:
         self._endpointURL = endpointURL
 
     @property
-    def endpointDescription(self: DataService) -> str:
+    def endpointDescription(self: DataService) -> List[URI]:
         """Get/set for endpointDescription."""
         return self._endpointDescription
 
     @endpointDescription.setter
-    def endpointDescription(self: DataService, endpointDescription: str) -> None:
+    def endpointDescription(self: DataService, endpointDescription: List[URI]) -> None:
         self._endpointDescription = endpointDescription
 
     @property
@@ -83,39 +86,38 @@ class DataService(Resource):
 
         self._g.add((URIRef(self.identifier), RDF.type, self._type))
 
-        if getattr(self, "endpointURL", None):
-            self._endpointURL_to_graph()
-        if getattr(self, "endpointDescription", None):
-            self._endpointDescription_to_graph()
-        if getattr(self, "servesdatasets", None):
-            self._servesdatasets_to_graph()
+        self._endpointURL_to_graph()
+        self._endpointDescription_to_graph()
+        self._servesdatasets_to_graph()
 
         return self._g
 
     # -
     def _endpointURL_to_graph(self: DataService) -> None:
-
-        self._g.add(
-            (URIRef(self.identifier), DCAT.endpointURL, URIRef(self.endpointURL))
-        )
+        if getattr(self, "endpointURL", None):
+            for _endpointURL in self.endpointURL:
+                self._g.add(
+                    (URIRef(self.identifier), DCAT.endpointURL, URIRef(_endpointURL))
+                )
 
     def _endpointDescription_to_graph(self: DataService) -> None:
-
-        self._g.add(
-            (
-                URIRef(self.identifier),
-                DCAT.endpointDescription,
-                URIRef(self.endpointDescription),
-            )
-        )
+        if getattr(self, "endpointDescription", None):
+            for _endpointDescription in self.endpointDescription:
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        DCAT.endpointDescription,
+                        URIRef(_endpointDescription),
+                    )
+                )
 
     def _servesdatasets_to_graph(self: DataService) -> None:
-
-        for dataset in self._servesdatasets:
-            self._g.add(
-                (
-                    URIRef(self.identifier),
-                    DCAT.servesDataset,
-                    URIRef(dataset.identifier),
+        if getattr(self, "servesdatasets", None):
+            for dataset in self._servesdatasets:
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        DCAT.servesDataset,
+                        URIRef(dataset.identifier),
+                    )
                 )
-            )

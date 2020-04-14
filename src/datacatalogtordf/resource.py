@@ -9,7 +9,7 @@ Refer to sub-class for typical usage examples.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import List, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 
 from concepttordf import Contact
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
@@ -67,27 +67,27 @@ class Resource(ABC):
     )
 
     # Types
-    _access_rights: str  # 6.4.1
-    _conformsTo: List[str]  # 6.4.2
+    _access_rights: URI  # 6.4.1
+    _conformsTo: List[URI]  # 6.4.2
     _contactpoint: Contact  # 6.4.3
-    _creator: str  # 6.4.4
+    _creator: URI  # 6.4.4
     _description: dict  # 6.4.5
     _title: dict  # 6.4.6
-    _release_date: str  # 6.4.7
-    _modification_date: str  # 6.4.8
-    _language: List[str]  # 6.4.9
-    _publisher: str  # 6.4.10
-    _identifier: str  # 6.4.11
-    _theme: List[str]  # 6.4.12
-    _type_genre: str  # 6.4.13
-    _resource_relation: List[str]  # 6.4.14
+    _release_date: Date  # 6.4.7
+    _modification_date: Date  # 6.4.8
+    _language: List[URI]  # 6.4.9
+    _publisher: URI  # 6.4.10
+    _identifier: URI  # 6.4.11
+    _theme: List[URI]  # 6.4.12
+    _type_genre: URI  # 6.4.13
+    _resource_relation: List[URI]  # 6.4.14
     _qualified_relation: List[Relationship]  # 6.4.15
     _keyword: dict  # 6.4.16
-    _landing_page: List[str]  # 6.4.17
+    _landing_page: List[URI]  # 6.4.17
     _qualified_attributions: List[dict]  # 6.4.18
-    _license: str  # 6.4.19
-    _rights: str  # 6.4.20
-    _has_policy: str  # 6.4.21
+    _license: URI  # 6.4.19
+    _rights: URI  # 6.4.20
+    _has_policy: URI  # 6.4.21
     _is_referenced_by: List[Resource]  # 6.4.22
 
     @abstractmethod
@@ -112,22 +112,22 @@ class Resource(ABC):
         self._g.bind("prov", PROV)
 
     @property
-    def identifier(self: Resource) -> str:
+    def identifier(self: Resource) -> URI:
         """Get/set for identifier."""
         return self._identifier
 
     @identifier.setter
-    def identifier(self: Resource, identifier: str) -> None:
-        self._identifier = URI(identifier)
+    def identifier(self: Resource, identifier: URI) -> None:
+        self._identifier = identifier
 
     @property
-    def publisher(self: Resource) -> str:
+    def publisher(self: Resource) -> URI:
         """Get/set for publisher."""
         return self._publisher
 
     @publisher.setter
-    def publisher(self: Resource, publisher: str) -> None:
-        self._publisher = URI(publisher)
+    def publisher(self: Resource, publisher: URI) -> None:
+        self._publisher = publisher
 
     @property
     def title(self: Resource) -> dict:
@@ -153,30 +153,30 @@ class Resource(ABC):
         self._description = description
 
     @property
-    def access_rights(self: Resource) -> str:
+    def access_rights(self: Resource) -> URI:
         """Get/set for access_rights."""
         return self._access_rights
 
     @access_rights.setter
-    def access_rights(self: Resource, access_rights: str) -> None:
-        self._access_rights = URI(access_rights)
+    def access_rights(self: Resource, access_rights: URI) -> None:
+        self._access_rights = access_rights
 
     @property
-    def conformsTo(self: Resource) -> List[str]:
+    def conformsTo(self: Resource) -> List[URI]:
         """Get/set for conformsTo."""
         return self._conformsTo
 
     @conformsTo.setter
-    def conformsTo(self: Resource, conformsTo: List[str]) -> None:
+    def conformsTo(self: Resource, conformsTo: List[URI]) -> None:
         self._conformsTo = conformsTo
 
     @property
-    def theme(self: Resource) -> List[str]:
+    def theme(self: Resource) -> List[URI]:
         """Get/set for theme."""
         return self._theme
 
     @theme.setter
-    def theme(self: Resource, theme: List[str]) -> None:
+    def theme(self: Resource, theme: List[URI]) -> None:
         self._theme = theme
 
     @property
@@ -189,22 +189,22 @@ class Resource(ABC):
         self._contactpoint = contactpoint
 
     @property
-    def creator(self: Resource) -> str:
+    def creator(self: Resource) -> URI:
         """Get/set for creator."""
         return self._creator
 
     @creator.setter
-    def creator(self: Resource, creator: str) -> None:
-        self._creator = URI(creator)
+    def creator(self: Resource, creator: URI) -> None:
+        self._creator = creator
 
     @property
-    def has_policy(self: Resource) -> str:
+    def has_policy(self: Resource) -> URI:
         """Get/set for has_policy."""
         return self._has_policy
 
     @has_policy.setter
-    def has_policy(self: Resource, has_policy: str) -> None:
-        self._has_policy = URI(has_policy)
+    def has_policy(self: Resource, has_policy: URI) -> None:
+        self._has_policy = has_policy
 
     @property
     def is_referenced_by(self: Resource) -> List[Resource]:
@@ -216,31 +216,31 @@ class Resource(ABC):
         self._is_referenced_by = is_referenced_by
 
     @property
-    def release_date(self: Resource) -> str:
+    def release_date(self: Resource) -> Date:
         """Get/set for release_date."""
         return self._release_date
 
     @release_date.setter
-    def release_date(self: Resource, release_date: str) -> None:
-        self._release_date = Date(release_date)
+    def release_date(self: Resource, release_date: Date) -> None:
+        self._release_date = release_date
 
     @property
-    def modification_date(self: Resource) -> str:
+    def modification_date(self: Resource) -> Date:
         """Get/set for modification_date."""
         return self._modification_date
 
     @modification_date.setter
-    def modification_date(self: Resource, modification_date: str) -> None:
-        self._modification_date = Date(modification_date)
+    def modification_date(self: Resource, modification_date: Date) -> None:
+        self._modification_date = modification_date
 
     @property
-    def type_genre(self: Resource) -> str:
+    def type_genre(self: Resource) -> URI:
         """Get/set for type_genre."""
         return self._type_genre
 
     @type_genre.setter
-    def type_genre(self: Resource, type_genre: str) -> None:
-        self._type_genre = URI(type_genre)
+    def type_genre(self: Resource, type_genre: URI) -> None:
+        self._type_genre = type_genre
 
     @property
     def qualified_attributions(self: Resource) -> List[dict]:
@@ -254,49 +254,49 @@ class Resource(ABC):
         self._qualified_attributions = qualified_attributions
 
     @property
-    def landing_page(self: Resource) -> List[str]:
+    def landing_page(self: Resource) -> List[URI]:
         """Get/set for landing_page."""
         return self._landing_page
 
     @landing_page.setter
-    def landing_page(self: Resource, landing_page: List[str]) -> None:
+    def landing_page(self: Resource, landing_page: List[URI]) -> None:
         self._landing_page = landing_page
 
     @property
-    def license(self: Resource) -> str:
+    def license(self: Resource) -> URI:
         """Get/set for license."""
         return self._license
 
     @license.setter
-    def license(self: Resource, license: str) -> None:
-        self._license = URI(license)
+    def license(self: Resource, license: URI) -> None:
+        self._license = license
 
     @property
-    def language(self: Resource) -> List[str]:
+    def language(self: Resource) -> List[URI]:
         """Get/set for language."""
         return self._language
 
     @language.setter
-    def language(self: Resource, language: List[str]) -> None:
+    def language(self: Resource, language: List[URI]) -> None:
         self._language = language
 
     @property
-    def resource_relation(self: Resource) -> List[str]:
+    def resource_relation(self: Resource) -> List[URI]:
         """Get/set for resource_relation."""
         return self._resource_relation
 
     @resource_relation.setter
-    def resource_relation(self: Resource, resource_relation: List[str]) -> None:
+    def resource_relation(self: Resource, resource_relation: List[URI]) -> None:
         self._resource_relation = resource_relation
 
     @property
-    def rights(self: Resource) -> str:
+    def rights(self: Resource) -> URI:
         """Get/set for rights."""
         return self._rights
 
     @rights.setter
-    def rights(self: Resource, rights: str) -> None:
-        self._rights = URI(rights)
+    def rights(self: Resource, rights: URI) -> None:
+        self._rights = rights
 
     @property
     def keyword(self: Resource) -> dict:
@@ -319,7 +319,9 @@ class Resource(ABC):
         self._qualified_relation = qualified_relation
 
     # -
-    def to_rdf(self: Resource, format: str = "turtle") -> str:
+    def to_rdf(
+        self: Resource, format: str = "turtle", encoding: Optional[str] = "utf-8"
+    ) -> str:
         """Maps the distribution to rdf.
 
         Available formats:
@@ -329,6 +331,7 @@ class Resource(ABC):
 
         Args:
             format: a valid format.
+            encoding: the encoding to serialize into
 
         Returns:
             a rdf serialization as a string according to format.
@@ -342,7 +345,7 @@ class Resource(ABC):
             >>> bool(catalog.to_rdf())
             True
         """
-        return self._to_graph().serialize(format=format, encoding="utf-8")
+        return self._to_graph().serialize(format=format, encoding=encoding)
 
     # -
     def _to_graph(self: Resource) -> Graph:
@@ -396,8 +399,7 @@ class Resource(ABC):
 
     def _conformsTo_to_graph(self: Resource) -> None:
         if getattr(self, "conformsTo", None):
-            for _c in self.conformsTo:
-                _uri = URI(_c)
+            for _uri in self.conformsTo:
                 self._g.add((URIRef(self.identifier), DCT.conformsTo, URIRef(_uri)))
 
     def _description_to_graph(self: Resource) -> None:
@@ -413,8 +415,7 @@ class Resource(ABC):
 
     def _theme_to_graph(self: Resource) -> None:
         if getattr(self, "theme", None):
-            for _t in self.theme:
-                _uri = URI(_t)
+            for _uri in self.theme:
                 self._g.add((URIRef(self.identifier), DCAT.theme, URIRef(_uri)))
 
     def _contactpoint_to_graph(self: Resource) -> None:
@@ -437,9 +438,14 @@ class Resource(ABC):
 
     def _is_referenced_by_to_graph(self: Resource) -> None:
         if getattr(self, "is_referenced_by", None):
-            for _i in self.is_referenced_by:
-                _uri = URI(_i.identifier)
-                self._g.add((URIRef(self.identifier), DCT.isReferencedBy, URIRef(_uri)))
+            for _resource in self.is_referenced_by:
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        DCT.isReferencedBy,
+                        URIRef(_resource.identifier),
+                    )
+                )
 
     def _release_date_to_graph(self: Resource) -> None:
         if getattr(self, "release_date", None):
@@ -478,8 +484,7 @@ class Resource(ABC):
 
     def _landing_page_to_graph(self: Resource) -> None:
         if getattr(self, "landing_page", None):
-            for _lp in self.landing_page:
-                _uri = URI(_lp)
+            for _uri in self.landing_page:
                 self._g.add((URIRef(self.identifier), DCAT.landingPage, URIRef(_uri)))
 
     def _license_to_graph(self: Resource) -> None:
@@ -488,14 +493,12 @@ class Resource(ABC):
 
     def _language_to_graph(self: Resource) -> None:
         if getattr(self, "language", None):
-            for _l in self.language:
-                _uri = URI(_l)
+            for _uri in self.language:
                 self._g.add((URIRef(self.identifier), DCT.language, URIRef(_uri)))
 
     def _resource_relation_to_graph(self: Resource) -> None:
         if getattr(self, "resource_relation", None):
-            for _l in self.resource_relation:
-                _uri = URI(_l)
+            for _uri in self.resource_relation:
                 self._g.add((URIRef(self.identifier), DCT.relation, URIRef(_uri)))
 
     def _rights_to_graph(self: Resource) -> None:

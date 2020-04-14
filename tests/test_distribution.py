@@ -4,14 +4,13 @@ from decimal import Decimal
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
-from datacatalogtordf import DataService
-from datacatalogtordf import Distribution
+from datacatalogtordf import DataService, Date, Distribution, URI
 
 
 def test_to_graph_should_return_title_as_graph() -> None:
     """It returns a title graph isomorphic to spec."""
     distribution = Distribution()
-    distribution.identifier = "http://example.com/distributions/1"
+    distribution.identifier = URI("http://example.com/distributions/1")
     distribution.title = {"nb": "API-distribusjon", "en": "API-distribution"}
 
     src = """
@@ -37,7 +36,7 @@ def test_to_graph_should_return_title_as_graph() -> None:
 def test_to_graph_should_return_description() -> None:
     """It returns a description graph isomorphic to spec."""
     distribution = Distribution()
-    distribution.identifier = "http://example.com/distributions/1"
+    distribution.identifier = URI("http://example.com/distributions/1")
     distribution.description = {"nb": "Beskrivelse", "en": "Description"}
 
     src = """
@@ -63,8 +62,8 @@ def test_to_graph_should_return_description() -> None:
 def test_to_graph_should_return_release_date() -> None:
     """It returns a release date graph isomorphic to spec."""
     distribution = Distribution()
-    distribution.identifier = "http://example.com/distributions/1"
-    distribution.release_date = "2019-12-31"
+    distribution.identifier = URI("http://example.com/distributions/1")
+    distribution.release_date = Date("2019-12-31")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -90,8 +89,8 @@ def test_to_graph_should_return_release_date() -> None:
 def test_to_graph_should_return_modification_date() -> None:
     """It returns a modification date graph isomorphic to spec."""
     distribution = Distribution()
-    distribution.identifier = "http://example.com/distributions/1"
-    distribution.modification_date = "2019-12-31"
+    distribution.identifier = URI("http://example.com/distributions/1")
+    distribution.modification_date = Date("2019-12-31")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -117,8 +116,8 @@ def test_to_graph_should_return_modification_date() -> None:
 def test_to_graph_should_return_license() -> None:
     """It returns a license graph isomorphic to spec."""
     distribution = Distribution()
-    distribution.identifier = "http://example.com/distributions/1"
-    distribution.license = "http://example.com/licenses/1"
+    distribution.identifier = URI("http://example.com/distributions/1")
+    distribution.license = URI("http://example.com/licenses/1")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -145,8 +144,8 @@ def test_to_graph_should_return_access_rights() -> None:
     access_rights = ["PUBLIC", "RESTRICTED", "NON-PUBLIC"]
     for _r in access_rights:
         distribution = Distribution()
-        distribution.identifier = "http://example.com/distributions/1"
-        distribution.access_rights = (
+        distribution.identifier = URI("http://example.com/distributions/1")
+        distribution.access_rights = URI(
             f"http://publications.europa.eu/distribution/authority/access-right/{_r}"
         )
 
@@ -173,8 +172,8 @@ def test_to_graph_should_return_access_rights() -> None:
 def test_to_graph_should_return_rights() -> None:
     """It returns a rights graph isomorphic to spec."""
     distribution = Distribution()
-    distribution.identifier = "http://example.com/distributions/1"
-    distribution.rights = "http://example.com/rights/1"
+    distribution.identifier = URI("http://example.com/distributions/1")
+    distribution.rights = URI("http://example.com/rights/1")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -199,8 +198,8 @@ def test_to_graph_should_return_rights() -> None:
 def test_to_graph_should_return_has_policy() -> None:
     """It returns a has_policy graph isomorphic to spec."""
     distribution = Distribution()
-    distribution.identifier = "http://example.com/distributions/1"
-    distribution.has_policy = "http://example.com/policies/1"
+    distribution.identifier = URI("http://example.com/distributions/1")
+    distribution.has_policy = URI("http://example.com/policies/1")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -226,8 +225,8 @@ def test_to_graph_should_return_has_policy() -> None:
 def test_to_graph_should_return_access_URL() -> None:
     """It returns a access URL graph isomorphic to spec."""
     distribution = Distribution()
-    distribution.identifier = "http://example.com/distributions/1"
-    distribution.access_URL = "http://example.com/someendpoint"
+    distribution.identifier = URI("http://example.com/distributions/1")
+    distribution.access_URL = URI("http://example.com/someendpoint")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -252,9 +251,9 @@ def test_to_graph_should_return_access_URL() -> None:
 def test_to_graph_should_return_access_service() -> None:
     """It returns a access service graph isomorphic to spec."""
     distribution = Distribution()
-    distribution.identifier = "http://example.com/distributions/1"
+    distribution.identifier = URI("http://example.com/distributions/1")
     service = DataService()
-    service.identifier = "http://example.com/dataservices/1"
+    service.identifier = URI("http://example.com/dataservices/1")
     distribution.access_service = service
 
     src = """
@@ -280,8 +279,8 @@ def test_to_graph_should_return_access_service() -> None:
 def test_to_graph_should_return_download_URL() -> None:
     """It returns a download URL graph isomorphic to spec."""
     distribution = Distribution()
-    distribution.identifier = "http://example.com/distributions/1"
-    distribution.download_URL = "http://example.com/download"
+    distribution.identifier = URI("http://example.com/distributions/1")
+    distribution.download_URL = URI("http://example.com/download")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -306,7 +305,7 @@ def test_to_graph_should_return_download_URL() -> None:
 def test_to_graph_should_return_byte_size() -> None:
     """It returns a byte size graph isomorphic to spec."""
     distribution = Distribution()
-    distribution.identifier = "http://example.com/distributions/1"
+    distribution.identifier = URI("http://example.com/distributions/1")
     # byte_size is an xsd:decimal:
     distribution.byte_size = Decimal(5120.0)
 
@@ -334,7 +333,7 @@ def test_to_graph_should_return_byte_size() -> None:
 def test_to_graph_should_return_spatial_resolution() -> None:
     """It returns a spatial resolution graph isomorphic to spec."""
     distribution = Distribution()
-    distribution.identifier = "http://example.com/distributions/1"
+    distribution.identifier = URI("http://example.com/distributions/1")
     # spatial resolution is an xsd:decimal:
     distribution.spatial_resolution = Decimal(30.0)
 
@@ -362,7 +361,7 @@ def test_to_graph_should_return_spatial_resolution() -> None:
 def test_to_graph_should_return_temporal_resolution() -> None:
     """It returns a temporal resolution graph isomorphic to spec."""
     distribution = Distribution()
-    distribution.identifier = "http://example.com/distributions/1"
+    distribution.identifier = URI("http://example.com/distributions/1")
     distribution.temporal_resolution = "PT15M"
 
     src = """
@@ -389,9 +388,9 @@ def test_to_graph_should_return_temporal_resolution() -> None:
 def test_to_graph_should_return_conforms_to() -> None:
     """It returns a conforms to graph isomorphic to spec."""
     distribution = Distribution()
-    distribution.identifier = "http://example.com/distributions/1"
-    distribution.conforms_to.append("http://example.com/standards/1")
-    distribution.conforms_to.append("http://example.com/standards/2")
+    distribution.identifier = URI("http://example.com/distributions/1")
+    distribution.conforms_to.append(URI("http://example.com/standards/1"))
+    distribution.conforms_to.append(URI("http://example.com/standards/2"))
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -417,9 +416,9 @@ def test_to_graph_should_return_conforms_to() -> None:
 def test_to_graph_should_return_media_type() -> None:
     """It returns a media type graph isomorphic to spec."""
     distribution = Distribution()
-    distribution.identifier = "http://example.com/distributions/1"
+    distribution.identifier = URI("http://example.com/distributions/1")
     distribution.media_types.append(
-        "https://www.iana.org/assignments/media-types/application/ld+json"
+        URI("https://www.iana.org/assignments/media-types/application/ld+json")
     )
 
     src = """
@@ -446,9 +445,9 @@ def test_to_graph_should_return_media_type() -> None:
 def test_to_graph_should_return_format() -> None:
     """It returns a format graph isomorphic to spec."""
     distribution = Distribution()
-    distribution.identifier = "http://example.com/distributions/1"
+    distribution.identifier = URI("http://example.com/distributions/1")
     distribution.formats.append(
-        "https://www.iana.org/assignments/media-types/application/pdf"
+        URI("https://www.iana.org/assignments/media-types/application/pdf")
     )
 
     src = """
@@ -474,8 +473,8 @@ def test_to_graph_should_return_format() -> None:
 def test_to_graph_should_return_compression_format() -> None:
     """It returns a compression format graph isomorphic to spec."""
     distribution = Distribution()
-    distribution.identifier = "http://example.com/distributions/1"
-    distribution.compression_format = (
+    distribution.identifier = URI("http://example.com/distributions/1")
+    distribution.compression_format = URI(
         "http://www.iana.org/assignments/media-types/application/gzip"
     )
 
@@ -503,8 +502,8 @@ def test_to_graph_should_return_compression_format() -> None:
 def test_to_graph_should_return_packaging_format() -> None:
     """It returns a packaging format graph isomorphic to spec."""
     distribution = Distribution()
-    distribution.identifier = "http://example.com/distributions/1"
-    distribution.package_format = (
+    distribution.identifier = URI("http://example.com/distributions/1")
+    distribution.package_format = URI(
         "http://publications.europa.eu/resource/authority/file-type/TAR"
     )
 

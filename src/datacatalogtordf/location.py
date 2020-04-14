@@ -18,6 +18,8 @@ from __future__ import annotations
 
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 
+from .uri import URI
+
 
 DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
@@ -38,7 +40,7 @@ class Location:
 
     slots = ("_identifier", "_geometry", "_bounding_box", "_centroid")
 
-    _identifier: str
+    _identifier: URI
     _geometry: str
     _bounding_box: str
     _centroid: str
@@ -54,12 +56,12 @@ class Location:
         self._g.bind("geosparql", GEOSPARQL)
 
     @property
-    def identifier(self: Location) -> str:
+    def identifier(self: Location) -> URI:
         """Get/set for identifier."""
         return self._identifier
 
     @identifier.setter
-    def identifier(self: Location, identifier: str) -> None:
+    def identifier(self: Location, identifier: URI) -> None:
         self._identifier = identifier
 
     @property
