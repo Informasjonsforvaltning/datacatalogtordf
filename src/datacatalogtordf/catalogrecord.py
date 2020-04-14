@@ -17,7 +17,7 @@ Example:
 """
 from __future__ import annotations
 
-from typing import List
+from typing import List, Optional
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
 
@@ -138,7 +138,9 @@ class CatalogRecord:
         self._conforms_to = conforms_to
 
     # -
-    def to_rdf(self: CatalogRecord, format: str = "turtle") -> str:
+    def to_rdf(
+        self: CatalogRecord, format: str = "turtle", encoding: Optional[str] = "utf-8"
+    ) -> str:
         """Maps the catalogrecord to rdf.
 
         Available formats:
@@ -148,6 +150,7 @@ class CatalogRecord:
 
         Args:
             format: a valid format.
+            encoding: the encoding to serialize into
 
         Returns:
             a rdf serialization as a string according to format.
@@ -161,7 +164,7 @@ class CatalogRecord:
             >>> bool(catalogrecord.to_rdf())
             True
         """
-        return self._to_graph().serialize(format=format, encoding="utf-8")
+        return self._to_graph().serialize(format=format, encoding=encoding)
 
     # -
     def _to_graph(self: CatalogRecord) -> Graph:

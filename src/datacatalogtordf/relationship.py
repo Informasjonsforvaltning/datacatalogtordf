@@ -16,7 +16,7 @@ Example:
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
 from rdflib import BNode, Graph, Namespace, RDF, URIRef
 
@@ -82,16 +82,19 @@ class Relationship:
         self._relation = relation
 
     # -
-    def to_rdf(self: Relationship, format: str = "turtle") -> str:
+    def to_rdf(
+        self: Relationship, format: str = "turtle", encoding: Optional[str] = "utf-8"
+    ) -> str:
         """Maps the relationship to rdf.
 
         Args:
             format: a valid format. Default: turtle
+            encoding: the encoding to serialize into
 
         Returns:
             a rdf serialization as a string according to format.
         """
-        return self._to_graph().serialize(format=format, encoding="utf-8")
+        return self._to_graph().serialize(format=format, encoding=encoding)
 
     # -
     def _to_graph(self: Relationship) -> Graph:

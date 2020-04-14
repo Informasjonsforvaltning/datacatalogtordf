@@ -17,6 +17,7 @@ Example:
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Optional
 
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 
@@ -115,16 +116,19 @@ class PeriodOfTime:
         self._end_date = _date
 
     # -
-    def to_rdf(self: PeriodOfTime, format: str = "turtle") -> str:
+    def to_rdf(
+        self: PeriodOfTime, format: str = "turtle", encoding: Optional[str] = "utf-8"
+    ) -> str:
         """Maps the period_of_time to rdf.
 
         Args:
             format: a valid format. Default: turtle
+            encoding: the encoding to serialize into
 
         Returns:
             a rdf serialization as a string according to format.
         """
-        return self._to_graph().serialize(format=format, encoding="utf-8")
+        return self._to_graph().serialize(format=format, encoding=encoding)
 
     # -
     def _to_graph(self: PeriodOfTime) -> Graph:

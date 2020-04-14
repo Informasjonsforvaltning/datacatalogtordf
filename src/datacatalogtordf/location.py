@@ -16,6 +16,8 @@ Example:
 """
 from __future__ import annotations
 
+from typing import Optional
+
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 
 
@@ -90,16 +92,19 @@ class Location:
         self._centroid = centroid
 
     # -
-    def to_rdf(self: Location, format: str = "turtle") -> str:
+    def to_rdf(
+        self: Location, format: str = "turtle", encoding: Optional[str] = "utf-8"
+    ) -> str:
         """Maps the location to rdf.
 
         Args:
             format: a valid format. Default: turtle
+            encoding: the encoding to serialize into
 
         Returns:
             a rdf serialization as a string according to format.
         """
-        return self._to_graph().serialize(format=format, encoding="utf-8")
+        return self._to_graph().serialize(format=format, encoding=encoding)
 
     # -
     def _to_graph(self: Location) -> Graph:

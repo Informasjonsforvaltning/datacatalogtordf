@@ -9,7 +9,7 @@ Refer to sub-class for typical usage examples.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import List, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 
 from concepttordf import Contact
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
@@ -319,7 +319,9 @@ class Resource(ABC):
         self._qualified_relation = qualified_relation
 
     # -
-    def to_rdf(self: Resource, format: str = "turtle") -> str:
+    def to_rdf(
+        self: Resource, format: str = "turtle", encoding: Optional[str] = "utf-8"
+    ) -> str:
         """Maps the distribution to rdf.
 
         Available formats:
@@ -329,6 +331,7 @@ class Resource(ABC):
 
         Args:
             format: a valid format.
+            encoding: the encoding to serialize into
 
         Returns:
             a rdf serialization as a string according to format.
@@ -342,7 +345,7 @@ class Resource(ABC):
             >>> bool(catalog.to_rdf())
             True
         """
-        return self._to_graph().serialize(format=format, encoding="utf-8")
+        return self._to_graph().serialize(format=format, encoding=encoding)
 
     # -
     def _to_graph(self: Resource) -> Graph:

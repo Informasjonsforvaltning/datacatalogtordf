@@ -17,7 +17,7 @@ Example:
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import List, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
 from rdflib.namespace import DCTERMS
@@ -281,16 +281,19 @@ class Distribution:
         self._package_format = URI(package_format)
 
     # -
-    def to_rdf(self: Distribution, format: str = "turtle") -> str:
+    def to_rdf(
+        self: Distribution, format: str = "turtle", encoding: Optional[str] = "utf-8"
+    ) -> str:
         """Maps the distribution to rdf.
 
         Args:
             format: a valid format. Default: turtle
+            encoding: the encoding to serialize into
 
         Returns:
             a rdf serialization as a string according to format.
         """
-        return self._to_graph().serialize(format=format, encoding="utf-8")
+        return self._to_graph().serialize(format=format, encoding=encoding)
 
     # -
     def _to_graph(self: Distribution) -> Graph:
