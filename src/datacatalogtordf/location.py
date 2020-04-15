@@ -9,7 +9,7 @@ Example:
     >>>
     >>> location = Location()
     >>> location.identifier = "http://example.com/relations/1"
-    >>> location.title = {"en": "Title of location"}
+    >>> location.centroid = "POINT(4.88412 52.37509)"
     >>>
     >>> bool(location.to_rdf())
     True
@@ -35,9 +35,10 @@ class Location:
     Ref: `dcat:Location <https://www.w3.org/TR/vocab-dcat-2/#Class:Location>`_
 
     Attributes:
-        identifier: an URI uniquely identifying the resource
-        relation: an URI uniquely identifying related resource
-        had_role: an URI identifying the role
+        identifier (URI): an URI uniquely identifying the resource
+        geometry (str): Associates any resource with the corresponding geometry.
+        bounding_box (str): The geographic bounding box of a resource.
+        centroid (str): The geographic center (centroid) of a resource.
     """
 
     slots = ("_identifier", "_geometry", "_bounding_box", "_centroid")

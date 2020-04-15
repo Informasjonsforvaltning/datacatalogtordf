@@ -14,22 +14,39 @@ datacatalogtordf.resource
   :show-inheritance:
 
 
+datacatalogtordf.relationship
+-----------------------------
+
+.. automodule:: datacatalogtordf.relationship
+  :members:
+  :show-inheritance:
+
+
 datacatalogtordf.catalog
 ------------------------
 
 .. automodule:: datacatalogtordf.catalog
-   :members:
-   :show-inheritance:
-   :inherited-members:
+  :members:
+  :show-inheritance:
+  :inherited-members:
+
+
+datacatalogtordf.catalogrecord
+------------------------------
+
+.. automodule:: datacatalogtordf.catalogrecord
+  :members:
+  :show-inheritance:
+  :inherited-members:
 
 
 datacatalogtordf.dataservice
 ----------------------------
 
 .. automodule:: datacatalogtordf.dataservice
-   :members:
-   :show-inheritance:
-   :inherited-members:
+  :members:
+  :show-inheritance:
+  :inherited-members:
 
 
 datacatalogtordf.dataset
@@ -56,3 +73,29 @@ datacatalogtordf.uri
 .. automodule:: datacatalogtordf.uri
   :members:
   :show-inheritance:
+
+
+datacatalogtordf.periodoftime
+-----------------------------
+
+.. automodule:: datacatalogtordf.periodoftime
+  :members:
+  :show-inheritance:
+
+
+datacatalogtordf.location
+-------------------------
+
+.. automodule:: datacatalogtordf.location
+  :members:
+  :show-inheritance:
+  :inherited-members:
+
+
+datacatalogtordf.exceptions
+---------------------------
+
+.. automodule:: datacatalogtordf.exceptions
+  :members:
+  :show-inheritance:
+  :inherited-members:

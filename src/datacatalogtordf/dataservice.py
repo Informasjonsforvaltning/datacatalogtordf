@@ -34,15 +34,16 @@ class DataService(Resource):
     Ref: `dcat:DataService <https://www.w3.org/TR/vocab-dcat-2/#Class:Data_Service>`_.
 
     Attributes:
-        endpointURL: The root location or primary endpoint of the service
-         (a Web-resolvable IRI).
-        endpointDescription: A description of the services available via
-        the end-points, including their operations, parameters etc.
+        endpointURL (URI): The root location or primary endpoint of the service \
+            (a Web-resolvable IRI).
+        endpointDescription (URI): A description of the services available via \
+            the end-points, including their operations, parameters etc.
+        servesdatasets (List[Dataset])
     """
 
     _endpointURL: URI
     _endpointDescription: URI
-    _servesdatasets: List
+    _servesdatasets: List[Dataset]
 
     def __init__(self) -> None:
         """Inits DataService with default values."""

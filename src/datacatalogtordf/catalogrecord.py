@@ -37,12 +37,16 @@ class CatalogRecord:
     Ref: https://www.w3.org/TR/vocab-dcat-2/#Class:Catalog_Record
 
     Attributes:
-        title: A name given to the record.
-        description: A free-text account of the record.
-        listing_date: The date of listing
-        modification_date: Most recent date on which the catalog entry was changed
-        primary_topic: The dcat:Resource (dataset or service) described in the record.
-        conforms_to: An established standard to which the described resource conforms.
+        identifier (URI): a URI uniquely identifying the catalog record
+        title (dict): A name given to the record. key is language code.
+        description (dict): A free-text account of the record. key is language code.
+        listing_date (Date): The date of listing
+        modification_date (Date): Most recent date on which the catalog entry \
+            was changed
+        primary_topic (Resource): The dcat:Resource (dataset or service) \
+            described in the record.
+        conforms_to (List[URI]): An established standard to which the described \
+            resource conforms.
     """
 
     __slots__ = (
@@ -141,29 +145,7 @@ class CatalogRecord:
     def to_rdf(
         self: CatalogRecord, format: str = "turtle", encoding: Optional[str] = "utf-8"
     ) -> str:
-        """Maps the catalogrecord to rdf.
-
-        Available formats:
-         - turtle (default)
-         - xml
-         - json-ld
-
-        Args:
-            format: a valid format.
-            encoding: the encoding to serialize into
-
-        Returns:
-            a rdf serialization as a string according to format.
-
-        Example:
-            >>> from datacatalogtordf import CatalogRecord
-            >>>
-            >>> catalogrecord = CatalogRecord()
-            >>> catalogrecord.identifier = "http://example.com/catalogrecords/1"
-            >>> catalogrecord.title = {'en': 'Title of catalogrecord'}
-            >>> bool(catalogrecord.to_rdf())
-            True
-        """
+        """Maps the catalogrecord to rdf."""
         return self._to_graph().serialize(format=format, encoding=encoding)
 
     # -

@@ -620,8 +620,8 @@ def test_to_graph_should_return_modification_date() -> None:
     assert _isomorphic
 
 
-def test_to_graph_should_return_qualifiedAttribution() -> None:
-    """It returns a qualifiedAttribution graph isomorphic to spec."""
+def test_to_graph_should_return_qualified_attributions() -> None:
+    """It returns a qualified_attributions graph isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
     qualified_attribution = {}

@@ -34,9 +34,41 @@ class Resource(ABC):
     Ref: `dcat:Resource <https://www.w3.org/TR/vocab-dcat-2/#Class:Resource>`_.
 
     Attributes:
-        identifier: an URI uniquely identifying the resource
-        publisher: an URI uniquely identifying the publisher of the resource
-        title: a dict with title in multiple languages
+        access_rights (URI): A link to information about who can access the \
+            resource or an indication of its security status.
+        conformsTo (List[URI]): A list of links to established standards \
+            to which the described resource conforms.
+        contactpoint (Contact): Relevant contact information for the cataloged resource.
+        creator (URI): Link to the entity responsible for producing the resource.
+        description (dict): A free-text account of the item. key is language code.
+        title (dict):  A name given to the item. key is langauge code.
+        release_date (Date): Date of formal issuance (e.g., publication) of the item.
+        modification_date (Date): Most recent date on which the item was changed,\
+            updated or modified.
+        language (List[str]): A list of links to languages of the item.
+        publisher (URI):  A URI uniquely identifying the publisher of the resource
+        identifier (URI): A URI uniquely identifying the resource
+        theme (List[URI]): A list of links to categories of the resource.
+        type_genre (URI):  A link to the nature or genre of the resource.
+        resource_relation (List[URI]): A list of links to resources with \
+            an unspecified relationship to the cataloged item.
+        qualified_relation (List[Relationship]): A list of links to a description\
+            of a relationship with another resource
+        keyword (dict): A keyword or tag describing the resource. key is language code.
+        landing_page (List[URI]): A list of links to web pages that can be \
+            navigated to in a Web browser to gain access to the catalog, \
+            a dataset, its distributions and/or additional information.
+        qualified_attributions (List[dict]): List of links to an Agent having \
+            some form of responsibility for the resource
+        license (URI): 	A link to a legal document under which the resource is \
+            made available.
+        rights (URI): A link to a statement that concerns all rights not addressed\
+            with dct:license or dct:accessRights, such as copyright statements.
+        has_policy (URI): A link to an ODRL conformant policy expressing \
+            the rights associated with the resource.
+        is_referenced_by (List[Resource]): A list of related resources, \
+            such as a publication, that references, cites, or otherwise points\
+            to the cataloged resource.
     """
 
     # Use slots to save memory, faster access and restrict attribute creation

@@ -45,7 +45,20 @@ class Dataset(Resource):
     Ref: `dcat:Dataset <https://www.w3.org/TR/vocab-dcat-2/#Class:Dataset>`_.
 
     Attributes:
-        distributions: a list of distributions of the dataset
+        distributions (List[Distribution]): A list of distributions of the dataset
+        frequency (URI): A link to resource describing the frequency at\
+            which dataset is published.
+        spatial_coverage (Location): The geographical area covered by the dataset.
+        spatial_resolution (Decimal): Minimum spatial separation resolvable \
+            in a dataset, measured in meters.
+        temporal_coverage (PeriodOfTime): The temporal period that the dataset covers.
+        temporal_resolution (str): Minimum time period resolvable in the dataset.
+        was_generated_by (URI): A link to an activity that generated, \
+            or provides the business context for, the creation of the dataset.
+        access_rights_comments (List[URI]): Referanse til hjemmel \
+            (kilde for påstand) i offentlighetsloven, sikkerhetsloven, \
+            beskyttelsesinstruksen eller annet lovverk som ligger til grunn for \
+            vurdering av tilgangsnivå.
     """
 
     __slots__ = (
@@ -54,7 +67,7 @@ class Dataset(Resource):
         "_frequency",
         "_spatial_coverage",
         "_spatial_resolution",
-        "_period_of_time",
+        "_temporal_coverage",
         "_temporal_resolution",
         "_was_generated_by",
         "_access_rights_comments",
@@ -65,7 +78,7 @@ class Dataset(Resource):
     _frequency: URI
     _spatial_coverage: Location
     _spatial_resolution: Decimal
-    _period_of_time: PeriodOfTime
+    _temporal_coverage: PeriodOfTime
     _temporal_resolution: str
     _was_generated_by: URI
     _access_rights_comments: List[str]
@@ -115,13 +128,13 @@ class Dataset(Resource):
         self._spatial_resolution = spatial_resolution
 
     @property
-    def period_of_time(self: Dataset) -> PeriodOfTime:
-        """Get/set for period_of_time."""
-        return self._period_of_time
+    def temporal_coverage(self: Dataset) -> PeriodOfTime:
+        """Get/set for temporal_coverage."""
+        return self._temporal_coverage
 
-    @period_of_time.setter
-    def period_of_time(self: Dataset, period_of_time: PeriodOfTime) -> None:
-        self._period_of_time = period_of_time
+    @temporal_coverage.setter
+    def temporal_coverage(self: Dataset, temporal_coverage: PeriodOfTime) -> None:
+        self._temporal_coverage = temporal_coverage
 
     @property
     def temporal_resolution(self: Dataset) -> str:
@@ -163,7 +176,7 @@ class Dataset(Resource):
         self._frequency_to_graph()
         self._spatial_coverage_to_graph()
         self._spatial_resolution_to_graph()
-        self._period_of_time_to_graph()
+        self._temporal_coverage_to_graph()
         self._temporal_resolution_to_graph()
         self._was_generated_by_to_graph()
         self._access_rights_comments_to_graph()
@@ -210,10 +223,12 @@ class Dataset(Resource):
                 )
             )
 
-    def _period_of_time_to_graph(self: Dataset) -> None:
-        if getattr(self, "period_of_time", None):
+    def _temporal_coverage_to_graph(self: Dataset) -> None:
+        if getattr(self, "temporal_coverage", None):
             _temporal = BNode()
-            for _s, p, o in self.period_of_time._to_graph().triples((None, None, None)):
+            for _s, p, o in self.temporal_coverage._to_graph().triples(
+                (None, None, None)
+            ):
                 self._g.add((_temporal, p, o))
             self._g.add((URIRef(self.identifier), DCT.temporal, _temporal,))
 

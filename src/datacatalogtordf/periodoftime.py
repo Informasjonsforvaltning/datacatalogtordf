@@ -119,15 +119,7 @@ class PeriodOfTime:
     def to_rdf(
         self: PeriodOfTime, format: str = "turtle", encoding: Optional[str] = "utf-8"
     ) -> str:
-        """Maps the period_of_time to rdf.
-
-        Args:
-            format: a valid format. Default: turtle
-            encoding: the encoding to serialize into
-
-        Returns:
-            a rdf serialization as a string according to format.
-        """
+        """Maps the period_of_time to rdf."""
         return self._to_graph().serialize(format=format, encoding=encoding)
 
     # -

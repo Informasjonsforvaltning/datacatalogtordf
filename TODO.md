@@ -4,9 +4,10 @@
  - [x] Add support for all catalog properties
  - [x] Add support for all distribution properties
  - [x] Add support for all dataservice properties
- - [ ] Consider validating temporal_resolution
- - [ ] Check that multiplicities are in accordance with DCAT-AP-NO
+ - [x] Consider validating temporal_resolution
+ - [x] Check that multiplicities are in accordance with DCAT-AP-NO
  - [x] Add support for catalog record properties
  - [x] Ensure that Errors are imported from exceptions module
  - [x] Refactor validation of date and interval into one function in periodoftime module
  - [x] Use validation of date and interval from periodoftime module
+ - [x] Complete xdocs

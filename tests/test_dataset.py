@@ -136,11 +136,11 @@ def test_to_graph_should_return_temporal_coverage() -> None:
     dataset = Dataset()
     dataset.identifier = "http://example.com/datasets/1"
     # Create PeriodOfTime:
-    period_of_time = PeriodOfTime()
-    period_of_time.start_date = "2019-12-31"
-    period_of_time.end_date = "2020-12-31"
-    # Add period_of_time to dataset:
-    dataset.period_of_time = period_of_time
+    temporal_coverage = PeriodOfTime()
+    temporal_coverage.start_date = "2019-12-31"
+    temporal_coverage.end_date = "2020-12-31"
+    # Add temporal_coverage to dataset:
+    dataset.temporal_coverage = temporal_coverage
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .

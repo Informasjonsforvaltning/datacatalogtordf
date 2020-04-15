@@ -35,9 +35,9 @@ class Relationship:
     Ref: `dcat:Relationship <https://www.w3.org/TR/vocab-dcat-2/#Class:Relationship>`_
 
     Attributes:
-        identifier: an URI uniquely identifying the resource
-        relation: an URI uniquely identifying related resource
-        had_role: an URI identifying the role
+        identifier (URI): a URI uniquely identifying the resource
+        relation (Resource): A URI uniquely identifying related resource
+        had_role (URI): A URI identifying the role
     """
 
     slots = ("_identifier", "_relation", "_had_role", "_ref")

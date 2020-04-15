@@ -43,12 +43,18 @@ class Catalog(Dataset):
     Ref: `dcat:Catalog <https://www.w3.org/TR/vocab-dcat-2/#Class:Catalog>`_.
 
     Attributes:
-        homepage: link to a homepage for the catalog
-        themes: A knowledge organization system (KOS) used to classify catalog
-        has_part: An item that is listed in the catalog.
-        datasets: A collection of data that is listed in the catalog.
-        services: A collection of sites or end-points that is listed in the catalog.
-        catalogs: Catalogs that are of interest in the context of this catalog.
+        homepage (URI): A link to a homepage for the catalog
+        themes (List[URI]): A list of links to knowledge organization system (KOS) \
+                    used to classify catalog
+        has_parts (List[Resource]): A list of resources that is listed in the catalog.
+        datasets (List[Dataset]): A list of datasets that is listed in the catalog.
+        services (List[DataService]): A list of dataservices of sites or \
+                    end-points that is listed in the catalog.
+        catalogs (List[Catalog]): A list of catalogs that are of interest in \
+                    the context of this catalog.
+        catalogrecords (List[CatalogRecord]): A list of records describing \
+                    the registration of a single dataset or data service \
+                    that is part of the catalog.
     """
 
     __slots__ = (

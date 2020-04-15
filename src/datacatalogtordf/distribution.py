@@ -40,8 +40,44 @@ class Distribution:
     Ref: `dcat:Distribution <https://www.w3.org/TR/vocab-dcat-2/#Class:Distribution>`_
 
     Attributes:
-        identifier: an URI uniquely identifying the resource
-        title: a dict with title in multiple languages
+        identifier (URI): A URI uniquely identifying the resource
+        title (dict): A dict with title in multiple languages
+        description (dict): A free-text account of the distribution.
+        release_date (Date): Date of formal issuance (e.g., publication) \
+            of the distribution.
+        modification_date (Date): Most recent date on which the distribution \
+            was changed, updated or modified.
+        license (URI): A link to legal document under which the distribution is \
+            made available.
+        access_rights (URI): A link to rights statement that concerns how the \
+            distribution is accessed.
+        rights (URI): A link to information about rights held in and over \
+            the distribution.
+        has_policy (URI): A link to an ODRL conformant policy expressing \
+            the rights associated with the distribution.
+        access_URL (URI): A URL of the resource that gives access to a \
+            distribution of the dataset. E.g. landing page, feed, SPARQL endpoint.
+        access_service (DataService): A data service that gives access to \
+            the distribution of the dataset
+        download_URL (URI): The URL of the downloadable file in a given format.\
+            E.g. CSV file or RDF file. The format is indicated by \
+            the distribution's dct:format and/or dcat:mediaType
+        byte_size (Decimal): 	The size of a distribution in bytes.
+        spatial_resolution (Decimal): 	The minimum spatial separation resolvable \
+            in a dataset distribution, measured in meters.
+        temporal_resolution (str): Minimum time period resolvable in the \
+            dataset distribution.
+        conforms_to (List[URI]): A list of links to established standards \
+            to which the distribution conforms.
+        media_types (List[URI]): A list of media types of the distribution \
+            as defined by IANA.
+        formats (List[URI]): A list of file formats of the distribution.
+        compression_format (URI): The compression format of the distribution \
+            in which the data is contained in a compressed form, e.g. \
+            to reduce the size of the downloadable file.
+        package_format (URI): The package format of the distribution in which \
+            one or more data files are grouped together, e.g. to enable a set \
+            of related files to be downloaded together.
     """
 
     __slots__ = (
@@ -284,15 +320,7 @@ class Distribution:
     def to_rdf(
         self: Distribution, format: str = "turtle", encoding: Optional[str] = "utf-8"
     ) -> str:
-        """Maps the distribution to rdf.
-
-        Args:
-            format: a valid format. Default: turtle
-            encoding: the encoding to serialize into
-
-        Returns:
-            a rdf serialization as a string according to format.
-        """
+        """Maps the distribution to rdf."""
         return self._to_graph().serialize(format=format, encoding=encoding)
 
     # -
