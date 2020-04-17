@@ -21,7 +21,7 @@ Example:
 """
 from __future__ import annotations
 
-from typing import List
+from typing import List, Optional
 
 from rdflib import Graph, Namespace, RDF, URIRef
 
@@ -149,8 +149,40 @@ class Catalog(Dataset):
     def catalogrecords(self: Catalog, catalogrecords: List[CatalogRecord]) -> None:
         self._catalogrecords = catalogrecords
 
+        # -
+
+    def to_rdf(
+        self: Catalog,
+        format: str = "turtle",
+        encoding: Optional[str] = "utf-8",
+        include_datasets: bool = True,
+        include_services: bool = True,
+    ) -> str:
+        """Maps the catalog to rdf.
+
+        Available formats:
+         - turtle (default)
+         - xml
+         - json-ld
+
+        Args:
+            format (str): a valid format.
+            encoding (str): the encoding to serialize into
+            include_datasets (bool): includes the dataset graphs in the catalog
+            include_services (bool): includes the services in the catalog
+
+        Returns:
+            a rdf serialization as a string according to format.
+        """
+        return self._to_graph(include_datasets, include_services).serialize(
+            format=format, encoding=encoding
+        )
+
     # -
-    def _to_graph(self: Catalog) -> Graph:
+
+    def _to_graph(
+        self: Catalog, include_datasets: bool = True, include_services: bool = True
+    ) -> Graph:
 
         super(Catalog, self)._to_graph()
 
@@ -163,6 +195,16 @@ class Catalog(Dataset):
         self._services_to_graph()
         self._catalogs_to_graph()
         self._catalogrecords_to_graph()
+
+        # Add all the datasets to the graf
+        if include_datasets:
+            for dataset in self._datasets:
+                self._g += dataset._to_graph()
+
+        # Add all the services to the graf
+        if include_services:
+            for service in self._services:
+                self._g += service._to_graph()
 
         return self._g
 
