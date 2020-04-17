@@ -37,7 +37,7 @@ dataset = Dataset()
 dataset.identifier = "http://example.com/datasets/1"
 dataset.title = {"nb": "inntektsAPI", "en": "incomeAPI"}
 #
-# Add concept to catalog:
+# Add dataset to catalog:
 catalog.datasets.append(dataset)
 
 # get rdf representation in turtle (default)
