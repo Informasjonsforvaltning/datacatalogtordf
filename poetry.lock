@@ -134,11 +134,11 @@ description = "A library for mapping a concept collection to rdf"
 name = "concepttordf"
 optional = false
 python-versions = ">=3.7,<4.0"
-version = "1.0.0rc7"
+version = "1.0.0"
 
 [package.dependencies]
-rdflib = ">=4.2.2,<5.0.0"
-rdflib-jsonld = ">=0.4.0,<0.5.0"
+rdflib = ">=5.0.0,<6.0.0"
+rdflib-jsonld = ">=0.5.0,<0.6.0"
 
 [package.dependencies.importlib_metadata]
 python = "<3.8"
@@ -695,15 +695,18 @@ description = "RDFLib is a Python library for working with RDF, a simple yet pow
 name = "rdflib"
 optional = false
 python-versions = "*"
-version = "4.2.2"
+version = "5.0.0"
 
 [package.dependencies]
 isodate = "*"
 pyparsing = "*"
+six = "*"
 
 [package.extras]
+docs = ["sphinx (<3)", "sphinxcontrib-apidoc"]
 html = ["html5lib"]
-sparql = ["sparqlwrapper"]
+sparql = ["requests"]
+tests = ["html5lib", "networkx", "nose", "doctest-ignore-unicode"]
 
 [[package]]
 category = "main"
@@ -711,10 +714,10 @@ description = "rdflib extension adding JSON-LD parser and serializer"
 name = "rdflib-jsonld"
 optional = false
 python-versions = "*"
-version = "0.4.0"
+version = "0.5.0"
 
 [package.dependencies]
-rdflib = ">=4.2"
+rdflib = ">=4.2.2"
 
 [[package]]
 category = "dev"
@@ -1035,7 +1038,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "a5f84ac1c44528e9d0ad797104ed91dd308076a671191a6f109d3d016449118e"
+content-hash = "d8eafbe7581409f64dda9f2fe92a1d216470da178f89f3fed5ecfa146380c0c1"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1088,8 +1091,8 @@ colorama = [
     {file = "colorama-0.4.3.tar.gz", hash = "sha256:e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"},
 ]
 concepttordf = [
-    {file = "concepttordf-1.0.0rc7-py3-none-any.whl", hash = "sha256:2c2354798b12c2f39afb67b9f8b1b887b3cbad17e52fa8650cc93a08dd2f6602"},
-    {file = "concepttordf-1.0.0rc7.tar.gz", hash = "sha256:6cbcbe9a48883b7000878922c2138e436af8c8327caf8ba40488959b3b55811f"},
+    {file = "concepttordf-1.0.0-py3-none-any.whl", hash = "sha256:f4cb8c8b309701bd9c64a344dcf560c6406c21a2b75818154e215e53af02bf85"},
+    {file = "concepttordf-1.0.0.tar.gz", hash = "sha256:033e94f42572d1f4f3a4623569857a357ff073027bd0898b11ef2a57aed95b66"},
 ]
 coverage = [
     {file = "coverage-5.1-cp27-cp27m-macosx_10_12_x86_64.whl", hash = "sha256:0cb4be7e784dcdc050fc58ef05b71aa8e89b7e6636b99967fadbdba694cf2b65"},
@@ -1366,11 +1369,11 @@ pyyaml = [
     {file = "PyYAML-5.3.1.tar.gz", hash = "sha256:b8eac752c5e14d3eca0e6dd9199cd627518cb5ec06add0de9d32baeee6fe645d"},
 ]
 rdflib = [
-    {file = "rdflib-4.2.2-py3-none-any.whl", hash = "sha256:58d5994610105a457cff7fdfe3d683d87786c5028a45ae032982498a7e913d6f"},
-    {file = "rdflib-4.2.2.tar.gz", hash = "sha256:da1df14552555c5c7715d8ce71c08f404c988c58a1ecd38552d0da4fc261280d"},
+    {file = "rdflib-5.0.0-py3-none-any.whl", hash = "sha256:88208ea971a87886d60ae2b1a4b2cdc263527af0454c422118d43fe64b357877"},
+    {file = "rdflib-5.0.0.tar.gz", hash = "sha256:78149dd49d385efec3b3adfbd61c87afaf1281c30d3fcaf1b323b34f603fb155"},
 ]
 rdflib-jsonld = [
-    {file = "rdflib-jsonld-0.4.0.tar.gz", hash = "sha256:144774786a2fc7de09b24a9309cbcccc78bc48b152536d2ea1c1df2ad715bc2d"},
+    {file = "rdflib-jsonld-0.5.0.tar.gz", hash = "sha256:4f7d55326405071c7bce9acf5484643bcb984eadb84a6503053367da207105ed"},
 ]
 regex = [
     {file = "regex-2020.4.4-cp27-cp27m-win32.whl", hash = "sha256:90742c6ff121a9c5b261b9b215cb476eea97df98ea82037ec8ac95d1be7a034f"},
