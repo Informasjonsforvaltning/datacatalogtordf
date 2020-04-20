@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "datacatalogtordf"
-version = "1.0.0"
+version = "1.0.1"
 description= "A library for mapping a data catalog to rdf"
 authors = ["Stig B. Dørmænen <stigbd@gmail.com>"]
 license = "Apache-2.0"
@@ -15,9 +15,10 @@ classifiers=[
       ]
 [tool.poetry.dependencies]
 python = "^3.7"
-rdflib = "^4.2.2"
+rdflib = "^5.0.0"
 importlib_metadata = {version = "^1.5.0", python = "<3.8"}
-concepttordf = "^1.0.0-rc.7"
+concepttordf = "^1.0.0"
+rdflib-jsonld = "^0.5.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.4.1"

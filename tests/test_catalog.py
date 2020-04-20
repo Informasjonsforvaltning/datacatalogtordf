@@ -93,10 +93,12 @@ def test_to_graph_should_return_dataset_as_graph() -> None:
 
     dataset1 = Dataset()
     dataset1.identifier = "http://example.com/datasets/1"
+    dataset1.title = {"nb": "Datasett 1", "en": "Dataset 1"}
     catalog.datasets.append(dataset1)
 
     dataset2 = Dataset()
     dataset2.identifier = "http://example.com/datasets/2"
+    dataset2.title = {"nb": "Datasett 2", "en": "Dataset 2"}
     catalog.datasets.append(dataset2)
 
     src = """
@@ -106,9 +108,16 @@ def test_to_graph_should_return_dataset_as_graph() -> None:
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
 
     <http://example.com/catalogs/1> a dcat:Catalog ;
-        dcat:dataset    <http://example.com/datasets/1>,
-                        <http://example.com/datasets/2>
-        .
+        dcat:dataset    <http://example.com/datasets/1> ,
+                        <http://example.com/datasets/2> ;
+    .
+    <http://example.com/datasets/1> a dcat:Dataset ;
+        dct:title   "Dataset 1"@en, "Datasett 1"@nb ;
+    .
+    <http://example.com/datasets/2> a dcat:Dataset ;
+        dct:title   "Dataset 2"@en, "Datasett 2"@nb ;
+    .
+
     """
     g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
     g2 = Graph().parse(data=src, format="turtle")
@@ -120,18 +129,55 @@ def test_to_graph_should_return_dataset_as_graph() -> None:
     assert _isomorphic
 
 
+def test_to_graph_should_return_catalog_without_datasets_as_graph() -> None:
+    """It returns a catalog graph isomorphic to spec."""
+    catalog = Catalog()
+    catalog.identifier = "http://example.com/catalogs/1"
+
+    dataset1 = Dataset()
+    dataset1.identifier = "http://example.com/datasets/1"
+    dataset1.title = {"nb": "Datasett 1", "en": "Dataset 1"}
+    catalog.datasets.append(dataset1)
+
+    dataset2 = Dataset()
+    dataset2.identifier = "http://example.com/datasets/2"
+    dataset2.title = {"nb": "Datasett 2", "en": "Dataset 2"}
+    catalog.datasets.append(dataset2)
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/catalogs/1> a dcat:Catalog ;
+        dcat:dataset    <http://example.com/datasets/1> ,
+                        <http://example.com/datasets/2> ;
+    .
+    """
+    g1 = Graph().parse(data=catalog.to_rdf(include_datasets=False), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
 def test_to_graph_should_return_service() -> None:
     """It returns a service graph isomorphic to spec."""
-    """It returns a dataset graph isomorphic to spec."""
     catalog = Catalog()
     catalog.identifier = "http://example.com/catalogs/1"
 
     service1 = DataService()
     service1.identifier = "http://example.com/services/1"
+    service1.title = {"nb": "Datatjeneste 1", "en": "Dataservice 1"}
     catalog.services.append(service1)
 
     service2 = DataService()
     service2.identifier = "http://example.com/services/2"
+    service2.title = {"nb": "Datatjeneste 2", "en": "Dataservice 2"}
     catalog.services.append(service2)
 
     src = """
@@ -143,9 +189,52 @@ def test_to_graph_should_return_service() -> None:
     <http://example.com/catalogs/1> a dcat:Catalog ;
         dcat:service    <http://example.com/services/1>,
                         <http://example.com/services/2>
-        .
+    .
+    <http://example.com/services/1> a dcat:DataService ;
+        dct:title   "Dataservice 1"@en, "Datatjeneste 1"@nb ;
+    .
+    <http://example.com/services/2> a dcat:DataService ;
+        dct:title   "Dataservice 2"@en, "Datatjeneste 2"@nb ;
+    .
+
     """
     g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
+def test_to_graph_should_return_catalog_without_services_as_graph() -> None:
+    """It returns a catalog graph isomorphic to spec."""
+    catalog = Catalog()
+    catalog.identifier = "http://example.com/catalogs/1"
+
+    service1 = DataService()
+    service1.identifier = "http://example.com/services/1"
+    service1.title = {"nb": "Datatjeneste 1", "en": "Dataservice 1"}
+    catalog.services.append(service1)
+
+    service2 = DataService()
+    service2.identifier = "http://example.com/services/2"
+    service2.title = {"nb": "Datatjeneste 2", "en": "Dataservice 2"}
+    catalog.services.append(service2)
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/catalogs/1> a dcat:Catalog ;
+        dcat:service    <http://example.com/services/1>,
+                        <http://example.com/services/2>
+    .
+    """
+    g1 = Graph().parse(data=catalog.to_rdf(include_services=False), format="turtle")
     g2 = Graph().parse(data=src, format="turtle")
 
     _isomorphic = isomorphic(g1, g2)
