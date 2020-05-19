@@ -104,6 +104,7 @@ class Distribution:
         "_package_format",
     )
 
+    _g: Graph
     _identifier: URI
     _title: dict
     _description: dict
@@ -130,11 +131,6 @@ class Distribution:
         self.conforms_to = []
         self.media_types = []
         self.formats = []
-        # set up graph and namespaces:
-        self._g = Graph()
-        self._g.bind("dct", DCT)
-        self._g.bind("dcat", DCAT)
-        self._g.bind("xsd", XSD)
 
     @property
     def identifier(self: Distribution) -> str:
@@ -325,6 +321,12 @@ class Distribution:
 
     # -
     def _to_graph(self: Distribution) -> Graph:
+
+        # set up graph and namespaces:
+        self._g = Graph()
+        self._g.bind("dct", DCT)
+        self._g.bind("dcat", DCAT)
+        self._g.bind("xsd", XSD)
 
         self._g.add((URIRef(self.identifier), RDF.type, DCAT.Distribution))
 

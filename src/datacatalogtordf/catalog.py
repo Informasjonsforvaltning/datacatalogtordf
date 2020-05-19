@@ -183,7 +183,6 @@ class Catalog(Dataset):
     def _to_graph(
         self: Catalog, include_datasets: bool = True, include_services: bool = True
     ) -> Graph:
-
         super(Catalog, self)._to_graph()
 
         self._g.add((URIRef(self.identifier), RDF.type, self._type))

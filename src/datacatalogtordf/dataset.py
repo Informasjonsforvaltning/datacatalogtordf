@@ -89,7 +89,6 @@ class Dataset(Resource):
         self._type = DCAT.Dataset
         self.distributions = []
         self.access_rights_comments = []
-        self._g.bind("dcatno", DCATNO)
 
     @property
     def distributions(self: Dataset) -> List[Distribution]:
@@ -169,6 +168,7 @@ class Dataset(Resource):
     def _to_graph(self: Dataset) -> Graph:
 
         super(Dataset, self)._to_graph()
+        self._g.bind("dcatno", DCATNO)
 
         self._g.add((URIRef(self.identifier), RDF.type, self._type))
 

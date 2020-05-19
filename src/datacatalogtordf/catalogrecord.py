@@ -60,6 +60,7 @@ class CatalogRecord:
         "_conforms_to",
     )
 
+    _g: Graph
     _identifier: URI
     _title: dict
     _description: dict
@@ -71,12 +72,6 @@ class CatalogRecord:
     def __init__(self) -> None:
         """Inits catalogrecord object with default values."""
         self.conforms_to = []
-        # set up graph and namespaces:
-        self._g = Graph()
-        self._g.bind("dct", DCT)
-        self._g.bind("dcat", DCAT)
-        self._g.bind("xsd", XSD)
-        self._g.bind("foaf", FOAF)
 
     @property
     def identifier(self: CatalogRecord) -> str:
@@ -150,6 +145,13 @@ class CatalogRecord:
 
     # -
     def _to_graph(self: CatalogRecord) -> Graph:
+
+        # set up graph and namespaces:
+        self._g = Graph()
+        self._g.bind("dct", DCT)
+        self._g.bind("dcat", DCAT)
+        self._g.bind("xsd", XSD)
+        self._g.bind("foaf", FOAF)
 
         self._g.add((URIRef(self.identifier), RDF.type, DCAT.CatalogRecord))
 

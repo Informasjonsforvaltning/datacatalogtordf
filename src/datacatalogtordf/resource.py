@@ -99,6 +99,7 @@ class Resource(ABC):
     )
 
     # Types
+    _g: Graph
     _access_rights: URI  # 6.4.1
     _conformsTo: List[str]  # 6.4.2
     _contactpoint: Contact  # 6.4.3
@@ -135,13 +136,6 @@ class Resource(ABC):
         self.language = list()
         self.resource_relation = list()
         self.qualified_relation = list()
-        # Set up graph and namespaces:
-        self._g = Graph()
-        self._g.bind("dct", DCT)
-        self._g.bind("dcat", DCAT)
-        self._g.bind("odrl", ODRL)
-        self._g.bind("xsd", XSD)
-        self._g.bind("prov", PROV)
 
     @property
     def identifier(self: Resource) -> str:
@@ -377,6 +371,14 @@ class Resource(ABC):
 
     # -
     def _to_graph(self: Resource) -> Graph:
+
+        # Set up graph and namespaces:
+        self._g = Graph()
+        self._g.bind("dct", DCT)
+        self._g.bind("dcat", DCAT)
+        self._g.bind("odrl", ODRL)
+        self._g.bind("xsd", XSD)
+        self._g.bind("prov", PROV)
 
         self._publisher_to_graph()
         self._title_to_graph()

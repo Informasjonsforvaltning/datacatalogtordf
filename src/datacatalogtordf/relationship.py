@@ -40,8 +40,9 @@ class Relationship:
         had_role (URI): A URI identifying the role
     """
 
-    slots = ("_identifier", "_relation", "_had_role", "_ref")
+    slots = ("_g", "_identifier", "_relation", "_had_role", "_ref")
 
+    _g: Graph
     _identifier: URI
     _relation: Resource
     _had_role: URI
@@ -49,10 +50,7 @@ class Relationship:
 
     def __init__(self) -> None:
         """Inits an object with default values."""
-        # set up graph and namespaces:
-        self._g = Graph()
-        self._g.bind("dct", DCT)
-        self._g.bind("dcat", DCAT)
+        pass
 
     @property
     def identifier(self: Relationship) -> str:
@@ -98,6 +96,11 @@ class Relationship:
 
     # -
     def _to_graph(self: Relationship) -> Graph:
+
+        # set up graph and namespaces:
+        self._g = Graph()
+        self._g.bind("dct", DCT)
+        self._g.bind("dcat", DCAT)
 
         if getattr(self, "identifier", None):
             self._ref = URIRef(self.identifier)
