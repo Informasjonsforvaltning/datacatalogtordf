@@ -105,6 +105,6 @@ def _dump_diff(g1: Graph, g2: Graph) -> None:
 
 
 def _dump_turtle(g: Graph) -> None:
-    for l in g.serialize(format="turtle").splitlines():
-        if l:
-            print(l.decode())
+    for _l in g.serialize(format="turtle").splitlines():
+        if _l:
+            print(_l.decode())
