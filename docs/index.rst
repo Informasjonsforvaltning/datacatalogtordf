@@ -42,7 +42,7 @@ This package can be used like this:
 
 .. code-block::
 
-  from datacatalogtordf.catalog import Catalog, Dataset
+  from datacatalogtordf import Catalog, Dataset
 
   # Create catalog object
   catalog = Catalog()
