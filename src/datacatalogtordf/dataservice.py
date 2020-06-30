@@ -38,18 +38,21 @@ class DataService(Resource):
             (a Web-resolvable IRI).
         endpointDescription (URI): A description of the services available via \
             the end-points, including their operations, parameters etc.
-        servesdatasets (List[Dataset])
+        servesdatasets (List[Dataset]): A list of datasets that this service serves
+        media_types (List[src]): A list of media types that is offered in the responses
     """
 
     _endpointURL: URI
     _endpointDescription: URI
     _servesdatasets: List[Dataset]
+    _media_types: List[str]
 
     def __init__(self) -> None:
         """Inits DataService with default values."""
         super().__init__()
         self._type = DCAT.DataService
         self.servesdatasets = []
+        self.media_types = []
 
     @property
     def endpointURL(self: DataService) -> str:
@@ -78,6 +81,15 @@ class DataService(Resource):
     def servesdatasets(self: DataService, servesdatasets: List[Dataset]) -> None:
         self._servesdatasets = servesdatasets
 
+    @property
+    def media_types(self: DataService) -> List[str]:
+        """Get/set for media_type."""
+        return self._media_types
+
+    @media_types.setter
+    def media_types(self: DataService, media_types: List[str]) -> None:
+        self._media_types = media_types
+
     # -
     def _to_graph(self: DataService) -> Graph:
 
@@ -91,6 +103,8 @@ class DataService(Resource):
             self._endpointDescription_to_graph()
         if getattr(self, "servesdatasets", None):
             self._servesdatasets_to_graph()
+        if getattr(self, "media_types", None):
+            self._media_type_to_graph()
 
         return self._g
 
@@ -121,3 +135,8 @@ class DataService(Resource):
                     URIRef(dataset.identifier),
                 )
             )
+
+    def _media_type_to_graph(self: DataService) -> None:
+
+        for _media_type in self.media_types:
+            self._g.add((URIRef(self.identifier), DCAT.mediaType, URIRef(_media_type)))
