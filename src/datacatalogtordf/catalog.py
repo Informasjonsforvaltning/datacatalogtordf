@@ -240,7 +240,11 @@ class Catalog(Dataset):
         if getattr(self, "themes", None):
             for _theme in self._themes:
                 self._g.add(
-                    (URIRef(self.identifier), DCAT.themeTaxonomy, URIRef(_theme),)
+                    (
+                        URIRef(self.identifier),
+                        DCAT.themeTaxonomy,
+                        URIRef(_theme),
+                    )
                 )
 
     def _has_parts_to_graph(self: Catalog) -> None:

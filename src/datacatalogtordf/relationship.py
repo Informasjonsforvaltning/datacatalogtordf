@@ -118,8 +118,20 @@ class Relationship:
 
     def _relation_to_graph(self: Relationship) -> None:
 
-        self._g.add((self._ref, DCT.relation, URIRef(self.relation.identifier),))
+        self._g.add(
+            (
+                self._ref,
+                DCT.relation,
+                URIRef(self.relation.identifier),
+            )
+        )
 
     def _had_role_to_graph(self: Relationship) -> None:
 
-        self._g.add((self._ref, DCAT.hadRole, URIRef(self.had_role),))
+        self._g.add(
+            (
+                self._ref,
+                DCAT.hadRole,
+                URIRef(self.had_role),
+            )
+        )

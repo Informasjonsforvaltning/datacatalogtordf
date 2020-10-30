@@ -220,5 +220,9 @@ class CatalogRecord:
         if getattr(self, "conforms_to", None):
             for _standard in self.conforms_to:
                 self._g.add(
-                    (URIRef(self.identifier), DCT.conformsTo, URIRef(_standard),)
+                    (
+                        URIRef(self.identifier),
+                        DCT.conformsTo,
+                        URIRef(_standard),
+                    )
                 )

@@ -470,14 +470,22 @@ class Distribution:
         if getattr(self, "conforms_to", None):
             for _standard in self.conforms_to:
                 self._g.add(
-                    (URIRef(self.identifier), DCT.conformsTo, URIRef(_standard),)
+                    (
+                        URIRef(self.identifier),
+                        DCT.conformsTo,
+                        URIRef(_standard),
+                    )
                 )
 
     def _media_types_to_graph(self: Distribution) -> None:
         if getattr(self, "media_types", None):
             for _media_type in self.media_types:
                 self._g.add(
-                    (URIRef(self.identifier), DCAT.mediaType, URIRef(_media_type),)
+                    (
+                        URIRef(self.identifier),
+                        DCAT.mediaType,
+                        URIRef(_media_type),
+                    )
                 )
 
     def _formats_to_graph(self: Distribution) -> None:

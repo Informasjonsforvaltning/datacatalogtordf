@@ -230,7 +230,13 @@ class Dataset(Resource):
                 (None, None, None)
             ):
                 self._g.add((_temporal, p, o))
-            self._g.add((URIRef(self.identifier), DCT.temporal, _temporal,))
+            self._g.add(
+                (
+                    URIRef(self.identifier),
+                    DCT.temporal,
+                    _temporal,
+                )
+            )
 
     def _temporal_resolution_to_graph(self: Dataset) -> None:
         if getattr(self, "temporal_resolution", None):

@@ -8,7 +8,7 @@ from nox.sessions import Session
 package = "datacatalogtordf"
 locations = "src", "tests", "noxfile.py", "docs/conf.py"
 nox.options.stop_on_first_error = True
-nox.options.sessions = "black", "lint", "mypy", "pytype", "tests"
+nox.options.sessions = "lint", "mypy", "pytype", "tests"
 
 
 def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> None:

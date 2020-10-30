@@ -355,7 +355,11 @@ def model_to_graph(model: Any) -> Graph:
 
     for key in model.title:
         g.add(
-            (URIRef(model.identifier), DCT.title, Literal(model.title[key], lang=key),)
+            (
+                URIRef(model.identifier),
+                DCT.title,
+                Literal(model.title[key], lang=key),
+            )
         )
 
     return g
