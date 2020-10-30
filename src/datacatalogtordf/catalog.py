@@ -21,7 +21,7 @@ Example:
 """
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from rdflib import Graph, Namespace, RDF, URIRef
 
@@ -35,6 +35,7 @@ from .uri import URI
 DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
 FOAF = Namespace("http://xmlns.com/foaf/0.1/")
+MODELLDCATNO = Namespace("https://data.norge.no/vocabulary/modelldcatno#")
 
 
 class Catalog(Dataset):
@@ -55,6 +56,7 @@ class Catalog(Dataset):
         catalogrecords (List[CatalogRecord]): A list of records describing \
                     the registration of a single dataset or data service \
                     that is part of the catalog.
+        models (List[URI]): A list of links to InformationModels
     """
 
     __slots__ = (
@@ -65,6 +67,7 @@ class Catalog(Dataset):
         "_services",
         "_catalogs",
         "_catalogrecords",
+        "_models",
     )
 
     _homepage: URI
@@ -74,6 +77,7 @@ class Catalog(Dataset):
     _services: List[DataService]
     _catalogs: List[Catalog]
     _catalogrecords: List[CatalogRecord]
+    _models: List[Any]
 
     def __init__(self) -> None:
         """Inits catalog object with default values."""
@@ -85,6 +89,7 @@ class Catalog(Dataset):
         self.services = []
         self.catalogs = []
         self.catalogrecords = []
+        self.models = []
 
     @property
     def homepage(self: Catalog) -> str:
@@ -123,6 +128,15 @@ class Catalog(Dataset):
         self._datasets = datasets
 
     @property
+    def models(self: Catalog) -> List[Any]:
+        """Get/set for models."""
+        return self._models
+
+    @models.setter
+    def models(self: Catalog, models: List[Any]) -> None:
+        self._models = models
+
+    @property
     def services(self: Catalog) -> List[DataService]:
         """Get/set for services."""
         return self._services
@@ -157,6 +171,7 @@ class Catalog(Dataset):
         encoding: Optional[str] = "utf-8",
         include_datasets: bool = True,
         include_services: bool = True,
+        include_models: bool = True,
     ) -> str:
         """Maps the catalog to rdf.
 
@@ -170,18 +185,22 @@ class Catalog(Dataset):
             encoding (str): the encoding to serialize into
             include_datasets (bool): includes the dataset graphs in the catalog
             include_services (bool): includes the services in the catalog
+            include_models (bool): includes the models in the catalog
 
         Returns:
             a rdf serialization as a string according to format.
         """
-        return self._to_graph(include_datasets, include_services).serialize(
-            format=format, encoding=encoding
-        )
+        return self._to_graph(
+            include_datasets, include_services, include_models
+        ).serialize(format=format, encoding=encoding)
 
     # -
 
     def _to_graph(
-        self: Catalog, include_datasets: bool = True, include_services: bool = True
+        self: Catalog,
+        include_datasets: bool = True,
+        include_services: bool = True,
+        include_models: bool = True,
     ) -> Graph:
         super(Catalog, self)._to_graph()
 
@@ -194,6 +213,7 @@ class Catalog(Dataset):
         self._services_to_graph()
         self._catalogs_to_graph()
         self._catalogrecords_to_graph()
+        self._models_to_graph()
 
         # Add all the datasets to the graf
         if include_datasets:
@@ -204,6 +224,11 @@ class Catalog(Dataset):
         if include_services:
             for service in self._services:
                 self._g += service._to_graph()
+
+        # Add all the models to the graf
+        if include_models:
+            for model in self._models:
+                self._g += model._to_graph()
 
         return self._g
 
@@ -254,5 +279,16 @@ class Catalog(Dataset):
                         URIRef(self.identifier),
                         DCAT.record,
                         URIRef(_catalogrecord.identifier),
+                    )
+                )
+
+    def _models_to_graph(self: Catalog) -> None:
+        if getattr(self, "models", None):
+            for _model in self._models:
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        MODELLDCATNO.model,
+                        URIRef(_model.identifier),
                     )
                 )

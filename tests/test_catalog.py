@@ -1,8 +1,13 @@
 """Test cases for the catalog module."""
-from rdflib import Graph
+from typing import Any
+
+from rdflib import Graph, Literal, Namespace, RDF, URIRef
 from rdflib.compare import graph_diff, isomorphic
 
 from datacatalogtordf import Catalog, CatalogRecord, DataService, Dataset
+
+DCT = Namespace("http://purl.org/dc/terms/")
+MODELLDCATNO = Namespace("https://data.norge.no/vocabulary/modelldcatno#")
 
 
 def test_to_graph_should_return_homepage() -> None:
@@ -335,6 +340,73 @@ def test_to_graph_should_return_catalog_without_removed_service_as_graph() -> No
     g2 = Graph().parse(data=src, format="turtle")
 
     _dump_turtle(g1)
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
+def model_to_graph(model: Any) -> Graph:
+    """Helper function to create a model graph to test with."""
+    g = Graph()
+
+    g.add((URIRef(model.identifier), RDF.type, MODELLDCATNO.InformationModel))
+
+    for key in model.title:
+        g.add(
+            (URIRef(model.identifier), DCT.title, Literal(model.title[key], lang=key),)
+        )
+
+    return g
+
+
+def test_to_graph_should_return_model_as_graph() -> None:
+    """It returns a model graph isomorphic to spec."""
+    catalog = Catalog()
+    catalog.identifier = "http://example.com/catalogs/1"
+    # Creating a class as a placeholder for real InformationModel class
+    InformationModel = type(
+        "InformationModel",
+        (object,),
+        {
+            "title": "",
+            "identifier": "",
+            "_to_graph": lambda self: model_to_graph(self),
+        },
+    )
+
+    model_1 = InformationModel()
+    model_1.identifier = "http://example.com/models/1"  # type: ignore
+    model_1.title = {"en": "My first model"}  # type: ignore
+    catalog.models.append(model_1)
+
+    model_2 = InformationModel()
+    model_2.identifier = "http://example.com/models/2"  # type: ignore
+    model_2.title = {"en": "My second model"}  # type: ignore
+    catalog.models.append(model_2)
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix modelldcatno: <https://data.norge.no/vocabulary/modelldcatno#> .
+
+    <http://example.com/catalogs/1> a dcat:Catalog ;
+        modelldcatno:model  <http://example.com/models/1> ,
+                            <http://example.com/models/2> ;
+    .
+    <http://example.com/models/1> a modelldcatno:InformationModel ;
+        dct:title   "My first model"@en ;
+    .
+    <http://example.com/models/2> a modelldcatno:InformationModel ;
+        dct:title   "My second model"@en ;
+    .
+    """
+    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
     _isomorphic = isomorphic(g1, g2)
     if not _isomorphic:
         _dump_diff(g1, g2)
