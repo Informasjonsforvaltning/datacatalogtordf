@@ -147,7 +147,11 @@ class PeriodOfTime:
     def _end_date_to_graph(self: PeriodOfTime) -> None:
         if getattr(self, "end_date", None):
             self._g.add(
-                (self._ref, DCAT.endDate, Literal(self.end_date, datatype=XSD.date),)
+                (
+                    self._ref,
+                    DCAT.endDate,
+                    Literal(self.end_date, datatype=XSD.date),
+                )
             )
 
     # - helpers

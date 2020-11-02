@@ -46,11 +46,16 @@ print(rdf.decode())
 ```
 ## Development
 ### Requirements
-- python3
 - [pyenv](https://github.com/pyenv/pyenv) (recommended)
+- python3
+- [pipx] (https://github.com/pipxproject/pipx) (recommended)
 - [poetry](https://python-poetry.org/)
 - [nox](https://nox.thea.codes/en/stable/)
 
+```
+% pipx install poetry==1.0.5
+% pipx install nox==2019.11.9
+```
 ### Install
 ```
 % git clone https://github.com/Informasjonsforvaltning/datacatalogtordf.git
