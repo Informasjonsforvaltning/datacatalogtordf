@@ -91,11 +91,11 @@ def test_to_graph_should_return_organizationid_as_graph() -> None:
     assert _isomorphic
 
 
-def test_to_graph_should_return_type_as_graph() -> None:
+def test_to_graph_should_return_organization_type_as_graph() -> None:
     """It returns a type graph isomorphic to spec."""
     agent = Agent()
     agent.identifier = "http://example.com/agents/1"
-    agent.type = "http://example.com/type/1"
+    agent.organization_type = "http://example.com/concepts/1"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -105,7 +105,7 @@ def test_to_graph_should_return_type_as_graph() -> None:
     @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
     <http://example.com/agents/1>    a foaf:Agent ;
-        dct:type <http://example.com/type/1>;
+        dct:type <http://example.com/concepts/1>;
     .
     """
     g1 = Graph().parse(data=agent.to_rdf(), format="turtle")

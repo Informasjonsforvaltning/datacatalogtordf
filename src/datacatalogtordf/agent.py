@@ -38,7 +38,7 @@ class Agent:
         identifier (URI): A URI uniquely identifying the agent
         name (dict): A name given to the agent. key is langauge code
         organization_id (str): The organzation's identifier
-        type (URI): a link to a concept designating the type of the agent
+        organization_type (URI): a link to a concept designating the type of the agent
     """
 
     slots = ("_identifier", "_name", "_organization_id")
@@ -46,7 +46,7 @@ class Agent:
     _identifier: URI
     _name: dict
     _organization_id: str
-    _type: URI
+    _organization_type: URI
 
     def __init__(self) -> None:
         """Inits an object with default values."""
@@ -84,13 +84,13 @@ class Agent:
         self._organization_id = organization_id
 
     @property
-    def type(self: Agent) -> str:
+    def organization_type(self: Agent) -> str:
         """Type attribute."""
-        return self._type
+        return self._organization_type
 
-    @type.setter
-    def type(self: Agent, type: str) -> None:
-        self._type = URI(type)
+    @organization_type.setter
+    def organization_type(self: Agent, organization_type: str) -> None:
+        self._organization_type = URI(organization_type)
 
     # -
     def to_rdf(
@@ -136,12 +136,12 @@ class Agent:
                 )
             )
 
-        if getattr(self, "type", None):
+        if getattr(self, "organization_type", None):
             self._g.add(
                 (
                     _self,
                     DCT.type,
-                    URIRef(self.type),
+                    URIRef(self.organization_type),
                 )
             )
 
