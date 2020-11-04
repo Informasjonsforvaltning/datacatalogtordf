@@ -92,6 +92,15 @@ datacatalogtordf.location
   :inherited-members:
 
 
+datacatalogtordf.agent
+-------------------------
+
+.. automodule:: datacatalogtordf.agent
+  :members:
+  :show-inheritance:
+  :inherited-members:
+
+
 datacatalogtordf.exceptions
 ---------------------------
 

@@ -9,11 +9,12 @@ Refer to sub-class for typical usage examples.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import List, Optional, TYPE_CHECKING
+from typing import Any, List, Optional, TYPE_CHECKING
 
 from concepttordf import Contact
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 
+from .agent import Agent
 from .periodoftime import Date
 from .uri import URI
 
@@ -26,6 +27,7 @@ DCAT = Namespace("http://www.w3.org/ns/dcat#")
 ODRL = Namespace("http://www.w3.org/ns/odrl/2/")
 XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
 PROV = Namespace("http://www.w3.org/ns/prov#")
+FOAF = Namespace("http://xmlns.com/foaf/0.1/")
 
 
 class Resource(ABC):
@@ -46,7 +48,7 @@ class Resource(ABC):
         modification_date (Date): Most recent date on which the item was changed,\
             updated or modified.
         language (List[str]): A list of links to languages of the item.
-        publisher (URI):  A URI uniquely identifying the publisher of the resource
+        publisher (Any):  A URI uniquely identifying the publisher of the resource
         identifier (URI): A URI uniquely identifying the resource
         theme (List[URI]): A list of links to categories of the resource.
         type_genre (URI):  A link to the nature or genre of the resource.
@@ -109,7 +111,7 @@ class Resource(ABC):
     _release_date: Date  # 6.4.7
     _modification_date: Date  # 6.4.8
     _language: List[str]  # 6.4.9
-    _publisher: URI  # 6.4.10
+    _publisher: Any  # 6.4.10
     _identifier: URI  # 6.4.11
     _theme: List[str]  # 6.4.12
     _type_genre: URI  # 6.4.13
@@ -147,13 +149,13 @@ class Resource(ABC):
         self._identifier = URI(identifier)
 
     @property
-    def publisher(self: Resource) -> str:
+    def publisher(self: Resource) -> Any:
         """Get/set for publisher."""
         return self._publisher
 
     @publisher.setter
-    def publisher(self: Resource, publisher: str) -> None:
-        self._publisher = URI(publisher)
+    def publisher(self: Resource, publisher: Any) -> None:
+        self._publisher = publisher
 
     @property
     def title(self: Resource) -> dict:
@@ -379,6 +381,7 @@ class Resource(ABC):
         self._g.bind("odrl", ODRL)
         self._g.bind("xsd", XSD)
         self._g.bind("prov", PROV)
+        self._g.bind("foaf", FOAF)
 
         self._publisher_to_graph()
         self._title_to_graph()
@@ -406,9 +409,19 @@ class Resource(ABC):
 
     def _publisher_to_graph(self: Resource) -> None:
         if getattr(self, "publisher", None):
-            self._g.add(
-                (URIRef(self.identifier), DCT.publisher, URIRef(self.publisher))
-            )
+            if type(self.publisher) is str:
+                self._g.add(
+                    (URIRef(self.identifier), DCT.publisher, URIRef(self.publisher))
+                )
+            elif type(self.publisher) is Agent:
+                if getattr(self.publisher, "identifier", None):
+                    _agent = URIRef(self.publisher.identifier)
+                else:
+                    _agent = BNode()
+
+                for _s, p, o in self.publisher._to_graph().triples((None, None, None)):
+                    self._g.add((_agent, p, o))
+                self._g.add((URIRef(self.identifier), DCT.publisher, _agent))
 
     def _title_to_graph(self: Resource) -> None:
         if getattr(self, "title", None):
