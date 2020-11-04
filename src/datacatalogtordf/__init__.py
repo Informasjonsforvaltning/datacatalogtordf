@@ -17,6 +17,7 @@ try:
 except PackageNotFoundError:  # pragma: no cover
     __version__ = "unknown"
 
+from .agent import Agent
 from .catalog import Catalog
 from .catalogrecord import CatalogRecord
 from .dataservice import DataService
