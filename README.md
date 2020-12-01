@@ -55,6 +55,7 @@ print(rdf.decode())
 ```
 % pipx install poetry==1.0.5
 % pipx install nox==2019.11.9
+% pipx inject nox nox-poetry
 ```
 ### Install
 ```
