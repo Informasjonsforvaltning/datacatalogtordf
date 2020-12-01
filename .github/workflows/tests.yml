@@ -16,4 +16,4 @@ jobs:
       - run: pip install nox==2020.8.22
       - run: pip install poetry==1.1.4
       - run: pip install nox-poetry
-  - run: nox
+      - run: nox
