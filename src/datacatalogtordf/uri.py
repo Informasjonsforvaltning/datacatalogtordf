@@ -1,8 +1,6 @@
 """URI helper module for very basic validation of a uri."""
 from __future__ import annotations
 
-from rdflib import Graph, Literal, RDF, URIRef
-
 from .exceptions import InvalidURIError
 
 
@@ -29,15 +27,15 @@ class URI(str):
 
     def __init__(self, link: str) -> None:
         """Validate a URI object."""
-        try:
-            self._is_valid_uri(link)
-        except Exception as err:
-            raise InvalidURIError(link, str(err))
+        if not _is_valid_uri(link):
+            raise InvalidURIError(link, f"{link} is not a valid URI")
 
-    # -
-    def _is_valid_uri(self: URI, link: str) -> None:
-        """Perform basic validation of link."""
-        _uriref = URIRef(link)
-        _g = Graph()
-        _g.add((_uriref, RDF.type, Literal(None)))
-        _g.serialize(format="n3")
+
+def _is_valid_uri(uri: str) -> bool:
+    """Perform basic validation of link."""
+    _invalid_uri_chars = '<>" {}|\\^`'
+
+    for c in _invalid_uri_chars:
+        if c in uri:
+            return False
+    return True
