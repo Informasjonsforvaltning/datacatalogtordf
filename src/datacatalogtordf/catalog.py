@@ -172,7 +172,7 @@ class Catalog(Dataset):
         include_datasets: bool = True,
         include_services: bool = True,
         include_models: bool = True,
-    ) -> str:
+    ) -> bytes:
         """Maps the catalog to rdf.
 
         Available formats:
@@ -188,7 +188,7 @@ class Catalog(Dataset):
             include_models (bool): includes the models in the catalog
 
         Returns:
-            a rdf serialization as a string according to format.
+            a rdf serialization as a bytes literal according to format.
         """
         return self._to_graph(
             include_datasets, include_services, include_models

@@ -82,7 +82,7 @@ class Relationship:
     # -
     def to_rdf(
         self: Relationship, format: str = "turtle", encoding: Optional[str] = "utf-8"
-    ) -> str:
+    ) -> bytes:
         """Maps the relationship to rdf.
 
         Args:
@@ -90,7 +90,7 @@ class Relationship:
             encoding: the encoding to serialize into
 
         Returns:
-            a rdf serialization as a string according to format.
+            a rdf serialization as a bytes literal according to format.
         """
         return self._to_graph().serialize(format=format, encoding=encoding)
 

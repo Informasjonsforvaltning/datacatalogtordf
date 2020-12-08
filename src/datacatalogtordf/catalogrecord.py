@@ -139,7 +139,7 @@ class CatalogRecord:
     # -
     def to_rdf(
         self: CatalogRecord, format: str = "turtle", encoding: Optional[str] = "utf-8"
-    ) -> str:
+    ) -> bytes:
         """Maps the catalogrecord to rdf."""
         return self._to_graph().serialize(format=format, encoding=encoding)
 
