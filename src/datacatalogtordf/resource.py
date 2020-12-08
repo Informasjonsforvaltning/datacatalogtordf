@@ -345,7 +345,7 @@ class Resource(ABC):
     # -
     def to_rdf(
         self: Resource, format: str = "turtle", encoding: Optional[str] = "utf-8"
-    ) -> str:
+    ) -> bytes:
         """Maps the distribution to rdf.
 
         Available formats:
@@ -358,7 +358,7 @@ class Resource(ABC):
             encoding: the encoding to serialize into
 
         Returns:
-            a rdf serialization as a string according to format.
+            a rdf serialization as a bytes literal according to format.
 
         Example:
             >>> from datacatalogtordf import Catalog

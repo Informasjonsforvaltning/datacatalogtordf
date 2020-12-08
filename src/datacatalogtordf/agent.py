@@ -95,7 +95,7 @@ class Agent:
     # -
     def to_rdf(
         self: Agent, format: str = "turtle", encoding: Optional[str] = "utf-8"
-    ) -> str:
+    ) -> bytes:
         """Maps the agent to rdf.
 
         Args:
@@ -103,7 +103,7 @@ class Agent:
             encoding: the encoding to serialize into
 
         Returns:
-            a rdf serialization as a string according to format.
+            a rdf serialization as a bytes literal according to format.
         """
         return self._to_graph().serialize(format=format, encoding=encoding)
 

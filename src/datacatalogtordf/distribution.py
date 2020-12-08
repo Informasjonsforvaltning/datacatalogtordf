@@ -315,7 +315,7 @@ class Distribution:
     # -
     def to_rdf(
         self: Distribution, format: str = "turtle", encoding: Optional[str] = "utf-8"
-    ) -> str:
+    ) -> bytes:
         """Maps the distribution to rdf."""
         return self._to_graph().serialize(format=format, encoding=encoding)
 
