@@ -48,13 +48,13 @@ print(rdf.decode())
 ### Requirements
 - [pyenv](https://github.com/pyenv/pyenv) (recommended)
 - python3
-- [pipx] (https://github.com/pipxproject/pipx) (recommended)
+- [pipx](https://github.com/pipxproject/pipx) (recommended)
 - [poetry](https://python-poetry.org/)
 - [nox](https://nox.thea.codes/en/stable/)
 
 ```
-% pipx install poetry==1.0.5
-% pipx install nox==2019.11.9
+% pipx install poetry==1.1.4
+% pipx install nox==2020.8.22
 % pipx inject nox nox-poetry
 ```
 ### Install
