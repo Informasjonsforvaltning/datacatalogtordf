@@ -64,6 +64,16 @@ class Document:
         """Set for title attribute."""
         self._title = title
 
+    @property
+    def language(self: Document) -> str:
+        """Get for language."""
+        return self._language
+
+    @language.setter
+    def language(self: Document, language: str) -> None:
+        """Set for language."""
+        self._language = URI(language)
+
     def to_rdf(
         self: Document, format: str = "turtle", encoding: Optional[str] = "utf-8"
     ) -> bytes:
@@ -78,7 +88,6 @@ class Document:
         """
         return self._to_graph().serialize(format=format, encoding=encoding)
 
-    # -
     def _to_graph(self: Document) -> Graph:
 
         self._g = Graph()
@@ -101,5 +110,13 @@ class Document:
                         Literal(self.title[key], lang=key),
                     )
                 )
+        if getattr(self, "language", None):
+            self._g.add(
+                (
+                    _self,
+                    DCTERMS.language,
+                    Literal(self.language, datatype=DCTERMS.LinguisticSystem),
+                )
+            )
 
         return self._g
