@@ -23,6 +23,7 @@ from .catalogrecord import CatalogRecord
 from .dataservice import DataService
 from .dataset import Dataset
 from .distribution import Distribution
+from .document import Document
 from .exceptions import InvalidDateError, InvalidDateIntervalError
 from .location import Location
 from .periodoftime import PeriodOfTime
