@@ -13,7 +13,9 @@ Example:
 """
 from __future__ import annotations
 
-from rdflib import FOAF, Namespace
+from typing import Optional
+
+from rdflib import BNode, DCTERMS, FOAF, Graph, Literal, Namespace, RDF, URIRef
 
 from datacatalogtordf.uri import URI
 
@@ -41,3 +43,63 @@ class Document:
     def __init__(self) -> None:
         """Inits an object with default values."""
         self._type = FOAF.Document
+
+    @property
+    def identifier(self: Document) -> str:
+        """Get for identifier."""
+        return self._identifier
+
+    @identifier.setter
+    def identifier(self: Document, identifier: str) -> None:
+        """Set for identifier."""
+        self._identifier = URI(identifier)
+
+    @property
+    def title(self) -> dict:
+        """Get for title attribute."""
+        return self._title
+
+    @title.setter
+    def title(self, title: dict) -> None:
+        """Set for title attribute."""
+        self._title = title
+
+    def to_rdf(
+        self: Document, format: str = "turtle", encoding: Optional[str] = "utf-8"
+    ) -> bytes:
+        """Maps the document to rdf.
+
+        Args:
+            format: a valid format. Default: turtle
+            encoding: the encoding to serialize into
+
+        Returns:
+            a rdf serialization as a bytes literal according to format.
+        """
+        return self._to_graph().serialize(format=format, encoding=encoding)
+
+    # -
+    def _to_graph(self: Document) -> Graph:
+
+        self._g = Graph()
+        self._g.bind("dct", DCTERMS)
+        self._g.bind("foaf", FOAF)
+
+        if getattr(self, "identifier", None):
+            _self = URIRef(self.identifier)
+        else:
+            _self = BNode()
+
+        self._g.add((_self, RDF.type, FOAF.Document))
+
+        if getattr(self, "title", None):
+            for key in self.title:
+                self._g.add(
+                    (
+                        _self,
+                        DCTERMS.title,
+                        Literal(self.title[key], lang=key),
+                    )
+                )
+
+        return self._g
