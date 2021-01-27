@@ -118,12 +118,12 @@ def test_to_graph_should_return_organization_type_as_graph() -> None:
     assert _isomorphic
 
 
-def test_to_graph_should_return_sameas() -> None:
+def test_to_graph_should_return_same_as() -> None:
     """It returns a agent graph isomorphic to spec."""
     """It returns an sameAs graph isomorphic to spec."""
     agent = Agent()
     agent.identifier = "http://example.com/agents/1"
-    agent.sameas = "http://example.com/agents/2"
+    agent.same_as = "http://example.com/agents/2"
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .

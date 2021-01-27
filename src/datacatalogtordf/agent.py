@@ -41,13 +41,13 @@ class Agent:
         organization_type (URI): a link to a concept designating the type of the agent
     """
 
-    slots = ("_identifier", "_name", "_organization_id", "_sameas")
+    slots = ("_identifier", "_name", "_organization_id", "_same_as")
 
     _identifier: URI
     _name: dict
     _organization_id: str
     _organization_type: URI
-    _sameas: URI
+    _same_as: URI
 
     def __init__(self) -> None:
         """Inits an object with default values."""
@@ -94,14 +94,14 @@ class Agent:
         self._organization_type = URI(organization_type)
 
     @property
-    def sameas(self: Agent) -> str:
-        """Get for sameas."""
-        return self._sameas
+    def same_as(self: Agent) -> str:
+        """Get for same_as."""
+        return self._same_as
 
-    @sameas.setter
-    def sameas(self: Agent, sameas: str) -> None:
-        """Get for sameas."""
-        self._sameas = URI(sameas)
+    @same_as.setter
+    def same_as(self: Agent, same_as: str) -> None:
+        """Get for same_as."""
+        self._same_as = URI(same_as)
 
     # -
     def to_rdf(
@@ -156,7 +156,7 @@ class Agent:
                 )
             )
 
-        if getattr(self, "sameas", None):
-            self._g.add((URIRef(self.identifier), OWL.sameAs, (URIRef(self._sameas))))
+        if getattr(self, "same_as", None):
+            self._g.add((URIRef(self.identifier), OWL.sameAs, (URIRef(self._same_as))))
 
         return self._g
