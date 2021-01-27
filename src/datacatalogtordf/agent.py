@@ -21,7 +21,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
+from rdflib import BNode, Graph, Literal, Namespace, OWL, RDF, URIRef
 
 from .uri import URI
 
@@ -41,12 +41,13 @@ class Agent:
         organization_type (URI): a link to a concept designating the type of the agent
     """
 
-    slots = ("_identifier", "_name", "_organization_id")
+    slots = ("_identifier", "_name", "_organization_id", "_sameas")
 
     _identifier: URI
     _name: dict
     _organization_id: str
     _organization_type: URI
+    _sameas: URI
 
     def __init__(self) -> None:
         """Inits an object with default values."""
@@ -91,6 +92,16 @@ class Agent:
     @organization_type.setter
     def organization_type(self: Agent, organization_type: str) -> None:
         self._organization_type = URI(organization_type)
+
+    @property
+    def sameas(self: Agent) -> str:
+        """Get for sameas."""
+        return self._sameas
+
+    @sameas.setter
+    def sameas(self: Agent, sameas: str) -> None:
+        """Get for sameas."""
+        self._sameas = URI(sameas)
 
     # -
     def to_rdf(
@@ -144,5 +155,8 @@ class Agent:
                     URIRef(self.organization_type),
                 )
             )
+
+        if getattr(self, "sameas", None):
+            self._g.add((URIRef(self.identifier), OWL.sameAs, (URIRef(self._sameas))))
 
         return self._g
