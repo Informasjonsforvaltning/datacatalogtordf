@@ -29,7 +29,7 @@ class Document:
         identifier (URI): A URI uniquely identifying the document
         title (dict): A title given to the document. key is langauge code
         language (str): The organzation's identifier
-        format (URI): a link to a concept designating the type of the document
+        format (str): a link to a concept designating the type of the document
     """
 
     slots = ("_identifier", "_title", "_language", "_format")
