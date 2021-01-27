@@ -28,8 +28,8 @@ class Document:
     Attributes:
         identifier (URI): A URI uniquely identifying the document
         title (dict): A title given to the document. key is langauge code
-        language (str): The organzation's identifier
-        format (str): a link to a concept designating the type of the document
+        language (str): A reference to the language which is used in the document
+        format (str): A link to a concept designating the type of the document
     """
 
     slots = ("_identifier", "_title", "_language", "_format")
