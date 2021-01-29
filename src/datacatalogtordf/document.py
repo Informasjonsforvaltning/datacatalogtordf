@@ -32,12 +32,15 @@ class Document:
         format (str): A link to a concept designating the type of the document
     """
 
-    slots = ("_identifier", "_title", "_language", "_format")
+    slots = (
+        "_identifier",
+        "_title",
+        "_language",
+    )
 
     _identifier: URI
     _title: dict
     _language: str
-    _format: str
     _type: str
 
     def __init__(self) -> None:
@@ -73,16 +76,6 @@ class Document:
     def language(self: Document, language: str) -> None:
         """Set for language."""
         self._language = URI(language)
-
-    @property
-    def format(self: Document) -> str:
-        """Get for format."""
-        return self._format
-
-    @format.setter
-    def format(self: Document, format: str) -> None:
-        """Set for format."""
-        self._format = URI(format)
 
     def to_rdf(
         self: Document, format: str = "turtle", encoding: Optional[str] = "utf-8"
@@ -126,15 +119,6 @@ class Document:
                     _self,
                     DCTERMS.language,
                     Literal(self.language, datatype=DCTERMS.LinguisticSystem),
-                )
-            )
-
-        if getattr(self, "format", None):
-            self._g.add(
-                (
-                    _self,
-                    DCTERMS["format"],  # https://github.com/RDFLib/rdflib/issues/932
-                    Literal(self.format, datatype=DCTERMS.MediaType),
                 )
             )
 

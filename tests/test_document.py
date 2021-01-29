@@ -84,27 +84,3 @@ def test_to_graph_should_return_language() -> None:
     g2 = Graph().parse(data=src, format="turtle")
 
     assert_isomorphic(g1, g2)
-
-
-def test_to_graph_should_return_format() -> None:
-    """It returns an identifier graph isomorphic to spec."""
-    document = Document()
-    document.identifier = "http://example.com/documents/1"
-    document.format = "https://www.iana.org/assignments/media-types/application/pdf"
-
-    src = """
-        @prefix dct: <http://purl.org/dc/terms/> .
-        @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-        @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-        @prefix dcat: <http://www.w3.org/ns/dcat#> .
-        @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-
-        <http://example.com/documents/1> a foaf:Document;
-                dct:format
-                "https://www.iana.org/assignments/media-types/application/pdf"^^dct:MediaType
-        .
-        """
-    g1 = Graph().parse(data=document.to_rdf(), format="turtle")
-    g2 = Graph().parse(data=src, format="turtle")
-
-    assert_isomorphic(g1, g2)
