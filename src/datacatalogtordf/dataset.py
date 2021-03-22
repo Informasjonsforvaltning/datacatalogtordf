@@ -22,7 +22,7 @@ Example:
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import List
+from typing import List, Union
 
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 
@@ -76,7 +76,7 @@ class Dataset(Resource):
     # Types
     _distributions: List[Distribution]
     _frequency: URI
-    _spatial_coverage: Location
+    _spatial_coverage: Union[Location, URI]
     _spatial_resolution: Decimal
     _temporal_coverage: PeriodOfTime
     _temporal_resolution: str
@@ -109,12 +109,12 @@ class Dataset(Resource):
         self._frequency = URI(frequency)
 
     @property
-    def spatial_coverage(self: Dataset) -> Location:
+    def spatial_coverage(self: Dataset) -> Union[Location, URI]:
         """Get/set for spatial_coverage."""
         return self._spatial_coverage
 
     @spatial_coverage.setter
-    def spatial_coverage(self: Dataset, spatial_coverage: Location) -> None:
+    def spatial_coverage(self: Dataset, spatial_coverage: Union[Location, URI]) -> None:
         self._spatial_coverage = spatial_coverage
 
     @property
@@ -206,11 +206,22 @@ class Dataset(Resource):
 
     def _spatial_coverage_to_graph(self: Dataset) -> None:
         if getattr(self, "spatial_coverage", None):
-            _location = BNode()
-            for _s, p, o in self.spatial_coverage._to_graph().triples(
-                (None, None, None)
-            ):
-                self._g.add((_location, p, o))
+
+            if isinstance(self.spatial_coverage, Location):
+
+                if not getattr(self.spatial_coverage, "identifier", None):
+                    _location = BNode()
+                else:
+                    _location = URIRef(self.spatial_coverage.identifier)
+
+                for _s, p, o in self.spatial_coverage._to_graph().triples(
+                    (None, None, None)
+                ):
+                    self._g.add((_location, p, o))
+
+            elif isinstance(self.spatial_coverage, str):
+                _location = URIRef(self.spatial_coverage)
+
             self._g.add((URIRef(self.identifier), DCT.spatial, _location))
 
     def _spatial_resolution_to_graph(self: Dataset) -> None:
