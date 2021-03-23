@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "datacatalogtordf"
-version = "1.2.3"
+version = "1.2.4"
 description= "A library for mapping a data catalog to rdf"
 authors = ["Stig B. Dørmænen <stigbd@gmail.com>"]
 license = "Apache-2.0"
@@ -28,16 +28,16 @@ black = "^20.8b1"
 flake8 = "^3.8.4"
 flake8-bandit = "^2.1.2"
 flake8-black = "^0.2.1"
-flake8-bugbear = "^20.1.4"
+flake8-bugbear = "^21.3.2"
 flake8-import-order = "^0.18.1"
 safety = "^1.9.0"
-mypy = "^0.790"
+mypy = "^0.812"
 pytype = {version = "^2020.2.20", python = "3.7"}
 flake8-annotations = "^2.4.1"
 flake8-docstrings = "^1.5.0"
 darglint = "^1.5.5"
 Pygments = "^2.7.2"
-xdoctest = {extras = ["all"], version = "^0.11.0"}
+xdoctest = {extras = ["all"], version = "^0.15.4"}
 sphinx = "^3.2.1"
 sphinx-autodoc-typehints = "^1.11.1"
 codecov = "^2.0.16"
