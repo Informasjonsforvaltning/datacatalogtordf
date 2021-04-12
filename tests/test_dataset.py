@@ -314,6 +314,32 @@ def test_to_graph_should_return_link_to_spatial_coverage_with_location_triple() 
     assert _isomorphic
 
 
+def test_to_graph_should_return_dct_identifier_as_graph() -> None:
+    """It returns a dct_identifier graph isomorphic to spec."""
+    dataset = Dataset()
+    dataset.identifier = "http://example.com/datasets/1"
+    dataset.dct_identifier = "Dataset_123456789"
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/datasets/1>    a dcat:Dataset ;
+        dct:identifier "Dataset_123456789";
+    .
+    """
+    g1 = Graph().parse(data=dataset.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
 # ---------------------------------------------------------------------- #
 # Utils for displaying debug information
 
