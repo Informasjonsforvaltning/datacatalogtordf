@@ -71,6 +71,7 @@ class Dataset(Resource):
         "_temporal_resolution",
         "_was_generated_by",
         "_access_rights_comments",
+        "_dct_identifier",
     )
 
     # Types
@@ -82,6 +83,7 @@ class Dataset(Resource):
     _temporal_resolution: str
     _was_generated_by: URI
     _access_rights_comments: List[str]
+    _dct_identifier: str
 
     def __init__(self) -> None:
         """Inits an object with default values."""
@@ -164,6 +166,16 @@ class Dataset(Resource):
     ) -> None:
         self._access_rights_comments = access_rights_comments
 
+    @property
+    def dct_identifier(self) -> str:
+        """Get for dct_identifier."""
+        return self._dct_identifier
+
+    @dct_identifier.setter
+    def dct_identifier(self, dct_identifier: str) -> None:
+        """Set for dct_identifier."""
+        self._dct_identifier = dct_identifier
+
     # -
     def _to_graph(self: Dataset) -> Graph:
 
@@ -172,6 +184,7 @@ class Dataset(Resource):
 
         self._g.add((URIRef(self.identifier), RDF.type, self._type))
 
+        self._dct_identifier_to_graph()
         self._distributions_to_graph()
         self._frequency_to_graph()
         self._spatial_coverage_to_graph()
@@ -182,6 +195,16 @@ class Dataset(Resource):
         self._access_rights_comments_to_graph()
 
         return self._g
+
+    def _dct_identifier_to_graph(self: Dataset) -> None:
+        if getattr(self, "dct_identifier", None):
+            self._g.add(
+                (
+                    URIRef(self.identifier),
+                    DCT.identifier,
+                    Literal(self.dct_identifier),
+                )
+            )
 
     def _distributions_to_graph(self: Dataset) -> None:
         if getattr(self, "distributions", None):
