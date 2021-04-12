@@ -23,7 +23,7 @@ from __future__ import annotations
 
 from typing import Any, List, Optional
 
-from rdflib import Graph, Namespace, RDF, URIRef
+from rdflib import Graph, Literal, Namespace, RDF, URIRef
 
 from .catalogrecord import CatalogRecord
 from .dataservice import DataService
@@ -68,6 +68,7 @@ class Catalog(Dataset):
         "_catalogs",
         "_catalogrecords",
         "_models",
+        "_dct_identifier",
     )
 
     _homepage: URI
@@ -78,6 +79,7 @@ class Catalog(Dataset):
     _catalogs: List[Catalog]
     _catalogrecords: List[CatalogRecord]
     _models: List[Any]
+    _dct_identifier: str
 
     def __init__(self) -> None:
         """Inits catalog object with default values."""
@@ -163,6 +165,16 @@ class Catalog(Dataset):
     def catalogrecords(self: Catalog, catalogrecords: List[CatalogRecord]) -> None:
         self._catalogrecords = catalogrecords
 
+    @property
+    def dct_identifier(self) -> str:
+        """Get for dct_identifier."""
+        return self._dct_identifier
+
+    @dct_identifier.setter
+    def dct_identifier(self, dct_identifier: str) -> None:
+        """Set for dct_identifier."""
+        self._dct_identifier = dct_identifier
+
         # -
 
     def to_rdf(
@@ -206,6 +218,7 @@ class Catalog(Dataset):
 
         self._g.add((URIRef(self.identifier), RDF.type, self._type))
 
+        self._dct_identifier_to_graph()
         self._homepage_to_graph()
         self._themes_to_graph()
         self._has_parts_to_graph()
@@ -231,6 +244,16 @@ class Catalog(Dataset):
                 self._g += model._to_graph()
 
         return self._g
+
+    def _dct_identifier_to_graph(self: Dataset) -> None:
+        if getattr(self, "dct_identifier", None):
+            self._g.add(
+                (
+                    URIRef(self.identifier),
+                    DCT.identifier,
+                    Literal(self.dct_identifier),
+                )
+            )
 
     def _homepage_to_graph(self: Catalog) -> None:
         if getattr(self, "homepage", None):
