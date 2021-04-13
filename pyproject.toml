@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "datacatalogtordf"
-version = "1.2.4"
+version = "1.3.0"
 description= "A library for mapping a data catalog to rdf"
 authors = ["Stig B. Dørmænen <stigbd@gmail.com>"]
 license = "Apache-2.0"
