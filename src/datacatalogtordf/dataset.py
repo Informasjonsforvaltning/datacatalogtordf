@@ -22,7 +22,7 @@ Example:
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import List, Union
+from typing import List, Optional, Union
 
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 
@@ -177,7 +177,35 @@ class Dataset(Resource):
         self._dct_identifier = dct_identifier
 
     # -
-    def _to_graph(self: Dataset) -> Graph:
+    def to_rdf(
+        self: Dataset,
+        format: str = "turtle",
+        encoding: Optional[str] = "utf-8",
+        include_distributions: bool = True,
+    ) -> bytes:
+        """Maps the catalog to rdf.
+
+        Available formats:
+         - turtle (default)
+         - xml
+         - json-ld
+
+        Args:
+            format (str): a valid format.
+            encoding (str): the encoding to serialize into
+            include_distributions (bool): includes the distributions in the graph
+
+        Returns:
+            a rdf serialization as a bytes literal according to format.
+        """
+        return self._to_graph(include_distributions).serialize(
+            format=format, encoding=encoding
+        )
+
+    def _to_graph(
+        self: Dataset,
+        include_distributions: bool = True,
+    ) -> Graph:
 
         super(Dataset, self)._to_graph()
         self._g.bind("dcatno", DCATNO)
@@ -193,6 +221,11 @@ class Dataset(Resource):
         self._temporal_resolution_to_graph()
         self._was_generated_by_to_graph()
         self._access_rights_comments_to_graph()
+
+        # Add all the distributions to the graf
+        if include_distributions:
+            for distribution in self._distributions:
+                self._g += distribution._to_graph()
 
         return self._g
 

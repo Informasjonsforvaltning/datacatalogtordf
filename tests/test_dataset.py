@@ -33,6 +33,54 @@ def test_to_graph_should_return_distribution_as_graph() -> None:
                             <http://example.com/distributions/2>
         .
     """
+    g1 = Graph().parse(
+        data=dataset.to_rdf(include_distributions=False), format="turtle"
+    )
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
+def test_to_graph_should_return_included_distribution_as_graph() -> None:
+    """It returns a dataset graph isomorphic to spec."""
+    dataset = Dataset()
+    dataset.identifier = "http://example.com/datasets/1"
+
+    distribution1 = Distribution()
+    distribution1.identifier = "http://example.com/distributions/1"
+    distribution1.title = {"nb": "API-distribusjon 1", "en": "API-distribution 1"}
+
+    dataset.distributions.append(distribution1)
+
+    distribution2 = Distribution()
+    distribution2.identifier = "http://example.com/distributions/2"
+    distribution2.title = {"nb": "API-distribusjon 2", "en": "API-distribution 2"}
+    dataset.distributions.append(distribution2)
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix prov: <http://www.w3.org/ns/prov#> .
+
+
+    <http://example.com/datasets/1> a dcat:Dataset ;
+        dcat:distribution   <http://example.com/distributions/1>,
+                            <http://example.com/distributions/2>
+    .
+    <http://example.com/distributions/1> a dcat:Distribution ;
+        dct:title   "API-distribution 1"@en, "API-distribusjon 1"@nb ;
+    .
+    <http://example.com/distributions/2> a dcat:Distribution ;
+        dct:title   "API-distribution 2"@en, "API-distribusjon 2"@nb ;
+    .
+
+    """
     g1 = Graph().parse(data=dataset.to_rdf(), format="turtle")
     g2 = Graph().parse(data=src, format="turtle")
 
