@@ -3,8 +3,7 @@ from typing import List, Union
 
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
-
-from datacatalogtordf.skolemizer import Skolemizer
+from skolemizer import Skolemizer
 
 uuid = "284db4d2-80c2-11eb-82c3-83e80baa2f94"
 skolemization = Skolemizer.get_baseurl() + ".well-known/skolem/" + uuid

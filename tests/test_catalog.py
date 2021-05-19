@@ -452,7 +452,7 @@ def test_to_graph_should_return_blank_skolemization(mocker: MockFixture) -> None
     catalog = Catalog()
 
     mocker.patch(
-        "datacatalogtordf.skolemizer.Skolemizer.add_skolemization",
+        "skolemizer.Skolemizer.add_skolemization",
         return_value=skolemization,
     )
 
