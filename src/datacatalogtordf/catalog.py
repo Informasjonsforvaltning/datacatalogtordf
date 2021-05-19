@@ -29,6 +29,7 @@ from .catalogrecord import CatalogRecord
 from .dataservice import DataService
 from .dataset import Dataset
 from .resource import Resource
+from .skolemizer import Skolemizer
 from .uri import URI
 
 
@@ -214,6 +215,10 @@ class Catalog(Dataset):
         include_services: bool = True,
         include_models: bool = True,
     ) -> Graph:
+
+        if not getattr(self, "identifier", None):
+            self.identifier = Skolemizer.add_skolemization()
+
         super(Catalog, self)._to_graph()
 
         self._g.add((URIRef(self.identifier), RDF.type, self._type))
