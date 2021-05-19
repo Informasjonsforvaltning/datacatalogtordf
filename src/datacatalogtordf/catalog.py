@@ -24,12 +24,12 @@ from __future__ import annotations
 from typing import Any, List, Optional
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
+from skolemizer import Skolemizer
 
 from .catalogrecord import CatalogRecord
 from .dataservice import DataService
 from .dataset import Dataset
 from .resource import Resource
-from .skolemizer import Skolemizer
 from .uri import URI
 
 
