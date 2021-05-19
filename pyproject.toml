@@ -19,6 +19,7 @@ rdflib = "^5.0.0"
 importlib_metadata = {version = "^1.5.0", python = "<3.8"}
 concepttordf = "^1.0.0"
 rdflib-jsonld = "^0.5.0"
+pytest-mock = "^3.6.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.1.2"
@@ -41,6 +42,7 @@ xdoctest = {extras = ["all"], version = "^0.15.4"}
 sphinx = "^3.2.1"
 sphinx-autodoc-typehints = "^1.11.1"
 codecov = "^2.0.16"
+pytest-mock = "^3.6.1"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
