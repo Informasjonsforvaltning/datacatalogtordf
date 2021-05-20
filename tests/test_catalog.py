@@ -5,9 +5,10 @@ from typing import Any
 from pytest_mock import MockFixture
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
 from rdflib.compare import graph_diff, isomorphic
+from skolemizer.testutils import skolemization
 
 from datacatalogtordf import Catalog, CatalogRecord, DataService, Dataset
-from tests.testutils import assert_isomorphic, skolemization
+from tests.testutils import assert_isomorphic
 
 DCT = Namespace("http://purl.org/dc/terms/")
 MODELLDCATNO = Namespace("https://data.norge.no/vocabulary/modelldcatno#")
