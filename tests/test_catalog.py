@@ -82,8 +82,9 @@ def test_to_graph_should_return_has_part() -> None:
     @prefix dcat: <http://www.w3.org/ns/dcat#> .
 
     <http://example.com/catalogs/1> a dcat:Catalog ;
-        dct:hasPart <http://example.com/catalogs/2> ;
-    .
+        dct:hasPart <http://example.com/catalogs/2> .
+
+    <http://example.com/catalogs/2> a dcat:Catalog  .
     """
     g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
     g2 = Graph().parse(data=src, format="turtle")
@@ -452,11 +453,6 @@ def test_to_graph_should_return_blank_skolemization(mocker: MockFixture) -> None
     """It returns a catalog graph as blank node isomorphic to spec."""
     catalog = Catalog()
 
-    mocker.patch(
-        "skolemizer.Skolemizer.add_skolemization",
-        return_value=skolemization,
-    )
-
     src = """
         @prefix dct: <http://purl.org/dc/terms/> .
         @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -467,10 +463,84 @@ def test_to_graph_should_return_blank_skolemization(mocker: MockFixture) -> None
          a dcat:Catalog  .
 
         """
+
+    mocker.patch(
+        "skolemizer.Skolemizer.add_skolemization",
+        return_value=skolemization,
+    )
+
     g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
     g2 = Graph().parse(data=src, format="turtle")
 
     assert_isomorphic(g1, g2)
+
+
+def test_to_graph_should_return_has_part_link() -> None:
+    """It returns a has has_part graph isomorphic to spec."""
+    catalog = Catalog()
+    catalog.identifier = "http://example.com/catalogs/1"
+
+    part = "http://example.com/catalogs/2"
+    catalog.has_parts.append(part)
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/catalogs/1> a dcat:Catalog ;
+        dct:hasPart <http://example.com/catalogs/2> .
+
+    """
+
+    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
+def test_to_graph_should_return_has_part_skolemization(mocker: MockFixture) -> None:
+    """It returns a has has_part graph isomorphic to spec."""
+    catalog = Catalog()
+    catalog.identifier = "http://example.com/catalogs/1"
+
+    part = Catalog()
+    catalog.has_parts.append(part)
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/catalogs/1> a dcat:Catalog ;
+        dct:hasPart
+        <http://wwww.digdir.no/.well-known/skolem/284db4d2-80c2-11eb-82c3-83e80baa2f94> .
+
+    <http://wwww.digdir.no/.well-known/skolem/284db4d2-80c2-11eb-82c3-83e80baa2f94>
+        a dcat:Catalog .
+
+
+    """
+
+    mocker.patch(
+        "skolemizer.Skolemizer.add_skolemization",
+        return_value=skolemization,
+    )
+
+    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
 
 
 # ---------------------------------------------------------------------- #
