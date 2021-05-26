@@ -636,6 +636,99 @@ def test_to_graph_should_return_dataset_link() -> None:
     assert _isomorphic
 
 
+def test_to_graph_should_return_dataservice_skolemization(mocker: MockFixture) -> None:
+    """It returns a dataservice graph isomorphic to spec."""
+    catalog = Catalog()
+    catalog.identifier = "http://example.com/catalogs/1"
+
+    dataservice1 = DataService()
+    dataservice1.title = {"nb": "Dataservice 1", "en": "Dataservice 1"}
+    catalog.services.append(dataservice1)
+
+    dataservice2 = DataService()
+    dataservice2.title = {"nb": "Dataservice 2", "en": "Dataservice 2"}
+    catalog.services.append(dataservice2)
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/catalogs/1> a dcat:Catalog ;
+        dcat:service
+            <http://wwww.digdir.no/.well-known/skolem/21043186-80ce-11eb-9829-cf7c8fc855ce> ,
+            <http://wwww.digdir.no/.well-known/skolem/284db4d2-80c2-11eb-82c3-83e80baa2f94> ;
+    .
+    <http://wwww.digdir.no/.well-known/skolem/284db4d2-80c2-11eb-82c3-83e80baa2f94>
+     a dcat:DataService ;
+        dct:title   "Dataservice 1"@en, "Dataservice 1"@nb ;
+    .
+    <http://wwww.digdir.no/.well-known/skolem/21043186-80ce-11eb-9829-cf7c8fc855ce>
+     a dcat:DataService ;
+        dct:title   "Dataservice 2"@en, "Dataservice 2"@nb ;
+    .
+
+    """
+
+    skolemutils = SkolemUtils()
+
+    mocker.patch(
+        "skolemizer.Skolemizer.add_skolemization",
+        side_effect=skolemutils.get_skolemization,
+    )
+
+    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
+def test_to_graph_should_return_dataservice_link() -> None:
+    """It returns a dataservice graph isomorphic to spec."""
+    catalog = Catalog()
+    catalog.identifier = "http://example.com/catalogs/1"
+
+    dataservice1 = "http://example.com/dataservices/1"
+    catalog.services.append(dataservice1)
+
+    dataservice2 = DataService()
+    dataservice2.identifier = "http://example.com/dataservices/2"
+    dataservice2.title = {"nb": "Dataservice 2", "en": "Dataservice 2"}
+    catalog.services.append(dataservice2)
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/catalogs/1> a dcat:Catalog ;
+        dcat:service
+            <http://example.com/dataservices/1> ,
+            <http://example.com/dataservices/2> ;
+    .
+    <http://example.com/dataservices/2>
+     a dcat:DataService ;
+        dct:title   "Dataservice 2"@en, "Dataservice 2"@nb ;
+    .
+
+    """
+
+    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
 # ---------------------------------------------------------------------- #
 # Utils for displaying debug information
 
