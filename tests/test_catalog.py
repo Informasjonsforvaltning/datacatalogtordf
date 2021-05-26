@@ -5,7 +5,7 @@ from typing import Any
 from pytest_mock import MockFixture
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
 from rdflib.compare import graph_diff, isomorphic
-from skolemizer.testutils import skolemization
+from skolemizer.testutils import skolemization, SkolemUtils
 
 from datacatalogtordf import Catalog, CatalogRecord, DataService, Dataset
 from tests.testutils import assert_isomorphic
@@ -532,6 +532,99 @@ def test_to_graph_should_return_has_part_skolemization(mocker: MockFixture) -> N
         "skolemizer.Skolemizer.add_skolemization",
         return_value=skolemization,
     )
+
+    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
+def test_to_graph_should_return_dataset_skolemization(mocker: MockFixture) -> None:
+    """It returns a dataset graph isomorphic to spec."""
+    catalog = Catalog()
+    catalog.identifier = "http://example.com/catalogs/1"
+
+    dataset1 = Dataset()
+    dataset1.title = {"nb": "Datasett 1", "en": "Dataset 1"}
+    catalog.datasets.append(dataset1)
+
+    dataset2 = Dataset()
+    dataset2.title = {"nb": "Datasett 2", "en": "Dataset 2"}
+    catalog.datasets.append(dataset2)
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/catalogs/1> a dcat:Catalog ;
+        dcat:dataset
+            <http://wwww.digdir.no/.well-known/skolem/21043186-80ce-11eb-9829-cf7c8fc855ce> ,
+            <http://wwww.digdir.no/.well-known/skolem/284db4d2-80c2-11eb-82c3-83e80baa2f94> ;
+    .
+    <http://wwww.digdir.no/.well-known/skolem/284db4d2-80c2-11eb-82c3-83e80baa2f94>
+     a dcat:Dataset ;
+        dct:title   "Dataset 1"@en, "Datasett 1"@nb ;
+    .
+    <http://wwww.digdir.no/.well-known/skolem/21043186-80ce-11eb-9829-cf7c8fc855ce>
+     a dcat:Dataset ;
+        dct:title   "Dataset 2"@en, "Datasett 2"@nb ;
+    .
+
+    """
+
+    skolemutils = SkolemUtils()
+
+    mocker.patch(
+        "skolemizer.Skolemizer.add_skolemization",
+        side_effect=skolemutils.get_skolemization,
+    )
+
+    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
+def test_to_graph_should_return_dataset_link() -> None:
+    """It returns a dataset graph isomorphic to spec."""
+    catalog = Catalog()
+    catalog.identifier = "http://example.com/catalogs/1"
+
+    dataset1 = "http://example.com/datasets/1"
+    catalog.datasets.append(dataset1)
+
+    dataset2 = Dataset()
+    dataset2.identifier = "http://example.com/datasets/2"
+    dataset2.title = {"nb": "Datasett 2", "en": "Dataset 2"}
+    catalog.datasets.append(dataset2)
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/catalogs/1> a dcat:Catalog ;
+        dcat:dataset
+            <http://example.com/datasets/1> ,
+            <http://example.com/datasets/2> ;
+    .
+    <http://example.com/datasets/2>
+     a dcat:Dataset ;
+        dct:title   "Dataset 2"@en, "Datasett 2"@nb ;
+    .
+
+    """
 
     g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
     g2 = Graph().parse(data=src, format="turtle")
