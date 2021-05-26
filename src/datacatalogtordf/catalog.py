@@ -75,7 +75,7 @@ class Catalog(Dataset):
     _homepage: URI
     _themes: List[str]
     _has_parts: List[Union[Resource, str]]
-    _datasets: List[Dataset]
+    _datasets: List[Union[Dataset, str]]
     _services: List[DataService]
     _catalogs: List[Catalog]
     _catalogrecords: List[CatalogRecord]
@@ -122,12 +122,12 @@ class Catalog(Dataset):
         self._has_parts = has_parts
 
     @property
-    def datasets(self: Catalog) -> List[Dataset]:
+    def datasets(self: Catalog) -> List[Union[Dataset, str]]:
         """Get/set for datasets."""
         return self._datasets
 
     @datasets.setter
-    def datasets(self: Catalog, datasets: List[Dataset]) -> None:
+    def datasets(self: Catalog, datasets: List[Union[Dataset, str]]) -> None:
         self._datasets = datasets
 
     @property
@@ -236,7 +236,8 @@ class Catalog(Dataset):
         # Add all the datasets to the graf
         if include_datasets:
             for dataset in self._datasets:
-                self._g += dataset._to_graph()
+                if isinstance(dataset, Dataset):
+                    self._g += dataset._to_graph()
 
         # Add all the services to the graf
         if include_services:
@@ -299,9 +300,24 @@ class Catalog(Dataset):
     def _datasets_to_graph(self: Catalog) -> None:
         if getattr(self, "datasets", None):
             for _dataset in self._datasets:
-                self._g.add(
-                    (URIRef(self.identifier), DCAT.dataset, URIRef(_dataset.identifier))
-                )
+
+                if isinstance(_dataset, Dataset):
+
+                    if not getattr(_dataset, "identifier", None):
+                        _dataset.identifier = Skolemizer.add_skolemization()
+
+                    self._g.add(
+                        (
+                            URIRef(self.identifier),
+                            DCAT.dataset,
+                            URIRef(_dataset.identifier),
+                        )
+                    )
+
+                elif isinstance(_dataset, str):
+                    self._g.add(
+                        (URIRef(self.identifier), DCAT.dataset, URIRef(_dataset))
+                    )
 
     def _services_to_graph(self: Catalog) -> None:
         if getattr(self, "services", None):
