@@ -82,9 +82,13 @@ class Catalog(Dataset):
     _models: List[Any]
     _dct_identifier: str
 
-    def __init__(self) -> None:
+    def __init__(self, identifier: Optional[str] = None) -> None:
         """Inits catalog object with default values."""
         super().__init__()
+
+        if identifier:
+            self.identifier = identifier
+
         self._type = DCAT.Catalog
         self.themes = []
         self.has_parts = []
