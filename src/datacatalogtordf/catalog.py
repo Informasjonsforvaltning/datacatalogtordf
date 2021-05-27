@@ -75,8 +75,8 @@ class Catalog(Dataset):
     _homepage: URI
     _themes: List[str]
     _has_parts: List[Union[Resource, str]]
-    _datasets: List[Union[Dataset, str]]
-    _services: List[Union[DataService, str]]
+    _datasets: List[Dataset]
+    _services: List[DataService]
     _catalogs: List[Catalog]
     _catalogrecords: List[CatalogRecord]
     _models: List[Any]
@@ -126,12 +126,12 @@ class Catalog(Dataset):
         self._has_parts = has_parts
 
     @property
-    def datasets(self: Catalog) -> List[Union[Dataset, str]]:
+    def datasets(self: Catalog) -> List[Dataset]:
         """Get/set for datasets."""
         return self._datasets
 
     @datasets.setter
-    def datasets(self: Catalog, datasets: List[Union[Dataset, str]]) -> None:
+    def datasets(self: Catalog, datasets: List[Dataset]) -> None:
         self._datasets = datasets
 
     @property
@@ -144,12 +144,12 @@ class Catalog(Dataset):
         self._models = models
 
     @property
-    def services(self: Catalog) -> List[Union[DataService, str]]:
+    def services(self: Catalog) -> List[DataService]:
         """Get/set for services."""
         return self._services
 
     @services.setter
-    def services(self: Catalog, services: List[Union[DataService, str]]) -> None:
+    def services(self: Catalog, services: List[DataService]) -> None:
         self._services = services
 
     @property
@@ -306,23 +306,16 @@ class Catalog(Dataset):
         if getattr(self, "datasets", None):
             for _dataset in self._datasets:
 
-                if isinstance(_dataset, Dataset):
+                if not getattr(_dataset, "identifier", None):
+                    _dataset.identifier = Skolemizer.add_skolemization()
 
-                    if not getattr(_dataset, "identifier", None):
-                        _dataset.identifier = Skolemizer.add_skolemization()
-
-                    self._g.add(
-                        (
-                            URIRef(self.identifier),
-                            DCAT.dataset,
-                            URIRef(_dataset.identifier),
-                        )
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        DCAT.dataset,
+                        URIRef(_dataset.identifier),
                     )
-
-                elif isinstance(_dataset, str):
-                    self._g.add(
-                        (URIRef(self.identifier), DCAT.dataset, URIRef(_dataset))
-                    )
+                )
 
     def _services_to_graph(self: Catalog) -> None:
 
@@ -330,23 +323,16 @@ class Catalog(Dataset):
 
             for _service in self._services:
 
-                if isinstance(_service, DataService):
+                if not getattr(_service, "identifier", None):
+                    _service.identifier = Skolemizer.add_skolemization()
 
-                    if not getattr(_service, "identifier", None):
-                        _service.identifier = Skolemizer.add_skolemization()
-
-                    self._g.add(
-                        (
-                            URIRef(self.identifier),
-                            DCAT.service,
-                            URIRef(_service.identifier),
-                        )
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        DCAT.service,
+                        URIRef(_service.identifier),
                     )
-
-                elif isinstance(_service, str):
-                    self._g.add(
-                        (URIRef(self.identifier), DCAT.service, URIRef(_service))
-                    )
+                )
 
     def _catalogs_to_graph(self: Catalog) -> None:
         if getattr(self, "catalogs", None):
