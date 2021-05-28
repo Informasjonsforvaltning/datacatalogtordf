@@ -240,14 +240,12 @@ class Catalog(Dataset):
         # Add all the datasets to the graf
         if include_datasets:
             for dataset in self._datasets:
-                if isinstance(dataset, Dataset):
-                    self._g += dataset._to_graph()
+                self._g += dataset._to_graph()
 
         # Add all the services to the graf
         if include_services:
             for service in self._services:
-                if isinstance(service, DataService):
-                    self._g += service._to_graph()
+                self._g += service._to_graph()
 
         # Add all the models to the graf
         if include_models:
