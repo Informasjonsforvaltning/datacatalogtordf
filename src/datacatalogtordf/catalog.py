@@ -328,7 +328,12 @@ class Catalog(Dataset):
 
     def _catalogs_to_graph(self: Catalog) -> None:
         if getattr(self, "catalogs", None):
+
             for _catalog in self._catalogs:
+
+                if not getattr(_catalog, "identifier", None):
+                    _catalog.identifier = Skolemizer.add_skolemization()
+
                 self._g.add(
                     (URIRef(self.identifier), DCAT.catalog, URIRef(_catalog.identifier))
                 )
