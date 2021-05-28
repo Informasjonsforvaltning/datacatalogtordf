@@ -21,7 +21,7 @@ Example:
 """
 from __future__ import annotations
 
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
 from skolemizer import Skolemizer
@@ -74,7 +74,7 @@ class Catalog(Dataset):
 
     _homepage: URI
     _themes: List[str]
-    _has_parts: List[Union[Resource, str]]
+    _has_parts: List[Resource]
     _datasets: List[Dataset]
     _services: List[DataService]
     _catalogs: List[Catalog]
@@ -117,12 +117,12 @@ class Catalog(Dataset):
         self._themes = themes
 
     @property
-    def has_parts(self: Catalog) -> List[Union[Resource, str]]:
+    def has_parts(self: Catalog) -> List[Resource]:
         """Get/set for has_parts."""
         return self._has_parts
 
     @has_parts.setter
-    def has_parts(self: Catalog, has_parts: List[Union[Resource, str]]) -> None:
+    def has_parts(self: Catalog, has_parts: List[Resource]) -> None:
         self._has_parts = has_parts
 
     @property
@@ -287,20 +287,12 @@ class Catalog(Dataset):
 
             for has_parts in self._has_parts:
 
-                if isinstance(has_parts, Resource):
+                if not getattr(has_parts, "identifier", None):
+                    has_parts.identifier = Skolemizer.add_skolemization()
 
-                    if not getattr(has_parts, "identifier", None):
-                        has_parts.identifier = Skolemizer.add_skolemization()
-
-                    _has_parts = URIRef(has_parts.identifier)
-
-                    for _s, p, o in has_parts._to_graph().triples((None, None, None)):
-                        self._g.add((_s, p, o))
-
-                elif isinstance(has_parts, str):
-                    _has_parts = URIRef(has_parts)
-
-                self._g.add((URIRef(self.identifier), DCT.hasPart, _has_parts))
+                self._g.add(
+                    (URIRef(self.identifier), DCT.hasPart, URIRef(has_parts.identifier))
+                )
 
     def _datasets_to_graph(self: Catalog) -> None:
         if getattr(self, "datasets", None):
