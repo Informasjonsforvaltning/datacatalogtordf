@@ -341,6 +341,10 @@ class Catalog(Dataset):
     def _catalogrecords_to_graph(self: Catalog) -> None:
         if getattr(self, "catalogrecords", None):
             for _catalogrecord in self._catalogrecords:
+
+                if not getattr(_catalogrecord, "identifier", None):
+                    _catalogrecord.identifier = Skolemizer.add_skolemization()
+
                 self._g.add(
                     (
                         URIRef(self.identifier),
