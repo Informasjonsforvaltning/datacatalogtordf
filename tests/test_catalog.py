@@ -671,6 +671,43 @@ def test_to_graph_should_return_catalog_skolemization(mocker: MockFixture) -> No
     assert _isomorphic
 
 
+def test_to_graph_should_return_catalog_record_skolemization(
+    mocker: MockFixture,
+) -> None:
+    """It returns a catalog record graph isomorphic to spec."""
+    catalog = Catalog()
+    catalog.identifier = "http://example.com/catalogs/1"
+    a_catalogrecord = CatalogRecord()
+
+    catalog.catalogrecords.append(a_catalogrecord)
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+    <http://example.com/catalogs/1> a dcat:Catalog ;
+        dcat:record
+        <http://wwww.digdir.no/.well-known/skolem/284db4d2-80c2-11eb-82c3-83e80baa2f94>
+    .
+    """
+
+    mocker.patch(
+        "skolemizer.Skolemizer.add_skolemization",
+        return_value=skolemization,
+    )
+
+    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
 # ---------------------------------------------------------------------- #
 # Utils for displaying debug information
 
