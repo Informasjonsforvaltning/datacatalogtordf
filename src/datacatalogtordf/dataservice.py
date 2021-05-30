@@ -19,6 +19,7 @@ from __future__ import annotations
 from typing import List, Optional
 
 from rdflib import Graph, Namespace, RDF, URIRef
+from skolemizer import Skolemizer
 
 from .dataset import Dataset
 from .resource import Resource
@@ -96,6 +97,9 @@ class DataService(Resource):
 
     # -
     def _to_graph(self: DataService) -> Graph:
+
+        if not getattr(self, "identifier", None):
+            self.identifier = Skolemizer.add_skolemization()
 
         super(DataService, self)._to_graph()
 
