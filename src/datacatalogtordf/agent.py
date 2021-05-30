@@ -49,8 +49,11 @@ class Agent:
     _organization_type: URI
     _same_as: URI
 
-    def __init__(self) -> None:
+    def __init__(self, identifier: Optional[str] = None) -> None:
         """Inits an object with default values."""
+        if identifier:
+            self.identifier = identifier
+
         # set up graph and namespaces:
         self._g = Graph()
         self._g.bind("dct", DCT)
