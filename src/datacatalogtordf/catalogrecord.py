@@ -69,8 +69,10 @@ class CatalogRecord:
     _primary_topic: Resource
     _conforms_to: List[str]
 
-    def __init__(self) -> None:
+    def __init__(self, identifier: Optional[str] = None) -> None:
         """Inits catalogrecord object with default values."""
+        if identifier:
+            self.identifier = identifier
         self.conforms_to = []
 
     @property
