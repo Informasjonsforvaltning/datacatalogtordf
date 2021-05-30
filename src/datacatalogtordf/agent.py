@@ -21,7 +21,8 @@ from __future__ import annotations
 
 from typing import Optional
 
-from rdflib import BNode, Graph, Literal, Namespace, OWL, RDF, URIRef
+from rdflib import Graph, Literal, Namespace, OWL, RDF, URIRef
+from skolemizer import Skolemizer
 
 from .uri import URI
 
@@ -124,18 +125,16 @@ class Agent:
     # -
     def _to_graph(self: Agent) -> Graph:
 
-        if getattr(self, "identifier", None):
-            _self = URIRef(self.identifier)
-        else:
-            _self = BNode()
+        if not getattr(self, "identifier", None):
+            self.identifier = Skolemizer.add_skolemization()
 
-        self._g.add((_self, RDF.type, FOAF.Agent))
+        self._g.add((URIRef(self.identifier), RDF.type, FOAF.Agent))
 
         if getattr(self, "name", None):
             for key in self.name:
                 self._g.add(
                     (
-                        _self,
+                        URIRef(self.identifier),
                         FOAF.name,
                         Literal(self.name[key], lang=key),
                     )
@@ -144,7 +143,7 @@ class Agent:
         if getattr(self, "organization_id", None):
             self._g.add(
                 (
-                    _self,
+                    URIRef(self.identifier),
                     DCT.identifier,
                     Literal(self.organization_id),
                 )
@@ -153,7 +152,7 @@ class Agent:
         if getattr(self, "organization_type", None):
             self._g.add(
                 (
-                    _self,
+                    URIRef(self.identifier),
                     DCT.type,
                     URIRef(self.organization_type),
                 )
