@@ -20,6 +20,7 @@ from __future__ import annotations
 from typing import List, Optional
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
+from skolemizer import Skolemizer
 
 from .periodoftime import Date
 from .resource import Resource
@@ -148,6 +149,9 @@ class CatalogRecord:
     # -
     def _to_graph(self: CatalogRecord) -> Graph:
 
+        if not getattr(self, "identifier", None):
+            self.identifier = Skolemizer.add_skolemization()
+
         # set up graph and namespaces:
         self._g = Graph()
         self._g.bind("dct", DCT)
@@ -210,6 +214,10 @@ class CatalogRecord:
 
     def _primary_topic_to_graph(self: CatalogRecord) -> None:
         if getattr(self, "primary_topic", None):
+
+            if not getattr(self.primary_topic, "identifier", None):
+                self.primary_topic.identifier = Skolemizer.add_skolemization()
+
             self._g.add(
                 (
                     URIRef(self.identifier),
