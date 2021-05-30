@@ -16,7 +16,7 @@ Example:
 """
 from __future__ import annotations
 
-from typing import List
+from typing import List, Optional
 
 from rdflib import Graph, Namespace, RDF, URIRef
 
@@ -47,9 +47,13 @@ class DataService(Resource):
     _servesdatasets: List[Dataset]
     _media_types: List[str]
 
-    def __init__(self) -> None:
+    def __init__(self, identifier: Optional[str] = None) -> None:
         """Inits DataService with default values."""
         super().__init__()
+
+        if identifier:
+            self.identifier = identifier
+
         self._type = DCAT.DataService
         self.servesdatasets = []
         self.media_types = []
