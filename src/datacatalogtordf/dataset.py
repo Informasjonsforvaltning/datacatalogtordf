@@ -25,6 +25,7 @@ from decimal import Decimal
 from typing import List, Optional, Union
 
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
+from skolemizer import Skolemizer
 
 from .distribution import Distribution
 from .location import Location
@@ -209,6 +210,9 @@ class Dataset(Resource):
         self: Dataset,
         include_distributions: bool = True,
     ) -> Graph:
+
+        if not getattr(self, "identifier", None):
+            self.identifier = Skolemizer.add_skolemization()
 
         super(Dataset, self)._to_graph()
         self._g.bind("dcatno", DCATNO)
