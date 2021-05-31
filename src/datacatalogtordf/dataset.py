@@ -249,6 +249,10 @@ class Dataset(Resource):
     def _distributions_to_graph(self: Dataset) -> None:
         if getattr(self, "distributions", None):
             for distribution in self._distributions:
+
+                if not getattr(distribution, "identifier", None):
+                    distribution.identifier = Skolemizer.add_skolemization()
+
                 self._g.add(
                     (
                         URIRef(self.identifier),
