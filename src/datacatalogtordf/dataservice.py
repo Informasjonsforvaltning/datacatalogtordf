@@ -136,6 +136,10 @@ class DataService(Resource):
     def _servesdatasets_to_graph(self: DataService) -> None:
 
         for dataset in self._servesdatasets:
+
+            if not getattr(dataset, "identifier", None):
+                dataset.identifier = Skolemizer.add_skolemization()
+
             self._g.add(
                 (
                     URIRef(self.identifier),
