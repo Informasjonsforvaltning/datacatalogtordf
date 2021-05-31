@@ -85,8 +85,11 @@ class Dataset(Resource):
     _access_rights_comments: List[str]
     _dct_identifier: str
 
-    def __init__(self) -> None:
+    def __init__(self, identifier: Optional[str] = None) -> None:
         """Inits an object with default values."""
+        if identifier:
+            self.identifier = identifier
+
         super().__init__()
         self._type = DCAT.Dataset
         self.distributions = []
