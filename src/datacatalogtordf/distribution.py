@@ -126,8 +126,11 @@ class Distribution:
     _compression_format: URI
     _package_format: URI
 
-    def __init__(self) -> None:
+    def __init__(self, identifier: Optional[str] = None) -> None:
         """Inits an object with default values."""
+        if identifier:
+            self.identifier = identifier
+
         self.conforms_to = []
         self.media_types = []
         self.formats = []
