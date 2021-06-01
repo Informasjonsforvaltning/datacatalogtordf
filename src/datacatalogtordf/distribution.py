@@ -429,6 +429,10 @@ class Distribution:
 
     def _access_service_to_graph(self: Distribution) -> None:
         if getattr(self, "access_service", None):
+
+            if not getattr(self.access_service, "identifier", None):
+                self.access_service.identifier = Skolemizer.add_skolemization()
+
             self._g.add(
                 (
                     URIRef(self.identifier),
