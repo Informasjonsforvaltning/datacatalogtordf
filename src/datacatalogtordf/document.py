@@ -43,8 +43,10 @@ class Document:
     _language: str
     _type: str
 
-    def __init__(self) -> None:
+    def __init__(self, identifier: Optional[str] = None) -> None:
         """Inits an object with default values."""
+        if identifier:
+            self.identifier = identifier
         self._type = FOAF.Document
 
     @property
