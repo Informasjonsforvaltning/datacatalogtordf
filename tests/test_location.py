@@ -5,6 +5,33 @@ from rdflib.compare import graph_diff, isomorphic
 from datacatalogtordf import Location
 
 
+def test_to_graph_should_return_identifier_set_at_constructor() -> None:
+    """It returns a centroid graph isomorphic to spec."""
+    location = Location("http://example.com/locations/1")
+    location.centroid = "POINT(4.88412 52.37509)"
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix locn: <http://www.w3.org/ns/locn#> .
+    @prefix geosparql: <http://www.opengis.net/ont/geosparql#> .
+
+    <http://example.com/locations/1> a dct:Location ;
+        dcat:centroid \"POINT(4.88412 52.37509)\"^^geosparql:asWKT ;
+    .
+    """
+    g1 = Graph().parse(data=location.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
 def test_to_graph_should_return_geometry_as_graph() -> None:
     """It returns a title graph isomorphic to spec."""
     location = Location()

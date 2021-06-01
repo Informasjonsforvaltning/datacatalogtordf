@@ -49,8 +49,11 @@ class Location:
     _centroid: str
     _ref: URIRef
 
-    def __init__(self) -> None:
+    def __init__(self, identifier: Optional[str] = None) -> None:
         """Inits an object with default values."""
+        if identifier:
+            self.identifier = identifier
+
         # set up graph and namespaces:
         self._g = Graph()
         self._g.bind("dct", DCT)
