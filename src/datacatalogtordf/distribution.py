@@ -21,6 +21,7 @@ from typing import List, Optional, TYPE_CHECKING
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
 from rdflib.namespace import DCTERMS
+from skolemizer import Skolemizer
 
 from .periodoftime import Date
 from .uri import URI
@@ -324,6 +325,9 @@ class Distribution:
 
     # -
     def _to_graph(self: Distribution) -> Graph:
+
+        if not getattr(self, "identifier", None):
+            self.identifier = Skolemizer.add_skolemization()
 
         # set up graph and namespaces:
         self._g = Graph()
