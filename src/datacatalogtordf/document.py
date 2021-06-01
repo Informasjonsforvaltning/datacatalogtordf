@@ -15,7 +15,8 @@ from __future__ import annotations
 
 from typing import Optional
 
-from rdflib import BNode, DCTERMS, FOAF, Graph, Literal, Namespace, RDF, URIRef
+from rdflib import DCTERMS, FOAF, Graph, Literal, Namespace, RDF, URIRef
+from skolemizer import Skolemizer
 
 from datacatalogtordf.uri import URI
 
@@ -95,14 +96,14 @@ class Document:
 
     def _to_graph(self: Document) -> Graph:
 
+        if not getattr(self, "identifier", None):
+            self.identifier = Skolemizer.add_skolemization()
+
         self._g = Graph()
         self._g.bind("dct", DCTERMS)
         self._g.bind("foaf", FOAF)
 
-        if getattr(self, "identifier", None):
-            _self = URIRef(self.identifier)
-        else:
-            _self = BNode()
+        _self = URIRef(self.identifier)
 
         self._g.add((_self, RDF.type, FOAF.Document))
 
