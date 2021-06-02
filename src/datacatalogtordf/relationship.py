@@ -18,7 +18,8 @@ from __future__ import annotations
 
 from typing import Optional, TYPE_CHECKING
 
-from rdflib import BNode, Graph, Namespace, RDF, URIRef
+from rdflib import Graph, Namespace, RDF, URIRef
+from skolemizer import Skolemizer
 
 from .uri import URI
 
@@ -98,15 +99,15 @@ class Relationship:
     # -
     def _to_graph(self: Relationship) -> Graph:
 
+        if not getattr(self, "identifier", None):
+            self.identifier = Skolemizer.add_skolemization()
+
         # set up graph and namespaces:
         self._g = Graph()
         self._g.bind("dct", DCT)
         self._g.bind("dcat", DCAT)
 
-        if getattr(self, "identifier", None):
-            self._ref = URIRef(self.identifier)
-        else:
-            self._ref = BNode()
+        self._ref = URIRef(self.identifier)
         self._g.add((self._ref, RDF.type, DCAT.Relationship))
 
         if getattr(self, "relation", None):
