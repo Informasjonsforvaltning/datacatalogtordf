@@ -18,7 +18,8 @@ from __future__ import annotations
 
 from typing import Optional
 
-from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
+from rdflib import Graph, Literal, Namespace, RDF, URIRef
+from skolemizer import Skolemizer
 
 from .uri import URI
 
@@ -115,10 +116,10 @@ class Location:
     # -
     def _to_graph(self: Location) -> Graph:
 
-        if getattr(self, "identifier", None):
-            self._ref = URIRef(self.identifier)
-        else:
-            self._ref = BNode()
+        if not getattr(self, "identifier", None):
+            self.identifier = Skolemizer.add_skolemization()
+
+        self._ref = URIRef(self.identifier)
         self._g.add((self._ref, RDF.type, DCT.Location))
 
         self._geometry_to_graph()
