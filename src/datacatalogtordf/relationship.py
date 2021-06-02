@@ -48,9 +48,10 @@ class Relationship:
     _had_role: URI
     _ref: URIRef
 
-    def __init__(self) -> None:
+    def __init__(self, identifier: Optional[str] = None) -> None:
         """Inits an object with default values."""
-        pass
+        if identifier:
+            self.identifier = identifier
 
     @property
     def identifier(self: Relationship) -> str:
