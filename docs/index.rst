@@ -60,4 +60,4 @@ This package can be used like this:
 
   # get rdf representation in turtle (default)
   rdf = catalog.to_rdf()
-  print(rdf.decode())
+  print(rdf)
