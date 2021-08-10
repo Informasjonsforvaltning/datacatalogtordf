@@ -727,7 +727,10 @@ def test_serialization_formats_that_should_work() -> None:
     dataset.identifier = "http://example.com/datasets/1"
     TURTLE = "text/turtle"
     XML = "application/rdf+xml"
-    JSONLD = "application/ld+json"
+    # TODO: this is to avoid a bug in rdflib,
+    # ref https://github.com/RDFLib/rdflib/issues/1387
+    # JSONLD = "application/ld+json"
+    JSONLD = "json-ld"
     NT = "application/n-triples"
     N3 = "text/n3"
 
@@ -756,4 +759,4 @@ def _dump_diff(g1: Graph, g2: Graph) -> None:
 def _dump_turtle(g: Graph) -> None:
     for _l in g.serialize(format="turtle").splitlines():
         if _l:
-            print(_l.decode())
+            print(_l)
