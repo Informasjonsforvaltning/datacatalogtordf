@@ -13,7 +13,7 @@ Example:
 """
 from __future__ import annotations
 
-from typing import Optional
+from typing import Optional, Union
 
 from rdflib import DCTERMS, FOAF, Graph, Literal, Namespace, RDF, URIRef
 from skolemizer import Skolemizer
@@ -82,7 +82,7 @@ class Document:
 
     def to_rdf(
         self: Document, format: str = "turtle", encoding: Optional[str] = "utf-8"
-    ) -> bytes:
+    ) -> Union[bytes, str]:
         """Maps the document to rdf.
 
         Args:

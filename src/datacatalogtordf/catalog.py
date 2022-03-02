@@ -21,7 +21,7 @@ Example:
 """
 from __future__ import annotations
 
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
 from skolemizer import Skolemizer
@@ -189,7 +189,7 @@ class Catalog(Dataset):
         include_datasets: bool = True,
         include_services: bool = True,
         include_models: bool = True,
-    ) -> bytes:
+    ) -> Union[bytes, str]:
         """Maps the catalog to rdf.
 
         Available formats:

@@ -16,7 +16,7 @@ Example:
 """
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING, Union
 
 from rdflib import Graph, Namespace, RDF, URIRef
 from skolemizer import Skolemizer
@@ -84,7 +84,7 @@ class Relationship:
     # -
     def to_rdf(
         self: Relationship, format: str = "turtle", encoding: Optional[str] = "utf-8"
-    ) -> bytes:
+    ) -> Union[bytes, str]:
         """Maps the relationship to rdf.
 
         Args:
