@@ -17,7 +17,7 @@ Example:
 """
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
 from skolemizer import Skolemizer
@@ -142,7 +142,7 @@ class CatalogRecord:
     # -
     def to_rdf(
         self: CatalogRecord, format: str = "turtle", encoding: Optional[str] = "utf-8"
-    ) -> bytes:
+    ) -> Union[bytes, str]:
         """Maps the catalogrecord to rdf."""
         return self._to_graph().serialize(format=format, encoding=encoding)
 

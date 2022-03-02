@@ -1,4 +1,5 @@
 """Exeptions module for datacatalogtordf."""
+from typing import Optional
 
 __all__ = ["Error", "InvalidDateError", "InvalidDateIntervalError"]
 
@@ -6,7 +7,7 @@ __all__ = ["Error", "InvalidDateError", "InvalidDateIntervalError"]
 class Error(Exception):
     """Base class for exceptions."""
 
-    def __init__(self, msg: str = None) -> None:
+    def __init__(self, msg: Optional[str] = None) -> None:
         """Inits the exception."""
         Exception.__init__(self, msg)
         self.msg = msg

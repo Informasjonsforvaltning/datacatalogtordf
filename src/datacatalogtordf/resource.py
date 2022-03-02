@@ -9,10 +9,11 @@ Refer to sub-class for typical usage examples.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, List, Optional, TYPE_CHECKING
+from typing import Any, List, Optional, TYPE_CHECKING, Union
 
 from concepttordf import Contact
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
+from rdflib.term import Identifier
 
 from .agent import Agent
 from .periodoftime import Date
@@ -345,7 +346,7 @@ class Resource(ABC):
     # -
     def to_rdf(
         self: Resource, format: str = "turtle", encoding: Optional[str] = "utf-8"
-    ) -> bytes:
+    ) -> Union[bytes, str]:
         """Maps the distribution to rdf.
 
         Available formats:
@@ -414,6 +415,7 @@ class Resource(ABC):
                     (URIRef(self.identifier), DCT.publisher, URIRef(self.publisher))
                 )
             elif type(self.publisher) is Agent:
+                _agent: Identifier
                 if getattr(self.publisher, "identifier", None):
                     _agent = URIRef(self.publisher.identifier)
                 else:

@@ -16,7 +16,7 @@ Example:
 """
 from __future__ import annotations
 
-from typing import Optional
+from typing import Optional, Union
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
 from skolemizer import Skolemizer
@@ -101,7 +101,7 @@ class Location:
     # -
     def to_rdf(
         self: Location, format: str = "turtle", encoding: Optional[str] = "utf-8"
-    ) -> bytes:
+    ) -> Union[bytes, str]:
         """Maps the location to rdf.
 
         Args:

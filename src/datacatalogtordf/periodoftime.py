@@ -17,9 +17,10 @@ Example:
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
-from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
+from rdflib import BNode, Graph, Literal, Namespace, RDF
+from rdflib.term import Identifier
 
 from .exceptions import InvalidDateError, InvalidDateIntervalError
 
@@ -44,15 +45,15 @@ class Date(str):
         try:
             self._is_valid_date(link)
         except Exception as err:
-            raise InvalidDateError(link, str(err))
+            raise InvalidDateError(link, str(err)) from err
 
     # -
     def _is_valid_date(self: Date, date: str) -> None:
         """Perform basic validation of str as date."""
         try:
             _ = datetime.strptime(date, "%Y-%m-%d")
-        except ValueError:
-            raise InvalidDateError(date, "String is not a valid date")
+        except ValueError as e:
+            raise InvalidDateError(date, "String is not a valid date") from e
 
 
 class PeriodOfTime:
@@ -73,7 +74,7 @@ class PeriodOfTime:
 
     _start_date: str
     _end_date: str
-    _ref: URIRef
+    _ref: Identifier
 
     def __init__(self) -> None:
         """Inits an object with default values."""
@@ -118,7 +119,7 @@ class PeriodOfTime:
     # -
     def to_rdf(
         self: PeriodOfTime, format: str = "turtle", encoding: Optional[str] = "utf-8"
-    ) -> bytes:
+    ) -> Union[bytes, str]:
         """Maps the period_of_time to rdf."""
         return self._to_graph().serialize(format=format, encoding=encoding)
 

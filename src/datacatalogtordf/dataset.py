@@ -25,6 +25,7 @@ from decimal import Decimal
 from typing import List, Optional, Union
 
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
+from rdflib.term import Identifier
 from skolemizer import Skolemizer
 
 from .distribution import Distribution
@@ -186,7 +187,7 @@ class Dataset(Resource):
         format: str = "turtle",
         encoding: Optional[str] = "utf-8",
         include_distributions: bool = True,
-    ) -> bytes:
+    ) -> Union[bytes, str]:
         """Maps the catalog to rdf.
 
         Available formats:
@@ -273,6 +274,7 @@ class Dataset(Resource):
 
     def _spatial_coverage_to_graph(self: Dataset) -> None:
         if getattr(self, "spatial_coverage", None):
+            _location: Identifier
             if isinstance(self.spatial_coverage, Location):
 
                 if not getattr(self.spatial_coverage, "identifier", None):

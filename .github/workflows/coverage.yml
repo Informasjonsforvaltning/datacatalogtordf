@@ -4,14 +4,14 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v1
-      with:
-        python-version: '3.9'
-        architecture: x64
-    - run: pip install nox==2020.12.31
-    - run: pip install poetry==1.1.4
-    - run: pip install nox-poetry==0.8.1
-    - run: nox --sessions tests-3.9 coverage
-      env:
-        CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}          
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+          architecture: x64
+      - run: pipx install nox==2022.1.7
+      - run: pipx install poetry==1.1.13
+      - run: pipx inject nox nox-poetry==0.9.0
+      - run: nox --sessions tests-3.9 coverage
+        env:
+          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
