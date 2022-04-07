@@ -63,9 +63,9 @@ print(rdf)
 - [nox](https://nox.thea.codes/en/stable/)
 
 ```Shell
-% pipx install poetry==1.1.4
-% pipx install nox==2020.8.22
-% pipx inject nox nox-poetry
+% pipx install poetry==1.1.13
+% pipx install nox==2022.1.7
+% pipx inject nox nox-poetry==0.9.0
 ```
 
 ### Install developer tools
