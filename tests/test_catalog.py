@@ -12,6 +12,7 @@ from tests.testutils import assert_isomorphic
 
 DCT = Namespace("http://purl.org/dc/terms/")
 MODELLDCATNO = Namespace("https://data.norge.no/vocabulary/modelldcatno#")
+CPSVNO = Namespace("https://data.norge.no/vocabulary/cpsvno#")
 
 
 def test_to_graph_should_return_identifier_set_at_constructor() -> None:
@@ -433,6 +434,78 @@ def test_to_graph_should_return_model_as_graph() -> None:
     .
     <http://example.com/models/2> a modelldcatno:InformationModel ;
         dct:title   "My second model"@en ;
+    .
+    """
+    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
+def service_to_graph(model: Any) -> Graph:
+    """Helper function to create a service graph to test with."""
+    g = Graph()
+
+    g.add((URIRef(model.identifier), RDF.type, CPSVNO.Service))
+
+    for key in model.title:
+        g.add(
+            (
+                URIRef(model.identifier),
+                DCT.title,
+                Literal(model.title[key], lang=key),
+            )
+        )
+
+    return g
+
+
+def test_to_graph_should_return_service_as_graph() -> None:
+    """It returns a service graph isomorphic to spec."""
+    catalog = Catalog()
+    catalog.identifier = "http://example.com/catalogs/1"
+    # Creating a class as a placeholder for real Service class
+    Service = type(
+        "Service",
+        (object,),
+        {
+            "title": "",
+            "identifier": "",
+            "_to_graph": lambda self: service_to_graph(self),
+        },
+    )
+
+    service_1 = Service()
+    service_1.identifier = "http://example.com/services/1"  # type: ignore
+    service_1.title = {"en": "My first service"}  # type: ignore
+    catalog.contains_services.append(service_1)
+
+    service_2 = Service()
+    service_2.identifier = "http://example.com/services/2"  # type: ignore
+    service_2.title = {"en": "My second service"}  # type: ignore
+    catalog.contains_services.append(service_2)
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix dcatno: <https://data.norge.no/vocabulary/dcatno#> .
+    @prefix cpsvno: <https://data.norge.no/vocabulary/cpsvno#> .
+
+    <http://example.com/catalogs/1> a dcat:Catalog ;
+        dcatno:containsService  <http://example.com/services/1> ,
+                            <http://example.com/services/2> ;
+    .
+    <http://example.com/services/1> a cpsvno:Service ;
+        dct:title   "My first service"@en ;
+    .
+    <http://example.com/services/2> a cpsvno:Service ;
+        dct:title   "My second service"@en ;
     .
     """
     g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")

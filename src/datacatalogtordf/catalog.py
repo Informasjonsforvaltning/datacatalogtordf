@@ -37,6 +37,7 @@ DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
 FOAF = Namespace("http://xmlns.com/foaf/0.1/")
 MODELLDCATNO = Namespace("https://data.norge.no/vocabulary/modelldcatno#")
+DCATNO = Namespace("https://data.norge.no/vocabulary/dcatno#")
 
 
 class Catalog(Dataset):
@@ -58,6 +59,7 @@ class Catalog(Dataset):
                     the registration of a single dataset or data service \
                     that is part of the catalog.
         models (List[URI]): A list of links to InformationModels
+        contains_services (List[URI]): A list of links to Services
     """
 
     __slots__ = (
@@ -69,6 +71,7 @@ class Catalog(Dataset):
         "_catalogs",
         "_catalogrecords",
         "_models",
+        "_contains_services",
         "_dct_identifier",
     )
 
@@ -80,6 +83,7 @@ class Catalog(Dataset):
     _catalogs: List[Catalog]
     _catalogrecords: List[CatalogRecord]
     _models: List[Any]
+    _contains_services: List[Any]
     _dct_identifier: str
 
     def __init__(self, identifier: Optional[str] = None) -> None:
@@ -97,6 +101,7 @@ class Catalog(Dataset):
         self.catalogs = []
         self.catalogrecords = []
         self.models = []
+        self.contains_services = []
 
     @property
     def homepage(self: Catalog) -> str:
@@ -144,6 +149,15 @@ class Catalog(Dataset):
         self._models = models
 
     @property
+    def contains_services(self: Catalog) -> List[Any]:
+        """Get/set for contains_services."""
+        return self._contains_services
+
+    @contains_services.setter
+    def contains_services(self: Catalog, contains_services: List[Any]) -> None:
+        self._contains_services = contains_services
+
+    @property
     def services(self: Catalog) -> List[DataService]:
         """Get/set for services."""
         return self._services
@@ -189,6 +203,7 @@ class Catalog(Dataset):
         include_datasets: bool = True,
         include_services: bool = True,
         include_models: bool = True,
+        include_contains_services: bool = True,
     ) -> Union[bytes, str]:
         """Maps the catalog to rdf.
 
@@ -203,12 +218,16 @@ class Catalog(Dataset):
             include_datasets (bool): includes the dataset graphs in the catalog
             include_services (bool): includes the services in the catalog
             include_models (bool): includes the models in the catalog
+            include_contains_services (bool): includes the services (cpsvno) in the catalog
 
         Returns:
             a rdf serialization as a bytes literal according to format.
         """
         return self._to_graph(
-            include_datasets, include_services, include_models
+            include_datasets,
+            include_services,
+            include_models,
+            include_contains_services,
         ).serialize(format=format, encoding=encoding)
 
     # -
@@ -218,6 +237,7 @@ class Catalog(Dataset):
         include_datasets: bool = True,
         include_services: bool = True,
         include_models: bool = True,
+        include_contains_services: bool = True,
     ) -> Graph:
 
         if not getattr(self, "identifier", None):
@@ -225,6 +245,7 @@ class Catalog(Dataset):
 
         super(Catalog, self)._to_graph()
         self._g.bind("modelldcatno", MODELLDCATNO)
+        self._g.bind("dcatno", DCATNO)
 
         self._g.add((URIRef(self.identifier), RDF.type, self._type))
 
@@ -237,6 +258,7 @@ class Catalog(Dataset):
         self._catalogs_to_graph()
         self._catalogrecords_to_graph()
         self._models_to_graph()
+        self._contains_services_to_graph()
 
         # Add all the datasets to the graf
         if include_datasets:
@@ -252,6 +274,11 @@ class Catalog(Dataset):
         if include_models:
             for model in self._models:
                 self._g += model._to_graph()
+
+        # Add all the contains_services  to the graf
+        if include_contains_services:
+            for service in self._contains_services:
+                self._g += service._to_graph()
 
         return self._g
 
@@ -360,5 +387,16 @@ class Catalog(Dataset):
                         URIRef(self.identifier),
                         MODELLDCATNO.model,
                         URIRef(_model.identifier),
+                    )
+                )
+
+    def _contains_services_to_graph(self: Catalog) -> None:
+        if getattr(self, "contains_services", None):
+            for _service in self._contains_services:
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        DCATNO.containsService,
+                        URIRef(_service.identifier),
                     )
                 )
