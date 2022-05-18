@@ -210,7 +210,7 @@ def test_to_graph_should_return_frequency() -> None:
     assert _isomorphic
 
 
-def test_to_graph_should_return_spatial_coverage() -> None:
+def test_to_graph_should_return_spatial() -> None:
     """It returns a spatial coverage graph isomorphic to spec."""
     dataset = Dataset()
     dataset.identifier = "http://example.com/datasets/1"
@@ -218,7 +218,7 @@ def test_to_graph_should_return_spatial_coverage() -> None:
     location = Location()
     location.centroid = "POINT(4.88412 52.37509)"
     # Add location to dataset:
-    dataset.spatial_coverage = location
+    dataset.spatial = [location]
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -390,13 +390,13 @@ def test_to_graph_should_return_access_rights_comment() -> None:
     assert _isomorphic
 
 
-def test_to_graph_should_return_link_to_spatial_coverage() -> None:
+def test_to_graph_should_return_link_to_spatial() -> None:
     """It returns a spatial coverage graph isomorphic to spec."""
     dataset = Dataset()
     dataset.identifier = "http://example.com/datasets/1"
     # Add link to location:
     location = "http://publications.europa.eu/resource/authority/country/NOR"
-    dataset.spatial_coverage = location
+    dataset.spatial = [location]
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -419,7 +419,7 @@ def test_to_graph_should_return_link_to_spatial_coverage() -> None:
     assert _isomorphic
 
 
-def test_to_graph_should_return_link_to_spatial_coverage_with_location_triple() -> None:
+def test_to_graph_should_return_link_to_spatial_with_location_triple() -> None:
     """It returns a spatial coverage graph isomorphic to spec."""
     dataset = Dataset()
     dataset.identifier = "http://example.com/datasets/1"
@@ -428,7 +428,7 @@ def test_to_graph_should_return_link_to_spatial_coverage_with_location_triple() 
     location.identifier = "http://example.com/locations/1"
     location.centroid = "POINT(4.88412 52.37509)"
     # Add location to dataset:
-    dataset.spatial_coverage = location
+    dataset.spatial = [location]
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .

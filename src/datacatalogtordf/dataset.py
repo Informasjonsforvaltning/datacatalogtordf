@@ -50,7 +50,7 @@ class Dataset(Resource):
         distributions (List[Distribution]): A list of distributions of the dataset
         frequency (URI): A link to resource describing the frequency at\
             which dataset is published.
-        spatial_coverage (Location): The geographical area covered by the dataset.
+        spatial (List[Location]): A list of geographical areas covered by the dataset.
         spatial_resolution (Decimal): Minimum spatial separation resolvable \
             in a dataset, measured in meters.
         temporal_coverage (PeriodOfTime): The temporal period that the dataset covers.
@@ -67,7 +67,7 @@ class Dataset(Resource):
         "_distributions",
         "_type",
         "_frequency",
-        "_spatial_coverage",
+        "_spatial",
         "_spatial_resolution",
         "_temporal_coverage",
         "_temporal_resolution",
@@ -79,7 +79,7 @@ class Dataset(Resource):
     # Types
     _distributions: List[Distribution]
     _frequency: URI
-    _spatial_coverage: Union[Location, str]
+    _spatial: List[Union[Location, str]]
     _spatial_resolution: Decimal
     _temporal_coverage: PeriodOfTime
     _temporal_resolution: str
@@ -116,13 +116,13 @@ class Dataset(Resource):
         self._frequency = URI(frequency)
 
     @property
-    def spatial_coverage(self: Dataset) -> Union[Location, str]:
-        """Get/set for spatial_coverage."""
-        return self._spatial_coverage
+    def spatial(self: Dataset) -> List[Union[Location, str]]:
+        """Get/set for spatial."""
+        return self._spatial
 
-    @spatial_coverage.setter
-    def spatial_coverage(self: Dataset, spatial_coverage: Union[Location, str]) -> None:
-        self._spatial_coverage = spatial_coverage
+    @spatial.setter
+    def spatial(self: Dataset, spatial: List[Union[Location, str]]) -> None:
+        self._spatial = spatial
 
     @property
     def spatial_resolution(self: Dataset) -> Decimal:
@@ -223,7 +223,7 @@ class Dataset(Resource):
         self._dct_identifier_to_graph()
         self._distributions_to_graph()
         self._frequency_to_graph()
-        self._spatial_coverage_to_graph()
+        self._spatial_to_graph()
         self._spatial_resolution_to_graph()
         self._temporal_coverage_to_graph()
         self._temporal_resolution_to_graph()
@@ -272,25 +272,26 @@ class Dataset(Resource):
                 )
             )
 
-    def _spatial_coverage_to_graph(self: Dataset) -> None:
-        if getattr(self, "spatial_coverage", None):
-            _location: Identifier
-            if isinstance(self.spatial_coverage, Location):
+    def _spatial_to_graph(self: Dataset) -> None:
+        if getattr(self, "spatial", None):
+            for spatial in self.spatial:
+                _location: Identifier
+                if isinstance(spatial, Location):
 
-                if not getattr(self.spatial_coverage, "identifier", None):
-                    _location = BNode()
-                else:
-                    _location = URIRef(self.spatial_coverage.identifier)  # type: ignore
+                    if not getattr(spatial, "identifier", None):
+                        _location = BNode()
+                    else:
+                        _location = URIRef(spatial.identifier)  # type: ignore
 
-                for _s, p, o in self.spatial_coverage._to_graph().triples(  # type: ignore
-                    (None, None, None)
-                ):
-                    self._g.add((_location, p, o))
+                    for _s, p, o in spatial._to_graph().triples(  # type: ignore
+                        (None, None, None)
+                    ):
+                        self._g.add((_location, p, o))
 
-            elif isinstance(self.spatial_coverage, str):
-                _location = URIRef(self.spatial_coverage)
+                elif isinstance(spatial, str):
+                    _location = URIRef(spatial)
 
-            self._g.add((URIRef(self.identifier), DCT.spatial, _location))
+                self._g.add((URIRef(self.identifier), DCT.spatial, _location))
 
     def _spatial_resolution_to_graph(self: Dataset) -> None:
         if getattr(self, "spatial_resolution", None):
