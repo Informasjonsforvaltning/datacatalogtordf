@@ -311,7 +311,7 @@ def test_to_graph_should_return_temporal_resolution() -> None:
     """It returns a temporal resolution graph isomorphic to spec."""
     dataset = Dataset()
     dataset.identifier = "http://example.com/datasets/1"
-    dataset.temporal_resolution = "PT15M"
+    dataset.temporal_resolution = ["PT15M"]
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .

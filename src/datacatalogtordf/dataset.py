@@ -54,7 +54,8 @@ class Dataset(Resource):
         spatial_resolution (Decimal): Minimum spatial separation resolvable \
             in a dataset, measured in meters.
         temporal_coverage (PeriodOfTime): The temporal period that the dataset covers.
-        temporal_resolution (str): Minimum time period resolvable in the dataset.
+        temporal_resolution (List[str]): A list of minimum time period resolvables in \
+        the dataset.
         was_generated_by (URI): A link to an activity that generated, \
             or provides the business context for, the creation of the dataset.
         access_rights_comments (List[URI]): Referanse til hjemmel \
@@ -82,7 +83,7 @@ class Dataset(Resource):
     _spatial: List[Union[Location, str]]
     _spatial_resolution: Decimal
     _temporal_coverage: PeriodOfTime
-    _temporal_resolution: str
+    _temporal_resolution: List[str]
     _was_generated_by: URI
     _access_rights_comments: List[str]
     _dct_identifier: str
@@ -143,12 +144,12 @@ class Dataset(Resource):
         self._temporal_coverage = temporal_coverage
 
     @property
-    def temporal_resolution(self: Dataset) -> str:
+    def temporal_resolution(self: Dataset) -> List[str]:
         """Get/set for temporal_resolution."""
         return self._temporal_resolution
 
     @temporal_resolution.setter
-    def temporal_resolution(self: Dataset, temporal_resolution: str) -> None:
+    def temporal_resolution(self: Dataset, temporal_resolution: List[str]) -> None:
         self._temporal_resolution = temporal_resolution
 
     @property
@@ -320,13 +321,14 @@ class Dataset(Resource):
 
     def _temporal_resolution_to_graph(self: Dataset) -> None:
         if getattr(self, "temporal_resolution", None):
-            self._g.add(
-                (
-                    URIRef(self.identifier),
-                    DCAT.temporalResolution,
-                    Literal(self.temporal_resolution, datatype=XSD.duration),
+            for temporal_resolution in self.temporal_resolution:
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        DCAT.temporalResolution,
+                        Literal(temporal_resolution, datatype=XSD.duration),
+                    )
                 )
-            )
 
     def _was_generated_by_to_graph(self: Dataset) -> None:
         if getattr(self, "was_generated_by", None):

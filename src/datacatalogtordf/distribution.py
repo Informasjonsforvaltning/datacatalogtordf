@@ -66,7 +66,7 @@ class Distribution:
         byte_size (Decimal): 	The size of a distribution in bytes.
         spatial_resolution (Decimal): 	The minimum spatial separation resolvable \
             in a dataset distribution, measured in meters.
-        temporal_resolution (str): Minimum time period resolvable in the \
+        temporal_resolution (List[str]): A list of minimum time period resolvables in the \
             dataset distribution.
         conforms_to (List[URI]): A list of links to established standards \
             to which the distribution conforms.
@@ -120,7 +120,7 @@ class Distribution:
     _download_URL: URI
     _byte_size: Decimal
     _spatial_resolution: Decimal
-    _temporal_resolution: str
+    _temporal_resolution: List[str]
     _conforms_to: List[str]
     _media_types: List[str]
     _formats: List[str]
@@ -263,12 +263,12 @@ class Distribution:
         self._spatial_resolution = spatial_resolution
 
     @property
-    def temporal_resolution(self: Distribution) -> str:
+    def temporal_resolution(self: Distribution) -> List[str]:
         """Get/set for temporal_resolution."""
         return self._temporal_resolution
 
     @temporal_resolution.setter
-    def temporal_resolution(self: Distribution, temporal_resolution: str) -> None:
+    def temporal_resolution(self: Distribution, temporal_resolution: List[str]) -> None:
         self._temporal_resolution = temporal_resolution
 
     @property
@@ -469,13 +469,14 @@ class Distribution:
 
     def _temporal_resolution_to_graph(self: Distribution) -> None:
         if getattr(self, "temporal_resolution", None):
-            self._g.add(
-                (
-                    URIRef(self.identifier),
-                    DCAT.temporalResolution,
-                    Literal(self.temporal_resolution, datatype=XSD.duration),
+            for temporal_resolution in self.temporal_resolution:
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        DCAT.temporalResolution,
+                        Literal(temporal_resolution, datatype=XSD.duration),
+                    )
                 )
-            )
 
     def _conforms_to_to_graph(self: Distribution) -> None:
         if getattr(self, "conforms_to", None):
