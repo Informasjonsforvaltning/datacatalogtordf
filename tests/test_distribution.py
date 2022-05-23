@@ -452,7 +452,7 @@ def test_to_graph_should_return_temporal_resolution() -> None:
     """It returns a temporal resolution graph isomorphic to spec."""
     distribution = Distribution()
     distribution.identifier = "http://example.com/distributions/1"
-    distribution.temporal_resolution = "PT15M"
+    distribution.temporal_resolution = ["PT15M"]
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
