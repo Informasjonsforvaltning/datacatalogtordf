@@ -272,16 +272,16 @@ def test_to_graph_should_return_spatial_resolution() -> None:
     assert _isomorphic
 
 
-def test_to_graph_should_return_temporal_coverage() -> None:
+def test_to_graph_should_return_temporal() -> None:
     """It returns a temporal coverage graph isomorphic to spec."""
     dataset = Dataset()
     dataset.identifier = "http://example.com/datasets/1"
     # Create PeriodOfTime:
-    temporal_coverage = PeriodOfTime()
-    temporal_coverage.start_date = "2019-12-31"
-    temporal_coverage.end_date = "2020-12-31"
-    # Add temporal_coverage to dataset:
-    dataset.temporal_coverage = temporal_coverage
+    temporal = PeriodOfTime()
+    temporal.start_date = "2019-12-31"
+    temporal.end_date = "2020-12-31"
+    # Add temporal to dataset:
+    dataset.temporal = [temporal]
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .

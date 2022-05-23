@@ -53,7 +53,7 @@ class Dataset(Resource):
         spatial (List[Location]): A list of geographical areas covered by the dataset.
         spatial_resolution (Decimal): Minimum spatial separation resolvable \
             in a dataset, measured in meters.
-        temporal_coverage (PeriodOfTime): The temporal period that the dataset covers.
+        temporal (List[PeriodOfTime]): A list of temporal periods that the dataset covers.
         temporal_resolution (List[str]): A list of minimum time period resolvables in \
         the dataset.
         was_generated_by (URI): A link to an activity that generated, \
@@ -70,7 +70,7 @@ class Dataset(Resource):
         "_frequency",
         "_spatial",
         "_spatial_resolution",
-        "_temporal_coverage",
+        "_temporal",
         "_temporal_resolution",
         "_was_generated_by",
         "_access_rights_comments",
@@ -82,7 +82,7 @@ class Dataset(Resource):
     _frequency: URI
     _spatial: List[Union[Location, str]]
     _spatial_resolution: Decimal
-    _temporal_coverage: PeriodOfTime
+    _temporal: List[PeriodOfTime]
     _temporal_resolution: List[str]
     _was_generated_by: URI
     _access_rights_comments: List[str]
@@ -135,13 +135,13 @@ class Dataset(Resource):
         self._spatial_resolution = spatial_resolution
 
     @property
-    def temporal_coverage(self: Dataset) -> PeriodOfTime:
-        """Get/set for temporal_coverage."""
-        return self._temporal_coverage
+    def temporal(self: Dataset) -> List[PeriodOfTime]:
+        """Get/set for temporal."""
+        return self._temporal
 
-    @temporal_coverage.setter
-    def temporal_coverage(self: Dataset, temporal_coverage: PeriodOfTime) -> None:
-        self._temporal_coverage = temporal_coverage
+    @temporal.setter
+    def temporal(self: Dataset, temporal: List[PeriodOfTime]) -> None:
+        self._temporal = temporal
 
     @property
     def temporal_resolution(self: Dataset) -> List[str]:
@@ -226,7 +226,7 @@ class Dataset(Resource):
         self._frequency_to_graph()
         self._spatial_to_graph()
         self._spatial_resolution_to_graph()
-        self._temporal_coverage_to_graph()
+        self._temporal_to_graph()
         self._temporal_resolution_to_graph()
         self._was_generated_by_to_graph()
         self._access_rights_comments_to_graph()
@@ -304,20 +304,19 @@ class Dataset(Resource):
                 )
             )
 
-    def _temporal_coverage_to_graph(self: Dataset) -> None:
-        if getattr(self, "temporal_coverage", None):
-            _temporal = BNode()
-            for _s, p, o in self.temporal_coverage._to_graph().triples(
-                (None, None, None)
-            ):
-                self._g.add((_temporal, p, o))
-            self._g.add(
-                (
-                    URIRef(self.identifier),
-                    DCT.temporal,
-                    _temporal,
+    def _temporal_to_graph(self: Dataset) -> None:
+        if getattr(self, "temporal", None):
+            for temporal in self.temporal:
+                _temporal = BNode()
+                for _s, p, o in temporal._to_graph().triples((None, None, None)):
+                    self._g.add((_temporal, p, o))
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        DCT.temporal,
+                        _temporal,
+                    )
                 )
-            )
 
     def _temporal_resolution_to_graph(self: Dataset) -> None:
         if getattr(self, "temporal_resolution", None):
