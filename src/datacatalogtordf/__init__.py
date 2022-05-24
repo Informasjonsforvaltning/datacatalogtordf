@@ -3,6 +3,7 @@
 Modules:
     resource
     dataset
+    dataset_series
     catalog
     dataservice
     distribution
@@ -22,6 +23,7 @@ from .catalog import Catalog
 from .catalogrecord import CatalogRecord
 from .dataservice import DataService
 from .dataset import Dataset
+from .dataset_series import DatasetSeries
 from .distribution import Distribution
 from .document import Document
 from .exceptions import InvalidDateError, InvalidDateIntervalError
