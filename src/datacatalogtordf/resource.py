@@ -72,6 +72,8 @@ class Resource(ABC):
         is_referenced_by (List[Resource]): A list of related resources, \
             such as a publication, that references, cites, or otherwise points\
             to the cataloged resource.
+        prev(Resource): The previous resource in an ordered collection or series \
+            of resources.
     """
 
     # Use slots to save memory, faster access and restrict attribute creation
@@ -99,6 +101,7 @@ class Resource(ABC):
         "_rights",
         "_has_policy",
         "_is_referenced_by",
+        "_prev",
     )
 
     # Types
@@ -125,6 +128,7 @@ class Resource(ABC):
     _rights: URI  # 6.4.20
     _has_policy: URI  # 6.4.21
     _is_referenced_by: List[Resource]  # 6.4.22
+    _prev: Resource  # 6.4.33
 
     @abstractmethod
     def __init__(self) -> None:
@@ -343,6 +347,15 @@ class Resource(ABC):
     ) -> None:
         self._qualified_relation = qualified_relation
 
+    @property
+    def prev(self: Resource) -> Resource:
+        """Get/set for prev."""
+        return self._prev
+
+    @prev.setter
+    def prev(self: Resource, prev: Resource) -> None:
+        self._prev = prev
+
     # -
     def to_rdf(
         self: Resource, format: str = "turtle", encoding: Optional[str] = "utf-8"
@@ -405,6 +418,7 @@ class Resource(ABC):
         self._rights_to_graph()
         self._keyword_to_graph()
         self._qualified_relation_to_graph()
+        self._prev_to_graph()
 
         return self._g
 
@@ -571,3 +585,9 @@ class Resource(ABC):
                 self._g.add(
                     (URIRef(self.identifier), DCAT.qualifiedRelation, _relationship)
                 )
+
+    def _prev_to_graph(self: Resource) -> None:
+        if getattr(self, "prev", None):
+            self._g.add(
+                (URIRef(self.identifier), DCAT.prev, URIRef(self.prev.identifier))
+            )

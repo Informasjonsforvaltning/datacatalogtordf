@@ -22,12 +22,14 @@ Example:
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import List, Optional, Union
+from typing import List, Optional, TYPE_CHECKING, Union
 
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 from rdflib.term import Identifier
 from skolemizer import Skolemizer
 
+if TYPE_CHECKING:  # pragma: no cover
+    from .dataset_series import DatasetSeries  # pytype: disable=pyi-error
 from .distribution import Distribution
 from .location import Location
 from .periodoftime import PeriodOfTime
@@ -62,6 +64,8 @@ class Dataset(Resource):
             (kilde for påstand) i offentlighetsloven, sikkerhetsloven, \
             beskyttelsesinstruksen eller annet lovverk som ligger til grunn for \
             vurdering av tilgangsnivå.
+        in_series (DatasetSeries): A dataset series of which the dataset is part.
+
     """
 
     __slots__ = (
@@ -75,6 +79,7 @@ class Dataset(Resource):
         "_was_generated_by",
         "_access_rights_comments",
         "_dct_identifier",
+        "_in_series",
     )
 
     # Types
@@ -87,6 +92,7 @@ class Dataset(Resource):
     _was_generated_by: URI
     _access_rights_comments: List[str]
     _dct_identifier: str
+    _in_series: DatasetSeries
 
     def __init__(self, identifier: Optional[str] = None) -> None:
         """Inits an object with default values."""
@@ -184,6 +190,15 @@ class Dataset(Resource):
         """Set for dct_identifier."""
         self._dct_identifier = dct_identifier
 
+    @property
+    def in_series(self: Dataset) -> DatasetSeries:
+        """Get/set for in_series."""
+        return self._in_series
+
+    @in_series.setter
+    def in_series(self: Dataset, in_series: DatasetSeries) -> None:
+        self._in_series = in_series
+
     # -
     def to_rdf(
         self: Dataset,
@@ -232,6 +247,7 @@ class Dataset(Resource):
         self._temporal_resolution_to_graph()
         self._was_generated_by_to_graph()
         self._access_rights_comments_to_graph()
+        self._in_series_to_graph()
 
         # Add all the distributions to the graf
         if include_distributions:
@@ -353,3 +369,13 @@ class Dataset(Resource):
                         URIRef(_access_rights_comment),
                     )
                 )
+
+    def _in_series_to_graph(self: Dataset) -> None:
+        if getattr(self, "in_series", None):
+            self._g.add(
+                (
+                    URIRef(self.identifier),
+                    DCAT.inSeries,
+                    URIRef(self.in_series.identifier),
+                )
+            )
