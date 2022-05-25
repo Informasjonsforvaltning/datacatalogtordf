@@ -51,8 +51,8 @@ class Dataset(Resource):
         frequency (URI): A link to resource describing the frequency at\
             which dataset is published.
         spatial (List[Location]): A list of geographical areas covered by the dataset.
-        spatial_resolution (Decimal): Minimum spatial separation resolvable \
-            in a dataset, measured in meters.
+        spatial_resolution_in_meters (List[Decimal]): A list of minimum spatial \
+            separation resolvables in a dataset, measured in meters.
         temporal (List[PeriodOfTime]): A list of temporal periods that the dataset covers.
         temporal_resolution (List[str]): A list of minimum time period resolvables in \
         the dataset.
@@ -69,7 +69,7 @@ class Dataset(Resource):
         "_type",
         "_frequency",
         "_spatial",
-        "_spatial_resolution",
+        "_spatial_resolution_in_meters",
         "_temporal",
         "_temporal_resolution",
         "_was_generated_by",
@@ -81,7 +81,7 @@ class Dataset(Resource):
     _distributions: List[Distribution]
     _frequency: URI
     _spatial: List[Union[Location, str]]
-    _spatial_resolution: Decimal
+    _spatial_resolution_in_meters: List[Decimal]
     _temporal: List[PeriodOfTime]
     _temporal_resolution: List[str]
     _was_generated_by: URI
@@ -126,13 +126,15 @@ class Dataset(Resource):
         self._spatial = spatial
 
     @property
-    def spatial_resolution(self: Dataset) -> Decimal:
-        """Get/set for spatial_resolution."""
-        return self._spatial_resolution
+    def spatial_resolution_in_meters(self: Dataset) -> List[Decimal]:
+        """Get/set for spatial_resolution_in_meters."""
+        return self._spatial_resolution_in_meters
 
-    @spatial_resolution.setter
-    def spatial_resolution(self: Dataset, spatial_resolution: Decimal) -> None:
-        self._spatial_resolution = spatial_resolution
+    @spatial_resolution_in_meters.setter
+    def spatial_resolution_in_meters(
+        self: Dataset, spatial_resolution_in_meters: List[Decimal]
+    ) -> None:
+        self._spatial_resolution_in_meters = spatial_resolution_in_meters
 
     @property
     def temporal(self: Dataset) -> List[PeriodOfTime]:
@@ -225,7 +227,7 @@ class Dataset(Resource):
         self._distributions_to_graph()
         self._frequency_to_graph()
         self._spatial_to_graph()
-        self._spatial_resolution_to_graph()
+        self._spatial_resolution_in_meters_to_graph()
         self._temporal_to_graph()
         self._temporal_resolution_to_graph()
         self._was_generated_by_to_graph()
@@ -276,7 +278,7 @@ class Dataset(Resource):
     def _spatial_to_graph(self: Dataset) -> None:
         if getattr(self, "spatial", None):
             for spatial in self.spatial:
-                _location: Identifier
+                _location: Union[Identifier, None] = None
                 if isinstance(spatial, Location):
 
                     if not getattr(spatial, "identifier", None):
@@ -292,17 +294,19 @@ class Dataset(Resource):
                 elif isinstance(spatial, str):
                     _location = URIRef(spatial)
 
-                self._g.add((URIRef(self.identifier), DCT.spatial, _location))
+                if _location is not None:
+                    self._g.add((URIRef(self.identifier), DCT.spatial, _location))
 
-    def _spatial_resolution_to_graph(self: Dataset) -> None:
-        if getattr(self, "spatial_resolution", None):
-            self._g.add(
-                (
-                    URIRef(self.identifier),
-                    DCAT.spatialResolutionInMeters,
-                    Literal(self.spatial_resolution, datatype=XSD.decimal),
+    def _spatial_resolution_in_meters_to_graph(self: Dataset) -> None:
+        if getattr(self, "spatial_resolution_in_meters", None):
+            for resolution in self.spatial_resolution_in_meters:
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        DCAT.spatialResolutionInMeters,
+                        Literal(resolution, datatype=XSD.decimal),
+                    )
                 )
-            )
 
     def _temporal_to_graph(self: Dataset) -> None:
         if getattr(self, "temporal", None):

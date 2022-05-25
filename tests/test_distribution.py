@@ -420,12 +420,12 @@ def test_to_graph_should_return_byte_size() -> None:
     assert _isomorphic
 
 
-def test_to_graph_should_return_spatial_resolution() -> None:
+def test_to_graph_should_return_spatial_resolution_in_meters() -> None:
     """It returns a spatial resolution graph isomorphic to spec."""
     distribution = Distribution()
     distribution.identifier = "http://example.com/distributions/1"
     # spatial resolution is an xsd:decimal:
-    distribution.spatial_resolution = Decimal(30.0)
+    distribution.spatial_resolution_in_meters = [Decimal(30.0)]
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
