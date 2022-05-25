@@ -64,8 +64,8 @@ class Distribution:
             E.g. CSV file or RDF file. The format is indicated by \
             the distribution's dct:format and/or dcat:mediaType
         byte_size (Decimal): 	The size of a distribution in bytes.
-        spatial_resolution (Decimal): 	The minimum spatial separation resolvable \
-            in a dataset distribution, measured in meters.
+        spatial_resolution_in_meters (List[Decimal]): A list of minimum spatial \
+            separation resolvables in a dataset distribution, measured in meters.
         temporal_resolution (List[str]): A list of minimum time period resolvables in the \
             dataset distribution.
         conforms_to (List[URI]): A list of links to established standards \
@@ -96,7 +96,7 @@ class Distribution:
         "_access_service",
         "_download_URL",
         "_byte_size",
-        "_spatial_resolution",
+        "_spatial_resolution_in_meters",
         "_temporal_resolution",
         "_conforms_to",
         "_media_types",
@@ -119,7 +119,7 @@ class Distribution:
     _access_service: DataService
     _download_URL: URI
     _byte_size: Decimal
-    _spatial_resolution: Decimal
+    _spatial_resolution_in_meters: List[Decimal]
     _temporal_resolution: List[str]
     _conforms_to: List[str]
     _media_types: List[str]
@@ -254,13 +254,15 @@ class Distribution:
         self._byte_size = byte_size
 
     @property
-    def spatial_resolution(self: Distribution) -> Decimal:
-        """Get/set for spatial_resolution."""
-        return self._spatial_resolution
+    def spatial_resolution_in_meters(self: Distribution) -> List[Decimal]:
+        """Get/set for spatial_resolution_in_meters."""
+        return self._spatial_resolution_in_meters
 
-    @spatial_resolution.setter
-    def spatial_resolution(self: Distribution, spatial_resolution: Decimal) -> None:
-        self._spatial_resolution = spatial_resolution
+    @spatial_resolution_in_meters.setter
+    def spatial_resolution_in_meters(
+        self: Distribution, spatial_resolution_in_meters: List[Decimal]
+    ) -> None:
+        self._spatial_resolution_in_meters = spatial_resolution_in_meters
 
     @property
     def temporal_resolution(self: Distribution) -> List[str]:
@@ -349,7 +351,7 @@ class Distribution:
         self._access_service_to_graph()
         self._download_URL_to_graph()
         self._byte_size_to_graph()
-        self._spatial_resolution_to_graph()
+        self._spatial_resolution_in_meters_to_graph()
         self._temporal_resolution_to_graph()
         self._conforms_to_to_graph()
         self._media_types_to_graph()
@@ -457,15 +459,16 @@ class Distribution:
                 )
             )
 
-    def _spatial_resolution_to_graph(self: Distribution) -> None:
-        if getattr(self, "spatial_resolution", None):
-            self._g.add(
-                (
-                    URIRef(self.identifier),
-                    DCAT.spatialResolutionInMeters,
-                    Literal(self.spatial_resolution, datatype=XSD.decimal),
+    def _spatial_resolution_in_meters_to_graph(self: Distribution) -> None:
+        if getattr(self, "spatial_resolution_in_meters", None):
+            for resolution in self.spatial_resolution_in_meters:
+                self._g.add(
+                    (
+                        URIRef(self.identifier),
+                        DCAT.spatialResolutionInMeters,
+                        Literal(resolution, datatype=XSD.decimal),
+                    )
                 )
-            )
 
     def _temporal_resolution_to_graph(self: Distribution) -> None:
         if getattr(self, "temporal_resolution", None):
