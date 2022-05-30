@@ -2,7 +2,7 @@
 
 This module contains methods for mapping a dataset_series object to rdf
 according to the
-`dcat-ap-no v.2 standard <https://doc.difi.no/review/dcat-ap-no/#klasse-katalog>`__
+`dcat-ap-no v.2 standard <https://informasjonsforvaltning.github.io/dcat-ap-no/#klasse-datasettSerie>`__
 
 Example:
     >>> from datacatalogtordf import Catalog, DatasetSeries, Dataset

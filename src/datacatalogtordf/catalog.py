@@ -2,7 +2,7 @@
 
 This module contains methods for mapping a catalog object to rdf
 according to the
-`dcat-ap-no v.2 standard <https://doc.difi.no/review/dcat-ap-no/#klasse-katalog>`__
+`dcat-ap-no v.2 standard <https://data.norge.no/specification/dcat-ap-no/#klasse-katalog>`__
 
 Example:
     >>> from datacatalogtordf import Catalog, Dataset

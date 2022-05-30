@@ -21,7 +21,7 @@ Other relevant classes are also supported, such as:
 
 * Contact (`vcard:Kind <https://www.w3.org/TR/2014/NOTE-vcard-rdf-20140522/#d4e1819>`_)
 
-The library will map to `the Norwegian Application Profile <https://doc.difi.no/dcat-ap-no/>`_ of `the DCAT standard <https://www.w3.org/TR/vocab-dcat-2/>`_.
+The library will map to `the Norwegian Application Profile <https://data.norge.no/specification/dcat-ap-no>`_ of `the DCAT standard <https://www.w3.org/TR/vocab-dcat-2/>`_.
 
 
 Installation

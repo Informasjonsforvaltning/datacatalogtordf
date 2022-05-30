@@ -2,7 +2,7 @@
 
 This module contains methods for mapping a agent object to rdf
 according to the
-`dcat-ap-no v.2 standard <https://doc.difi.no/review/dcat-ap-no/#klasse-distribusjon>`__
+`dcat-ap-no v.2 standard <https://data.norge.no/specification/dcat-ap-no/#klasse-aktor>`__
 
 Example:
     >>> from datacatalogtordf import Agent, Dataset

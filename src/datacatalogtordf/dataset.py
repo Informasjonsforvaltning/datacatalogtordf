@@ -2,7 +2,7 @@
 
 This module contains methods for mapping a dataset object to rdf
 according to the
-`dcat-ap-no v.2 standard <https://doc.difi.no/review/dcat-ap-no/#klasse-dataset>`__
+`dcat-ap-no v.2 standard <https://data.norge.no/specification/dcat-ap-no/#klasse-dataset>`__
 
 Example:
     >>> from datacatalogtordf import Dataset, Distribution
