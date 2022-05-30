@@ -58,6 +58,15 @@ datacatalogtordf.dataset
   :inherited-members:
 
 
+datacatalogtordf.dataset_series
+------------------------
+
+.. automodule:: datacatalogtordf.dataset_series
+  :members:
+  :show-inheritance:
+  :inherited-members:
+
+
 datacatalogtordf.distribution
 -----------------------------
 

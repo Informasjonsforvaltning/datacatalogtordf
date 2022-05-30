@@ -4,6 +4,11 @@ docstring-convention = google
 max-complexity = 10
 ignore = ANN101,ANN401,B009,E203,E501,W503
 max-line-length = 88
-per-file-ignores = __init__.py: F401,tests/*:S101
+per-file-ignores = 
+    __init__.py:F401
+    tests/*:S101
+    src/datacatalogtordf/dataset_series.py:B950
+    src/datacatalogtordf/distribution.py:B950
+    src/datacatalogtordf/dataservice.py:B950
 application-import-names = datacatalogtordf, tests
 import-order-style = google

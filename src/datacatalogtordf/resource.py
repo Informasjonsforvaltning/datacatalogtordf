@@ -2,7 +2,7 @@
 
 This module contains methods for mapping a sub-class objects to rdf
 according to the
-`dcat-ap-no v.2 standard <https://doc.difi.no/review/dcat-ap-no/>`_
+`dcat-ap-no v.2 standard <https://data.norge.no/specification/dcat-ap-no/>`_
 
 Refer to sub-class for typical usage examples.
 """
