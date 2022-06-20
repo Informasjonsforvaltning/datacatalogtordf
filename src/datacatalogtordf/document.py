@@ -13,7 +13,7 @@ Example:
 """
 from __future__ import annotations
 
-from typing import Optional, Union
+from typing import Dict, Optional, Union
 
 from rdflib import DCTERMS, FOAF, Graph, Literal, Namespace, RDF, URIRef
 from skolemizer import Skolemizer
@@ -24,14 +24,7 @@ DCAT = Namespace("http://www.w3.org/ns/dcat#")
 
 
 class Document:
-    """A class representing a foaf:Document.
-
-    Attributes:
-        identifier (URI): A URI uniquely identifying the document
-        title (dict): A title given to the document. key is langauge code
-        language (str): A reference to the language which is used in the document
-        format (str): A link to a concept designating the type of the document
-    """
+    """A class representing a foaf:Document."""
 
     slots = (
         "_identifier",
@@ -40,7 +33,7 @@ class Document:
     )
 
     _identifier: URI
-    _title: dict
+    _title: Dict[str, str]
     _language: str
     _type: str
 
@@ -52,32 +45,29 @@ class Document:
 
     @property
     def identifier(self: Document) -> str:
-        """Get for identifier."""
+        """URI: A URI uniquely identifying the document."""
         return self._identifier
 
     @identifier.setter
     def identifier(self: Document, identifier: str) -> None:
-        """Set for identifier."""
         self._identifier = URI(identifier)
 
     @property
-    def title(self) -> dict:
-        """Get for title attribute."""
+    def title(self) -> Dict[str, str]:
+        """Dict[str, str]: A title given to the document. key is langauge code."""
         return self._title
 
     @title.setter
-    def title(self, title: dict) -> None:
-        """Set for title attribute."""
+    def title(self, title: Dict[str, str]) -> None:
         self._title = title
 
     @property
     def language(self: Document) -> str:
-        """Get for language."""
+        """str: A reference to the language which is used in the document."""
         return self._language
 
     @language.setter
     def language(self: Document, language: str) -> None:
-        """Set for language."""
         self._language = URI(language)
 
     def to_rdf(

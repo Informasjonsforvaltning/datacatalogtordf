@@ -32,15 +32,10 @@ DCAT = Namespace("http://www.w3.org/ns/dcat#")
 class DataService(Resource):
     """A class representing a dcat:DataService.
 
-    Ref: `dcat:DataService <https://www.w3.org/TR/vocab-dcat-2/#Class:Data_Service>`_.
+    Args:
+        identifier (URI): the identifier of the datasetservice.
 
-    Attributes:
-        endpointURL (URI): The root location or primary endpoint of the service \
-            (a Web-resolvable IRI).
-        endpointDescription (URI): A description of the services available via \
-            the end-points, including their operations, parameters etc.
-        servesdatasets (List[Dataset]): A list of datasets that this service serves
-        media_types (List[src]): A list of media types that is offered in the responses
+    Ref: `dcat:DataService <https://www.w3.org/TR/vocab-dcat-2/#Class:Data_Service>`_.
     """
 
     _endpointURL: URI
@@ -61,7 +56,7 @@ class DataService(Resource):
 
     @property
     def endpointURL(self: DataService) -> str:
-        """Get/set for endpointURL."""
+        """URI: The root location or primary endpoint of the service (a Web-resolvable IRI)."""
         return self._endpointURL
 
     @endpointURL.setter
@@ -70,7 +65,7 @@ class DataService(Resource):
 
     @property
     def endpointDescription(self: DataService) -> str:
-        """Get/set for endpointDescription."""
+        """URI: A description of the services available via the end-points, including their operations, parameters etc."""  # noqa: B950
         return self._endpointDescription
 
     @endpointDescription.setter
@@ -79,7 +74,7 @@ class DataService(Resource):
 
     @property
     def servesdatasets(self: DataService) -> List[Dataset]:
-        """Get/set for servesdatasets."""
+        """List[Dataset]: A list of datasets that this service serves."""
         return self._servesdatasets
 
     @servesdatasets.setter
@@ -88,7 +83,7 @@ class DataService(Resource):
 
     @property
     def media_types(self: DataService) -> List[str]:
-        """Get/set for media_type."""
+        """List[src]: A list of media types that is offered in the responses."""
         return self._media_types
 
     @media_types.setter

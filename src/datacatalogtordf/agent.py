@@ -19,7 +19,7 @@ Example:
 """
 from __future__ import annotations
 
-from typing import Optional, Union
+from typing import Dict, Optional, Union
 
 from rdflib import Graph, Literal, Namespace, OWL, RDF, URIRef
 from skolemizer import Skolemizer
@@ -35,17 +35,14 @@ FOAF = Namespace("http://xmlns.com/foaf/0.1/")
 class Agent:
     """A class representing a foaf:Agent.
 
-    Attributes:
-        identifier (URI): A URI uniquely identifying the agent
-        name (dict): A name given to the agent. key is langauge code
-        organization_id (str): The organzation's identifier
-        organization_type (URI): a link to a concept designating the type of the agent
+    Args:
+        identifier (URI): the identifier of the dataset.
     """
 
     slots = ("_identifier", "_name", "_organization_id", "_same_as")
 
     _identifier: URI
-    _name: dict
+    _name: Dict[str, str]
     _organization_id: str
     _organization_type: URI
     _same_as: URI
@@ -63,7 +60,7 @@ class Agent:
 
     @property
     def identifier(self: Agent) -> str:
-        """Get/set for identifier."""
+        """URI: A URI uniquely identifying the agent."""
         return self._identifier
 
     @identifier.setter
@@ -71,17 +68,17 @@ class Agent:
         self._identifier = URI(identifier)
 
     @property
-    def name(self: Agent) -> dict:
-        """Name attribute."""
+    def name(self: Agent) -> Dict[str, str]:
+        """Dict[str, str]: A name given to the agent. key is langauge code."""
         return self._name
 
     @name.setter
-    def name(self: Agent, name: dict) -> None:
+    def name(self: Agent, name: Dict[str, str]) -> None:
         self._name = name
 
     @property
     def organization_id(self: Agent) -> str:
-        """Organization attribute."""
+        """str: The organzation's identifier."""
         return self._organization_id
 
     @organization_id.setter
@@ -90,7 +87,7 @@ class Agent:
 
     @property
     def organization_type(self: Agent) -> str:
-        """Type attribute."""
+        """URI: Link to a concept designating the type of the agent."""
         return self._organization_type
 
     @organization_type.setter
@@ -99,12 +96,11 @@ class Agent:
 
     @property
     def same_as(self: Agent) -> str:
-        """Get for same_as."""
+        """URI: Link to another resource that is the same as this one."""
         return self._same_as
 
     @same_as.setter
     def same_as(self: Agent, same_as: str) -> None:
-        """Get for same_as."""
         self._same_as = URI(same_as)
 
     # -

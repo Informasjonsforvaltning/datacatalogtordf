@@ -59,7 +59,7 @@ datacatalogtordf.dataset
 
 
 datacatalogtordf.dataset_series
-------------------------
+-------------------------------
 
 .. automodule:: datacatalogtordf.dataset_series
   :members:

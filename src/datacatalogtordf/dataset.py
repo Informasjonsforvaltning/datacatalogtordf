@@ -46,26 +46,10 @@ DCATNO = Namespace("https://data.norge.no/vocabulary/dcatno#")
 class Dataset(Resource):
     """A class representing a dcat:Dataset.
 
+    Args:
+        identifier (URI): the identifier of the dataset.
+
     Ref: `dcat:Dataset <https://www.w3.org/TR/vocab-dcat-2/#Class:Dataset>`_.
-
-    Attributes:
-        distributions (List[Distribution]): A list of distributions of the dataset
-        frequency (URI): A link to resource describing the frequency at\
-            which dataset is published.
-        spatial (List[Location]): A list of geographical areas covered by the dataset.
-        spatial_resolution_in_meters (List[Decimal]): A list of minimum spatial \
-            separation resolvables in a dataset, measured in meters.
-        temporal (List[PeriodOfTime]): A list of temporal periods that the dataset covers.
-        temporal_resolution (List[str]): A list of minimum time period resolvables in \
-        the dataset.
-        was_generated_by (URI): A link to an activity that generated, \
-            or provides the business context for, the creation of the dataset.
-        access_rights_comments (List[URI]): Referanse til hjemmel \
-            (kilde for påstand) i offentlighetsloven, sikkerhetsloven, \
-            beskyttelsesinstruksen eller annet lovverk som ligger til grunn for \
-            vurdering av tilgangsnivå.
-        in_series (DatasetSeries): A dataset series of which the dataset is part.
-
     """
 
     __slots__ = (
@@ -106,7 +90,7 @@ class Dataset(Resource):
 
     @property
     def distributions(self: Dataset) -> List[Distribution]:
-        """Get/set for distributions."""
+        """List[Distribution]: A list of distributions of the dataset."""
         return self._distributions
 
     @distributions.setter
@@ -115,7 +99,7 @@ class Dataset(Resource):
 
     @property
     def frequency(self: Dataset) -> str:
-        """Get/set for frequency."""
+        """[URI]: A link to resource describing the frequency at which dataset is published."""  # noqa: B950
         return self._frequency
 
     @frequency.setter
@@ -124,7 +108,7 @@ class Dataset(Resource):
 
     @property
     def spatial(self: Dataset) -> List[Union[Location, str]]:
-        """Get/set for spatial."""
+        """List[Location]: A list of geographical areas covered by the dataset."""  # noqa: B950
         return self._spatial
 
     @spatial.setter
@@ -133,7 +117,7 @@ class Dataset(Resource):
 
     @property
     def spatial_resolution_in_meters(self: Dataset) -> List[Decimal]:
-        """Get/set for spatial_resolution_in_meters."""
+        """List[Decimal]: A list of minimum spatial separation resolvables in a dataset, measured in meters."""  # noqa: B950
         return self._spatial_resolution_in_meters
 
     @spatial_resolution_in_meters.setter
@@ -144,7 +128,7 @@ class Dataset(Resource):
 
     @property
     def temporal(self: Dataset) -> List[PeriodOfTime]:
-        """Get/set for temporal."""
+        """List[PeriodOfTime]: A list of temporal periods that the dataset covers."""  # noqa: B950
         return self._temporal
 
     @temporal.setter
@@ -153,7 +137,7 @@ class Dataset(Resource):
 
     @property
     def temporal_resolution(self: Dataset) -> List[str]:
-        """Get/set for temporal_resolution."""
+        """List[str]: A list of minimum time period resolvables in the dataset."""  # noqa: B950
         return self._temporal_resolution
 
     @temporal_resolution.setter
@@ -162,7 +146,7 @@ class Dataset(Resource):
 
     @property
     def was_generated_by(self: Dataset) -> str:
-        """Get/set for was_generated_by."""
+        """URI: A link to an activity that generated, or provides the business context for, the creation of the dataset."""  # noqa: B950
         return self._was_generated_by
 
     @was_generated_by.setter
@@ -171,7 +155,7 @@ class Dataset(Resource):
 
     @property
     def access_rights_comments(self: Dataset) -> List[str]:
-        """Get/set for access_rights_comments."""
+        """List[URI]: Referanse til hjemmel (kilde for påstand) i offentlighetsloven, sikkerhetsloven, beskyttelsesinstruksen eller annet lovverk som ligger til grunn for vurdering av tilgangsnivå."""  # noqa: B950
         return self._access_rights_comments
 
     @access_rights_comments.setter
@@ -182,17 +166,16 @@ class Dataset(Resource):
 
     @property
     def dct_identifier(self) -> str:
-        """Get for dct_identifier."""
+        """str: the identifier for the dataset."""
         return self._dct_identifier
 
     @dct_identifier.setter
     def dct_identifier(self, dct_identifier: str) -> None:
-        """Set for dct_identifier."""
         self._dct_identifier = dct_identifier
 
     @property
     def in_series(self: Dataset) -> DatasetSeries:
-        """Get/set for in_series."""
+        """DatasetSeries]: A dataset series of which the dataset is part."""
         return self._in_series
 
     @in_series.setter

@@ -34,12 +34,6 @@ class Location:
     """A class representing a dcat:Location.
 
     Ref: `dcat:Location <https://www.w3.org/TR/vocab-dcat-2/#Class:Location>`_
-
-    Attributes:
-        identifier (URI): an URI uniquely identifying the resource
-        geometry (str): Associates any resource with the corresponding geometry.
-        bounding_box (str): The geographic bounding box of a resource.
-        centroid (str): The geographic center (centroid) of a resource.
     """
 
     slots = ("_identifier", "_geometry", "_bounding_box", "_centroid")
@@ -64,7 +58,7 @@ class Location:
 
     @property
     def identifier(self: Location) -> str:
-        """Get/set for identifier."""
+        """URI: an URI uniquely identifying the resource."""
         return self._identifier
 
     @identifier.setter
@@ -73,7 +67,7 @@ class Location:
 
     @property
     def geometry(self: Location) -> str:
-        """Get/set for geometry."""
+        """str: Associates any resource with the corresponding geometry."""
         return self._geometry
 
     @geometry.setter
@@ -82,7 +76,7 @@ class Location:
 
     @property
     def bounding_box(self: Location) -> str:
-        """Get/set for bounding_box."""
+        """str: The geographic bounding box of a resource."""
         return self._bounding_box
 
     @bounding_box.setter
@@ -91,7 +85,7 @@ class Location:
 
     @property
     def centroid(self: Location) -> str:
-        """Get/set for centroid."""
+        """str: The geographic center (centroid) of a resource."""
         return self._centroid
 
     @centroid.setter
