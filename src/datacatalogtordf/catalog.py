@@ -44,22 +44,6 @@ class Catalog(Dataset):
     """A class representing a dcat:Catalog.
 
     Ref: `dcat:Catalog <https://www.w3.org/TR/vocab-dcat-2/#Class:Catalog>`_.
-
-    Attributes:
-        homepage (URI): A link to a homepage for the catalog
-        themes (List[URI]): A list of links to knowledge organization system (KOS) \
-                    used to classify catalog
-        has_parts (List[Resource]): A list of resources that is listed in the catalog.
-        datasets (List[Dataset]): A list of datasets that is listed in the catalog.
-        services (List[DataService]): A list of dataservices of sites or \
-                    end-points that is listed in the catalog.
-        catalogs (List[Catalog]): A list of catalogs that are of interest in \
-                    the context of this catalog.
-        catalogrecords (List[CatalogRecord]): A list of records describing \
-                    the registration of a single dataset or data service \
-                    that is part of the catalog.
-        models (List[URI]): A list of links to InformationModels
-        contains_services (List[URI]): A list of links to Services
     """
 
     __slots__ = (
@@ -105,7 +89,7 @@ class Catalog(Dataset):
 
     @property
     def homepage(self: Catalog) -> str:
-        """Get/set for homepage."""
+        """URI: A link to a homepage for the catalog."""
         return self._homepage
 
     @homepage.setter
@@ -114,7 +98,7 @@ class Catalog(Dataset):
 
     @property
     def themes(self: Catalog) -> List[str]:
-        """Get/set for themes."""
+        """List[URI`): A list of links to knowledge organization system (KOS) used to classify catalog."""  # noqa: B950
         return self._themes
 
     @themes.setter
@@ -123,7 +107,7 @@ class Catalog(Dataset):
 
     @property
     def has_parts(self: Catalog) -> List[Resource]:
-        """Get/set for has_parts."""
+        """List[Resource]: A list of resources that is listed in the catalog."""
         return self._has_parts
 
     @has_parts.setter
@@ -132,7 +116,7 @@ class Catalog(Dataset):
 
     @property
     def datasets(self: Catalog) -> List[Dataset]:
-        """Get/set for datasets."""
+        """List[Dataset]: A list of datasets that is listed in the catalog."""
         return self._datasets
 
     @datasets.setter
@@ -141,7 +125,7 @@ class Catalog(Dataset):
 
     @property
     def models(self: Catalog) -> List[Any]:
-        """Get/set for models."""
+        """List[URI]: A list of links to InformationModels."""
         return self._models
 
     @models.setter
@@ -150,7 +134,7 @@ class Catalog(Dataset):
 
     @property
     def contains_services(self: Catalog) -> List[Any]:
-        """Get/set for contains_services."""
+        """List[URI]: A list of links to Services."""
         return self._contains_services
 
     @contains_services.setter
@@ -159,7 +143,7 @@ class Catalog(Dataset):
 
     @property
     def services(self: Catalog) -> List[DataService]:
-        """Get/set for services."""
+        """List[DataService]: A list of dataservices of sites or end-points that is listed in the catalog."""  # noqa: B950
         return self._services
 
     @services.setter
@@ -168,7 +152,7 @@ class Catalog(Dataset):
 
     @property
     def catalogs(self: Catalog) -> List[Catalog]:
-        """Get/set for catalogs."""
+        """List[Catalog]: A list of catalogs that are of interest in the context of this catalog."""  # noqa: B950
         return self._catalogs
 
     @catalogs.setter
@@ -177,7 +161,7 @@ class Catalog(Dataset):
 
     @property
     def catalogrecords(self: Catalog) -> List[CatalogRecord]:
-        """Get/set for catalogrecords."""
+        """List[CatalogRecord]: A list of records describing the registration of a single dataset or data service that is part of the catalog."""  # noqa: B950
         return self._catalogrecords
 
     @catalogrecords.setter
@@ -186,12 +170,11 @@ class Catalog(Dataset):
 
     @property
     def dct_identifier(self) -> str:
-        """Get for dct_identifier."""
+        """str: the identifier for the catalog."""
         return self._dct_identifier
 
     @dct_identifier.setter
     def dct_identifier(self, dct_identifier: str) -> None:
-        """Set for dct_identifier."""
         self._dct_identifier = dct_identifier
 
         # -

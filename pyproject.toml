@@ -12,7 +12,7 @@ license = "Apache-2.0"
 name = "datacatalogtordf"
 readme = "README.md"
 repository = "https://github.com/Informasjonsforvaltning/datacatalogtordf"
-version = "2.1.0"
+version = "2.1.1"
 
 [tool.poetry.dependencies]
 concepttordf = "^2.0.0"
@@ -21,7 +21,7 @@ rdflib = "^6.1.1"
 skolemizer = "^1.1.0"
 
 [tool.poetry.dev-dependencies]
-Sphinx = "^4.4.0"
+Sphinx = "^5.0.1"
 bandit = "^1.7.4"
 black = "^22.1.0"
 codecov = "^2.0.16"
@@ -44,6 +44,7 @@ pytype = "^2022.5.19"
 safety = "^1.9.0"
 sphinx-autodoc-typehints = "^1.11.1"
 xdoctest = "^1.0.0"
+sphinxcontrib-napoleon = "^0.7"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]

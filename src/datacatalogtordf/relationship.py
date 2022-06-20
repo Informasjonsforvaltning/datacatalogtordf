@@ -34,11 +34,6 @@ class Relationship:
     """A class representing a dcat:Relationship.
 
     Ref: `dcat:Relationship <https://www.w3.org/TR/vocab-dcat-2/#Class:Relationship>`_
-
-    Attributes:
-        identifier (URI): a URI uniquely identifying the resource
-        relation (Resource): A URI uniquely identifying related resource
-        had_role (URI): A URI identifying the role
     """
 
     slots = ("_g", "_identifier", "_relation", "_had_role", "_ref")
@@ -56,7 +51,7 @@ class Relationship:
 
     @property
     def identifier(self: Relationship) -> str:
-        """Get/set for identifier."""
+        """URI: a URI uniquely identifying the resource."""
         return self._identifier
 
     @identifier.setter
@@ -65,7 +60,7 @@ class Relationship:
 
     @property
     def had_role(self: Relationship) -> str:
-        """Get/set for had_role."""
+        """URI: A URI identifying the role."""
         return self._had_role
 
     @had_role.setter
@@ -74,7 +69,7 @@ class Relationship:
 
     @property
     def relation(self: Relationship) -> Resource:
-        """Get/set for relation."""
+        """Resource: A URI uniquely identifying related resource."""
         return self._relation
 
     @relation.setter

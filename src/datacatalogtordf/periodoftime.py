@@ -61,10 +61,6 @@ class PeriodOfTime:
 
     Ref: `dcat:PeriodOfTime <https://www.w3.org/TR/vocab-dcat-2/#Class:PeriodOfTime>`_
 
-    Attributes:
-        start_date: date signfying the start of the period
-        end_date: date signfying the end of the period
-
     Raises:
         InvalidDateIntervalError: If the interval is "negative", i.e. \
             start date is after the end date
@@ -86,7 +82,7 @@ class PeriodOfTime:
 
     @property
     def start_date(self: PeriodOfTime) -> str:
-        """Get/set for start_date."""
+        """str: date signfying the start of the period."""
         return self._start_date
 
     @start_date.setter
@@ -102,7 +98,7 @@ class PeriodOfTime:
 
     @property
     def end_date(self: PeriodOfTime) -> str:
-        """Get/set for end_date."""
+        """str: date signfying the end of the period."""
         return self._end_date
 
     @end_date.setter

@@ -17,7 +17,7 @@ Example:
 """
 from __future__ import annotations
 
-from typing import List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
 from skolemizer import Skolemizer
@@ -37,17 +37,8 @@ class CatalogRecord:
 
     Ref: https://www.w3.org/TR/vocab-dcat-2/#Class:Catalog_Record
 
-    Attributes:
-        identifier (URI): a URI uniquely identifying the catalog record
-        title (dict): A name given to the record. key is language code.
-        description (dict): A free-text account of the record. key is language code.
-        listing_date (Date): The date of listing
-        modification_date (Date): Most recent date on which the catalog entry \
-            was changed
-        primary_topic (Resource): The dcat:Resource (dataset or service) \
-            described in the record.
-        conforms_to (List[URI]): An established standard to which the described \
-            resource conforms.
+    Args:
+        identifier (URI): the identifier of the dataset-series.
     """
 
     __slots__ = (
@@ -63,8 +54,8 @@ class CatalogRecord:
 
     _g: Graph
     _identifier: URI
-    _title: dict
-    _description: dict
+    _title: Dict[str, str]
+    _description: Dict[str, str]
     _listing_date: Date
     _modification_date: Date
     _primary_topic: Resource
@@ -78,7 +69,7 @@ class CatalogRecord:
 
     @property
     def identifier(self: CatalogRecord) -> str:
-        """Get/set for identifier."""
+        """URI: a URI uniquely identifying the catalog record."""
         return self._identifier
 
     @identifier.setter
@@ -86,26 +77,26 @@ class CatalogRecord:
         self._identifier = URI(identifier)
 
     @property
-    def title(self: CatalogRecord) -> dict:
-        """Title attribute."""
+    def title(self: CatalogRecord) -> Dict[str, str]:
+        """Dict[str, str]: A name given to the record. key is language code."""
         return self._title
 
     @title.setter
-    def title(self: CatalogRecord, title: dict) -> None:
+    def title(self: CatalogRecord, title: Dict[str, str]) -> None:
         self._title = title
 
     @property
-    def description(self: CatalogRecord) -> dict:
-        """Description attribute."""
+    def description(self: CatalogRecord) -> Dict[str, str]:
+        """Dict[str, str]: A free-text account of the record. key is language code."""
         return self._description
 
     @description.setter
-    def description(self: CatalogRecord, description: dict) -> None:
+    def description(self: CatalogRecord, description: Dict[str, str]) -> None:
         self._description = description
 
     @property
     def listing_date(self: CatalogRecord) -> str:
-        """Get/set for listing_date."""
+        """Date: The date of listing."""
         return self._listing_date
 
     @listing_date.setter
@@ -114,7 +105,7 @@ class CatalogRecord:
 
     @property
     def modification_date(self: CatalogRecord) -> str:
-        """Get/set for modification_date."""
+        """Date: Most recent date on which the catalog entry was changed."""
         return self._modification_date
 
     @modification_date.setter
@@ -123,7 +114,7 @@ class CatalogRecord:
 
     @property
     def primary_topic(self: CatalogRecord) -> Resource:
-        """Get/set for primary_topic."""
+        """Resource: The dcat:Resource (dataset or service) described in the record."""  # noqa: B950
         return self._primary_topic
 
     @primary_topic.setter
@@ -132,7 +123,7 @@ class CatalogRecord:
 
     @property
     def conforms_to(self: CatalogRecord) -> List[str]:
-        """Get/set for conforms_to."""
+        """List[URI]: An established standard to which the described resource conforms."""
         return self._conforms_to
 
     @conforms_to.setter

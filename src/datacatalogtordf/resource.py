@@ -9,7 +9,7 @@ Refer to sub-class for typical usage examples.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, List, Optional, TYPE_CHECKING, Union
+from typing import Dict, List, Optional, TYPE_CHECKING, Union
 
 from concepttordf import Contact
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
@@ -35,45 +35,6 @@ class Resource(ABC):
     """An abstract class representing a dcat:Resource.
 
     Ref: `dcat:Resource <https://www.w3.org/TR/vocab-dcat-2/#Class:Resource>`_.
-
-    Attributes:
-        access_rights (URI): A link to information about who can access the \
-            resource or an indication of its security status.
-        conformsTo (List[URI]): A list of links to established standards \
-            to which the described resource conforms.
-        contactpoint (Contact): Relevant contact information for the cataloged resource.
-        creator (URI): Link to the entity responsible for producing the resource.
-        description (dict): A free-text account of the item. key is language code.
-        title (dict):  A name given to the item. key is langauge code.
-        release_date (Date): Date of formal issuance (e.g., publication) of the item.
-        modification_date (Date): Most recent date on which the item was changed,\
-            updated or modified.
-        language (List[str]): A list of links to languages of the item.
-        publisher (Any):  A URI uniquely identifying the publisher of the resource
-        identifier (URI): A URI uniquely identifying the resource
-        theme (List[URI]): A list of links to categories of the resource.
-        type_genre (URI):  A link to the nature or genre of the resource.
-        resource_relation (List[URI]): A list of links to resources with \
-            an unspecified relationship to the cataloged item.
-        qualified_relation (List[Relationship]): A list of links to a description\
-            of a relationship with another resource
-        keyword (dict): A keyword or tag describing the resource. key is language code.
-        landing_page (List[URI]): A list of links to web pages that can be \
-            navigated to in a Web browser to gain access to the catalog, \
-            a dataset, its distributions and/or additional information.
-        qualified_attributions (List[dict]): List of links to an Agent having \
-            some form of responsibility for the resource
-        license (URI): 	A link to a legal document under which the resource is \
-            made available.
-        rights (URI): A link to a statement that concerns all rights not addressed\
-            with dct:license or dct:accessRights, such as copyright statements.
-        has_policy (URI): A link to an ODRL conformant policy expressing \
-            the rights associated with the resource.
-        is_referenced_by (List[Resource]): A list of related resources, \
-            such as a publication, that references, cites, or otherwise points\
-            to the cataloged resource.
-        prev(Resource): The previous resource in an ordered collection or series \
-            of resources.
     """
 
     # Use slots to save memory, faster access and restrict attribute creation
@@ -110,20 +71,20 @@ class Resource(ABC):
     _conformsTo: List[str]  # 6.4.2
     _contactpoint: Contact  # 6.4.3
     _creator: URI  # 6.4.4
-    _description: dict  # 6.4.5
-    _title: dict  # 6.4.6
+    _description: Dict[str, str]  # 6.4.5
+    _title: Dict[str, str]  # 6.4.6
     _release_date: Date  # 6.4.7
     _modification_date: Date  # 6.4.8
     _language: List[str]  # 6.4.9
-    _publisher: Any  # 6.4.10
+    _publisher: Union[Agent, str]  # 6.4.10
     _identifier: URI  # 6.4.11
     _theme: List[str]  # 6.4.12
     _type_genre: URI  # 6.4.13
     _resource_relation: List[str]  # 6.4.14
     _qualified_relation: List[Relationship]  # 6.4.15
-    _keyword: dict  # 6.4.16
+    _keyword: Dict[str, str]  # 6.4.16
     _landing_page: List[str]  # 6.4.17
-    _qualified_attributions: List[dict]  # 6.4.18
+    _qualified_attributions: List[Dict]  # 6.4.18
     _license: URI  # 6.4.19
     _rights: URI  # 6.4.20
     _has_policy: URI  # 6.4.21
@@ -146,7 +107,7 @@ class Resource(ABC):
 
     @property
     def identifier(self: Resource) -> str:
-        """Get/set for identifier."""
+        """URI: A URI uniquely identifying the resource."""
         return self._identifier
 
     @identifier.setter
@@ -154,36 +115,35 @@ class Resource(ABC):
         self._identifier = URI(identifier)
 
     @property
-    def publisher(self: Resource) -> Any:
-        """Get/set for publisher."""
+    def publisher(self: Resource) -> Union[Agent, str]:
+        """Union[Agent, str]: A URI uniquely identifying the publisher of the resource."""
         return self._publisher
 
     @publisher.setter
-    def publisher(self: Resource, publisher: Any) -> None:
+    def publisher(self: Resource, publisher: Union[Agent, str]) -> None:
         self._publisher = publisher
 
     @property
-    def title(self: Resource) -> dict:
-        """Title attribute."""
+    def title(self: Resource) -> Dict[str, str]:
+        """Dict[str, str]:  A name given to the item. key is langauge code."""
         return self._title
 
     @title.setter
-    def title(self: Resource, title: dict) -> None:
+    def title(self: Resource, title: Dict[str, str]) -> None:
         self._title = title
 
     @property
-    def description(self: Resource) -> dict:
-        """Description attribute."""
+    def description(self: Resource) -> Dict[str, str]:
+        """Dict[str, str]: A free-text account of the item. key is language code."""
         return self._description
 
     @description.setter
-    def description(self: Resource, description: dict) -> None:
-        """Title attribute setter."""
+    def description(self: Resource, description: Dict[str, str]) -> None:
         self._description = description
 
     @property
     def access_rights(self: Resource) -> str:
-        """Get/set for access_rights."""
+        """URI: A link to information about who can access the resource or an indication of its security status."""  # noqa: B950
         return self._access_rights
 
     @access_rights.setter
@@ -192,7 +152,7 @@ class Resource(ABC):
 
     @property
     def conformsTo(self: Resource) -> List[str]:
-        """Get/set for conformsTo."""
+        """List[URI]: A list of links to established standards to which the described resource conforms."""  # noqa: B950
         return self._conformsTo
 
     @conformsTo.setter
@@ -201,7 +161,7 @@ class Resource(ABC):
 
     @property
     def theme(self: Resource) -> List[str]:
-        """Get/set for theme."""
+        """List[URI]: A list of links to categories of the resource."""
         return self._theme
 
     @theme.setter
@@ -210,7 +170,7 @@ class Resource(ABC):
 
     @property
     def contactpoint(self: Resource) -> Contact:
-        """Get/set for contactpoint."""
+        """Contact: Relevant contact information for the cataloged resource."""  # noqa: B950
         return self._contactpoint
 
     @contactpoint.setter
@@ -219,7 +179,7 @@ class Resource(ABC):
 
     @property
     def creator(self: Resource) -> str:
-        """Get/set for creator."""
+        """URI: Link to the entity responsible for producing the resource."""
         return self._creator
 
     @creator.setter
@@ -228,7 +188,7 @@ class Resource(ABC):
 
     @property
     def has_policy(self: Resource) -> str:
-        """Get/set for has_policy."""
+        """URI: A link to an ODRL conformant policy expressing the rights associated with the resource."""  # noqa: B950
         return self._has_policy
 
     @has_policy.setter
@@ -237,7 +197,7 @@ class Resource(ABC):
 
     @property
     def is_referenced_by(self: Resource) -> List[Resource]:
-        """Get/set for is_referenced_by."""
+        """List[Resource]: A list of related resources, such as a publication, that references, cites, or otherwise points to the cataloged resource."""  # noqa: B950
         return self._is_referenced_by
 
     @is_referenced_by.setter
@@ -246,7 +206,7 @@ class Resource(ABC):
 
     @property
     def release_date(self: Resource) -> str:
-        """Get/set for release_date."""
+        """Date: Date of formal issuance (e.g., publication) of the item."""
         return self._release_date
 
     @release_date.setter
@@ -255,7 +215,7 @@ class Resource(ABC):
 
     @property
     def modification_date(self: Resource) -> str:
-        """Get/set for modification_date."""
+        """Date: Most recent date on which the item was changed, updated or modified."""
         return self._modification_date
 
     @modification_date.setter
@@ -264,7 +224,7 @@ class Resource(ABC):
 
     @property
     def type_genre(self: Resource) -> str:
-        """Get/set for type_genre."""
+        """URI:  A link to the nature or genre of the resource."""
         return self._type_genre
 
     @type_genre.setter
@@ -272,19 +232,19 @@ class Resource(ABC):
         self._type_genre = URI(type_genre)
 
     @property
-    def qualified_attributions(self: Resource) -> List[dict]:
-        """Get/set for qualified_attributions."""
+    def qualified_attributions(self: Resource) -> List[Dict]:
+        """List[Dict]: List of links to an Agent having some form of responsibility for the resource."""  # noqa: B950
         return self._qualified_attributions
 
     @qualified_attributions.setter
     def qualified_attributions(
-        self: Resource, qualified_attributions: List[dict]
+        self: Resource, qualified_attributions: List[Dict]
     ) -> None:
         self._qualified_attributions = qualified_attributions
 
     @property
     def landing_page(self: Resource) -> List[str]:
-        """Get/set for landing_page."""
+        """List[URI]: A list of links to web pages that can be navigated to in a Web browser to gain access to the catalog, a dataset, its distributions and/or additional information."""  # noqa: B950
         return self._landing_page
 
     @landing_page.setter
@@ -293,7 +253,7 @@ class Resource(ABC):
 
     @property
     def license(self: Resource) -> str:
-        """Get/set for license."""
+        """URI:	A link to a legal document under which the resource is made available."""
         return self._license
 
     @license.setter
@@ -302,7 +262,7 @@ class Resource(ABC):
 
     @property
     def language(self: Resource) -> List[str]:
-        """Get/set for language."""
+        """List[str]: A list of links to languages of the item."""
         return self._language
 
     @language.setter
@@ -311,7 +271,7 @@ class Resource(ABC):
 
     @property
     def resource_relation(self: Resource) -> List[str]:
-        """Get/set for resource_relation."""
+        """List[URI]: A list of links to resources with an unspecified relationship to the cataloged item."""  # noqa: B950
         return self._resource_relation
 
     @resource_relation.setter
@@ -320,7 +280,7 @@ class Resource(ABC):
 
     @property
     def rights(self: Resource) -> str:
-        """Get/set for rights."""
+        """URI: A link to a statement that concerns all rights not addressed with dct:license or dct:accessRights, such as copyright statements."""  # noqa: B950
         return self._rights
 
     @rights.setter
@@ -328,17 +288,17 @@ class Resource(ABC):
         self._rights = URI(rights)
 
     @property
-    def keyword(self: Resource) -> dict:
-        """Title attribute."""
+    def keyword(self: Resource) -> Dict[str, str]:
+        """Dict[str, str]: A keyword or tag describing the resource. key is language code."""
         return self._keyword
 
     @keyword.setter
-    def keyword(self: Resource, keyword: dict) -> None:
+    def keyword(self: Resource, keyword: Dict[str, str]) -> None:
         self._keyword = keyword
 
     @property
     def qualified_relation(self: Resource) -> List[Relationship]:
-        """Get/set for qualified_relation."""
+        """List[Relationship]: A list of links to a description of a relationship with another resource."""  # noqa: B950
         return self._qualified_relation
 
     @qualified_relation.setter
@@ -349,7 +309,7 @@ class Resource(ABC):
 
     @property
     def prev(self: Resource) -> Resource:
-        """Get/set for prev."""
+        """Resource: The previous resource in an ordered collection or series of resources."""
         return self._prev
 
     @prev.setter

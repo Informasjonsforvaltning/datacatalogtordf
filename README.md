@@ -48,8 +48,24 @@ dataset.title = {"nb": "inntektsAPI", "en": "incomeAPI"}
 catalog.datasets.append(dataset)
 
 # get rdf representation in turtle (default)
-rdf = catalog.to_rdf()
-print(rdf)
+rdf = catalog.to_rdf(format="turtle")
+print(rdf.decode())
+```
+
+Will produce the following output:
+
+```Shell
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<http://example.com/catalogs/1> a dcat:Catalog ;
+    dct:publisher <https://example.com/publishers/1> ;
+    dct:title "A dataset catalog"@en ;
+    dcat:dataset <http://example.com/datasets/1> .
+
+<http://example.com/datasets/1> a dcat:Dataset ;
+    dct:title "incomeAPI"@en,
+        "inntekstAPI"@nb .
 ```
 
 ## Development

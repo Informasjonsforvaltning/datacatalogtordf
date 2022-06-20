@@ -17,7 +17,7 @@ Example:
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import List, Optional, TYPE_CHECKING, Union
+from typing import Dict, List, Optional, TYPE_CHECKING, Union
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
 from rdflib.namespace import DCTERMS
@@ -40,45 +40,8 @@ class Distribution:
 
     Ref: `dcat:Distribution <https://www.w3.org/TR/vocab-dcat-2/#Class:Distribution>`_
 
-    Attributes:
-        identifier (URI): A URI uniquely identifying the resource
-        title (dict): A dict with title in multiple languages
-        description (dict): A free-text account of the distribution.
-        release_date (Date): Date of formal issuance (e.g., publication) \
-            of the distribution.
-        modification_date (Date): Most recent date on which the distribution \
-            was changed, updated or modified.
-        license (URI): A link to legal document under which the distribution is \
-            made available.
-        access_rights (URI): A link to rights statement that concerns how the \
-            distribution is accessed.
-        rights (URI): A link to information about rights held in and over \
-            the distribution.
-        has_policy (URI): A link to an ODRL conformant policy expressing \
-            the rights associated with the distribution.
-        access_URL (URI): A URL of the resource that gives access to a \
-            distribution of the dataset. E.g. landing page, feed, SPARQL endpoint.
-        access_service (DataService): A data service that gives access to \
-            the distribution of the dataset
-        download_URL (URI): The URL of the downloadable file in a given format.\
-            E.g. CSV file or RDF file. The format is indicated by \
-            the distribution's dct:format and/or dcat:mediaType
-        byte_size (Decimal): 	The size of a distribution in bytes.
-        spatial_resolution_in_meters (List[Decimal]): A list of minimum spatial \
-            separation resolvables in a dataset distribution, measured in meters.
-        temporal_resolution (List[str]): A list of minimum time period resolvables in the \
-            dataset distribution.
-        conforms_to (List[URI]): A list of links to established standards \
-            to which the distribution conforms.
-        media_types (List[URI]): A list of media types of the distribution \
-            as defined by IANA.
-        formats (List[URI]): A list of file formats of the distribution.
-        compression_format (URI): The compression format of the distribution \
-            in which the data is contained in a compressed form, e.g. \
-            to reduce the size of the downloadable file.
-        package_format (URI): The package format of the distribution in which \
-            one or more data files are grouped together, e.g. to enable a set \
-            of related files to be downloaded together.
+    Args:
+        identifier (URI): the identifier of the dataset-series.
     """
 
     __slots__ = (
@@ -107,8 +70,8 @@ class Distribution:
 
     _g: Graph
     _identifier: URI
-    _title: dict
-    _description: dict
+    _title: Dict[str, str]
+    _description: Dict[str, str]
     _release_date: Date
     _modification_date: Date
     _license: URI
@@ -138,7 +101,7 @@ class Distribution:
 
     @property
     def identifier(self: Distribution) -> str:
-        """Get/set for identifier."""
+        """URI: A URI uniquely identifying the resource."""
         return self._identifier
 
     @identifier.setter
@@ -146,26 +109,26 @@ class Distribution:
         self._identifier = URI(identifier)
 
     @property
-    def title(self: Distribution) -> dict:
-        """Get/set for title."""
+    def title(self: Distribution) -> Dict[str, str]:
+        """Dict[str]: A dict with title in multiple languages."""
         return self._title
 
     @title.setter
-    def title(self: Distribution, title: dict) -> None:
+    def title(self: Distribution, title: Dict[str, str]) -> None:
         self._title = title
 
     @property
-    def description(self: Distribution) -> dict:
-        """Description attribute."""
+    def description(self: Distribution) -> Dict[str, str]:
+        """Dict[str]: A free-text account of the distribution."""
         return self._description
 
     @description.setter
-    def description(self: Distribution, description: dict) -> None:
+    def description(self: Distribution, description: Dict[str, str]) -> None:
         self._description = description
 
     @property
     def release_date(self: Distribution) -> str:
-        """Get/set for release_date."""
+        """Date: Date of formal issuance (e.g., publication) of the distribution."""
         return self._release_date
 
     @release_date.setter
@@ -174,7 +137,7 @@ class Distribution:
 
     @property
     def modification_date(self: Distribution) -> str:
-        """Get/set for modification_date."""
+        """Date: Most recent date on which the distribution was changed, updated or modified."""
         return self._modification_date
 
     @modification_date.setter
@@ -183,7 +146,7 @@ class Distribution:
 
     @property
     def license(self: Distribution) -> str:
-        """Get/set for license."""
+        """URI: A link to legal document under which the distribution is made available."""
         return self._license
 
     @license.setter
@@ -192,7 +155,7 @@ class Distribution:
 
     @property
     def access_rights(self: Distribution) -> str:
-        """Get/set for access_rights."""
+        """URI: A link to rights statement that concerns how the distribution is accessed."""
         return self._access_rights
 
     @access_rights.setter
@@ -201,7 +164,7 @@ class Distribution:
 
     @property
     def rights(self: Distribution) -> str:
-        """Get/set for rights."""
+        """URI: A link to information about rights held in and over the distribution."""
         return self._rights
 
     @rights.setter
@@ -210,7 +173,7 @@ class Distribution:
 
     @property
     def has_policy(self: Distribution) -> str:
-        """Get/set for has_policy."""
+        """URI: A link to an ODRL conformant policy expressing the rights associated with the distribution."""
         return self._has_policy
 
     @has_policy.setter
@@ -219,7 +182,7 @@ class Distribution:
 
     @property
     def access_URL(self: Distribution) -> str:
-        """Get/set for access_URL."""
+        """URI: A URL of the resource that gives access to a distribution of the dataset. E.g. landing page, feed, SPARQL endpoint."""  # noqa: B950
         return self._access_URL
 
     @access_URL.setter
@@ -228,7 +191,7 @@ class Distribution:
 
     @property
     def access_service(self: Distribution) -> DataService:
-        """Get/set for access_service."""
+        """DataService: A data service that gives access to the distribution of the dataset."""  # noqa: B950
         return self._access_service
 
     @access_service.setter
@@ -237,7 +200,7 @@ class Distribution:
 
     @property
     def download_URL(self: Distribution) -> str:
-        """Get/set for download_URL."""
+        """URI: The URL of the downloadable file in a given format. E.g. CSV file or RDF file. The format is indicated by the distribution's dct:format and/or dcat:mediaType."""  # noqa: B950
         return self._download_URL
 
     @download_URL.setter
@@ -246,7 +209,7 @@ class Distribution:
 
     @property
     def byte_size(self: Distribution) -> Decimal:
-        """Get/set for byte_size."""
+        """Decimal: The size of a distribution in bytes."""
         return self._byte_size
 
     @byte_size.setter
@@ -255,7 +218,7 @@ class Distribution:
 
     @property
     def spatial_resolution_in_meters(self: Distribution) -> List[Decimal]:
-        """Get/set for spatial_resolution_in_meters."""
+        """List[Decimal]: A list of minimum spatial separation resolvables in a dataset distribution, measured in meters."""  # noqa: B950
         return self._spatial_resolution_in_meters
 
     @spatial_resolution_in_meters.setter
@@ -266,7 +229,7 @@ class Distribution:
 
     @property
     def temporal_resolution(self: Distribution) -> List[str]:
-        """Get/set for temporal_resolution."""
+        """List[str]: A list of minimum time period resolvables in the dataset distribution."""
         return self._temporal_resolution
 
     @temporal_resolution.setter
@@ -275,7 +238,7 @@ class Distribution:
 
     @property
     def conforms_to(self: Distribution) -> List[str]:
-        """Get/set for conforms_to."""
+        """List[URI]: A list of links to established standards to which the distribution conforms."""
         return self._conforms_to
 
     @conforms_to.setter
@@ -284,7 +247,7 @@ class Distribution:
 
     @property
     def media_types(self: Distribution) -> List[str]:
-        """Get/set for media_types."""
+        """List[URI]: A list of media types of the distribution as defined by IANA."""
         return self._media_types
 
     @media_types.setter
@@ -293,7 +256,7 @@ class Distribution:
 
     @property
     def formats(self: Distribution) -> List[str]:
-        """Get/set for formats."""
+        """List[URI]: A list of file formats of the distribution."""
         return self._formats
 
     @formats.setter
@@ -302,7 +265,7 @@ class Distribution:
 
     @property
     def compression_format(self: Distribution) -> str:
-        """Get/set for compression_format."""
+        """URI: Link to the compression format of the distribution in which the data is contained in a compressed form, e.g. to reduce the size of the downloadable file."""  # noqa: B950
         return self._compression_format
 
     @compression_format.setter
@@ -311,7 +274,7 @@ class Distribution:
 
     @property
     def package_format(self: Distribution) -> str:
-        """Get/set for package_format."""
+        """URI: Link to the package format of the distribution in which one or more data files are grouped together, e.g. to enable a set of related files to be downloaded together."""  # noqa: B950
         return self._package_format
 
     @package_format.setter

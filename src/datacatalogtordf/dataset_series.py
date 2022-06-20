@@ -46,11 +46,8 @@ class DatasetSeries(Dataset):
 
     Ref: `dcat:DatasetSeries <https://www.w3.org/TR/vocab-dcat-3/#Class:Dataset_Series>`_.
 
-    Attributes:
-        first (Dataset): The first resource in an ordered collection or series of \
-            resources, to which the current resource belongs.
-        last (Dataset): The last resource in an ordered collection or series of \
-            resources, to which the current resource belongs.
+    Args:
+        identifier (URI): the identifier of the dataset-series.
     """
 
     __slots__ = (
@@ -75,7 +72,7 @@ class DatasetSeries(Dataset):
 
     @property
     def first(self: DatasetSeries) -> Dataset:
-        """Get/set for first."""
+        """Dataset: The first resource in an ordered collection or series of resources, to which the current resource belongs."""  # noqa: B950
         return self._first
 
     @first.setter
@@ -84,7 +81,7 @@ class DatasetSeries(Dataset):
 
     @property
     def last(self: DatasetSeries) -> Dataset:
-        """Get/set for last."""
+        """Dataset: The last resource in an ordered collection or series of resources, to which the current resource belongs."""  # noqa: B950
         return self._last
 
     @last.setter
