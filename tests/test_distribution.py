@@ -1,13 +1,13 @@
 """Test cases for the distribution module."""
 from decimal import Decimal
 
+import pytest
 from pytest_mock import MockFixture
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 from skolemizer.testutils import skolemization
 
-from datacatalogtordf import DataService
-from datacatalogtordf import Distribution
+from datacatalogtordf import DataService, Distribution, InvalidURIError
 
 
 def test_to_graph_should_return_identifier_set_at_constructor() -> None:
@@ -503,6 +503,14 @@ def test_to_graph_should_return_conforms_to() -> None:
     assert _isomorphic
 
 
+def test_set_conforms_to_list_of_invalid_uris() -> None:
+    """Should raise InvalidURIError."""
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    with pytest.raises(InvalidURIError):
+        distribution.conforms_to = ["http://invalid^.uri.com/format"]
+
+
 def test_to_graph_should_return_media_type() -> None:
     """It returns a media type graph isomorphic to spec."""
     distribution = Distribution()
@@ -530,6 +538,14 @@ def test_to_graph_should_return_media_type() -> None:
         _dump_diff(g1, g2)
         pass
     assert _isomorphic
+
+
+def test_set_media_types_list_of_invalid_uris() -> None:
+    """Should raise InvalidURIError."""
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    with pytest.raises(InvalidURIError):
+        distribution.media_types = ["http://invalid^.uri.com/format"]
 
 
 def test_to_graph_should_return_format() -> None:
@@ -616,6 +632,14 @@ def test_to_graph_should_return_packaging_format() -> None:
         _dump_diff(g1, g2)
         pass
     assert _isomorphic
+
+
+def test_set_format_with_list_of_invalid_formats() -> None:
+    """Should raise InvalidURIError."""
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/distributions/1"
+    with pytest.raises(InvalidURIError):
+        distribution.formats = ["http://invalid^.uri.com/format"]
 
 
 # ---------------------------------------------------------------------- #

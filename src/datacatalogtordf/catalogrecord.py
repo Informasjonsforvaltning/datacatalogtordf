@@ -128,6 +128,10 @@ class CatalogRecord:
 
     @conforms_to.setter
     def conforms_to(self: CatalogRecord, conforms_to: List[str]) -> None:
+        # Validate conforms_to URIs:
+        for string in conforms_to:
+            URI(string)
+
         self._conforms_to = conforms_to
 
     # -

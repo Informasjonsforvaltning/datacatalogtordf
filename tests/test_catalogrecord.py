@@ -1,11 +1,11 @@
 """Test cases for the dataset module."""
+import pytest
 from pytest_mock import MockFixture
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 from skolemizer.testutils import skolemization
 
-from datacatalogtordf import CatalogRecord
-from datacatalogtordf import Dataset
+from datacatalogtordf import CatalogRecord, Dataset, InvalidURIError
 from tests.testutils import assert_isomorphic
 
 
@@ -283,6 +283,14 @@ def test_to_graph_should_return_conforms_to() -> None:
         _dump_diff(g1, g2)
         pass
     assert _isomorphic
+
+
+def test_set_conforms_to_list_of_invalid_formats() -> None:
+    """Should raise InvalidURIError."""
+    catalogrecord = CatalogRecord()
+    catalogrecord.identifier = "http://example.com/catalogrecords/1"
+    with pytest.raises(InvalidURIError):
+        catalogrecord.conforms_to = ["http://invalid^.uri.com/format"]
 
 
 # ---------------------------------------------------------------------- #

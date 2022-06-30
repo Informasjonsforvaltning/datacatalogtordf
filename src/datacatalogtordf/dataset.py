@@ -162,6 +162,10 @@ class Dataset(Resource):
     def access_rights_comments(
         self: Dataset, access_rights_comments: List[str]
     ) -> None:
+        # Validate access-right comment URIs:
+        for access_rights_comment in access_rights_comments:
+            URI(access_rights_comment)
+
         self._access_rights_comments = access_rights_comments
 
     @property
