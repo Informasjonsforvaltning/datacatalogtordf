@@ -285,7 +285,7 @@ class Resource(ABC):
 
     @resource_relation.setter
     def resource_relation(self: Resource, resource_relation: List[str]) -> None:
-        # Validate conforms_to URIs:
+        # Validate resource_relation URIs:
         for string in resource_relation:
             URI(string)
         self._resource_relation = resource_relation
