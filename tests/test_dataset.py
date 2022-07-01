@@ -1,12 +1,19 @@
 """Test cases for the dataset module."""
 from decimal import Decimal
 
+import pytest
 from pytest_mock import MockFixture
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 from skolemizer.testutils import skolemization
 
-from datacatalogtordf import Dataset, Distribution, Location, PeriodOfTime
+from datacatalogtordf import (
+    Dataset,
+    Distribution,
+    InvalidURIError,
+    Location,
+    PeriodOfTime,
+)
 
 
 def test_to_graph_should_return_identifier_set_at_constructor() -> None:
@@ -388,6 +395,15 @@ def test_to_graph_should_return_access_rights_comment() -> None:
         _dump_diff(g1, g2)
         pass
     assert _isomorphic
+
+
+def test_set_access_rights_with_list_of_invalid_uris() -> None:
+    """Should raise InvalidURIError."""
+    dataset = Dataset()
+    dataset.identifier = "http://example.com/datasets/1"
+
+    with pytest.raises(InvalidURIError):
+        dataset.access_rights_comments = ["http://invalid^.uri.com/format"]
 
 
 def test_to_graph_should_return_link_to_spatial() -> None:

@@ -130,6 +130,11 @@ class Catalog(Dataset):
 
     @models.setter
     def models(self: Catalog, models: List[Any]) -> None:
+        # Validate model URIs:
+        for model in models:
+            if type(model) is str:
+                URI(model)
+
         self._models = models
 
     @property
@@ -139,6 +144,11 @@ class Catalog(Dataset):
 
     @contains_services.setter
     def contains_services(self: Catalog, contains_services: List[Any]) -> None:
+        # Validate contains_service URIs:
+        for contains_service in contains_services:
+            if type(contains_service) is str:
+                URI(contains_service)
+
         self._contains_services = contains_services
 
     @property

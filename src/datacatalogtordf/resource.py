@@ -157,6 +157,9 @@ class Resource(ABC):
 
     @conformsTo.setter
     def conformsTo(self: Resource, conformsTo: List[str]) -> None:
+        # Validate conforms_to URIs:
+        for string in conformsTo:
+            URI(string)
         self._conformsTo = conformsTo
 
     @property
@@ -166,6 +169,9 @@ class Resource(ABC):
 
     @theme.setter
     def theme(self: Resource, theme: List[str]) -> None:
+        # Validate theme URIs:
+        for string in theme:
+            URI(string)
         self._theme = theme
 
     @property
@@ -249,6 +255,9 @@ class Resource(ABC):
 
     @landing_page.setter
     def landing_page(self: Resource, landing_page: List[str]) -> None:
+        # Validate landing_page URIs:
+        for string in landing_page:
+            URI(string)
         self._landing_page = landing_page
 
     @property
@@ -276,6 +285,9 @@ class Resource(ABC):
 
     @resource_relation.setter
     def resource_relation(self: Resource, resource_relation: List[str]) -> None:
+        # Validate resource_relation URIs:
+        for string in resource_relation:
+            URI(string)
         self._resource_relation = resource_relation
 
     @property

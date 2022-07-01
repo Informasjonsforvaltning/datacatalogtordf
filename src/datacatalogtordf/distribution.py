@@ -243,6 +243,10 @@ class Distribution:
 
     @conforms_to.setter
     def conforms_to(self: Distribution, conforms_to: List[str]) -> None:
+        # Validate conforms_to URIs:
+        for string in conforms_to:
+            URI(string)
+
         self._conforms_to = conforms_to
 
     @property
@@ -252,6 +256,9 @@ class Distribution:
 
     @media_types.setter
     def media_types(self: Distribution, media_types: List[str]) -> None:
+        # Validate media_type URIs:
+        for media_type in media_types:
+            URI(media_type)
         self._media_types = media_types
 
     @property
@@ -261,6 +268,9 @@ class Distribution:
 
     @formats.setter
     def formats(self: Distribution, formats: List[str]) -> None:
+        # Validate format URIs:
+        for format in formats:
+            URI(format)
         self._formats = formats
 
     @property

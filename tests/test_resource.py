@@ -5,7 +5,7 @@ import pytest
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
-from datacatalogtordf import Agent, Dataset, Relationship, Resource
+from datacatalogtordf import Agent, Dataset, InvalidURIError, Relationship, Resource
 
 """
 A test class for testing the _abstract_ class Resource.
@@ -214,6 +214,14 @@ def test_to_graph_should_return_conformsTo() -> None:
         _dump_diff(g1, g2)
         pass
     assert _isomorphic
+
+
+def test_set_conformsTo_list_of_invalid_uris() -> None:
+    """Should raise InvalidURIError."""
+    resource = Dataset()
+    resource.identifier = "http://example.com/datasets/1"
+    with pytest.raises(InvalidURIError):
+        resource.conformsTo = ["http://invalid^.uri.com/format"]
 
 
 def test_to_graph_should_return_contactpoint() -> None:
@@ -429,6 +437,14 @@ def test_to_graph_should_return_landingPage() -> None:
     assert _isomorphic
 
 
+def test_set_conforms_to_list_of_landing_page() -> None:
+    """Should raise InvalidURIError."""
+    resource = Dataset()
+    resource.identifier = "http://example.com/datasets/1"
+    with pytest.raises(InvalidURIError):
+        resource.landing_page = ["http://invalid^.uri.com/format"]
+
+
 def test_to_graph_should_return_license() -> None:
     """It returns a license graph isomorphic to spec."""
     resource = Dataset()
@@ -509,6 +525,14 @@ def test_to_graph_should_return_relation() -> None:
         _dump_diff(g1, g2)
         pass
     assert _isomorphic
+
+
+def test_set_resource_relation_list_of_uris() -> None:
+    """Should raise InvalidURIError."""
+    resource = Dataset()
+    resource.identifier = "http://example.com/datasets/1"
+    with pytest.raises(InvalidURIError):
+        resource.resource_relation = ["http://invalid^.uri.com/format"]
 
 
 def test_to_graph_should_return_rights() -> None:
@@ -629,6 +653,14 @@ def test_to_graph_should_return_theme() -> None:
         _dump_diff(g1, g2)
         pass
     assert _isomorphic
+
+
+def test_set_theme_list_of_invalid_uris() -> None:
+    """Should raise InvalidURIError."""
+    resource = Dataset()
+    resource.identifier = "http://example.com/datasets/1"
+    with pytest.raises(InvalidURIError):
+        resource.theme = ["http://invalid^.uri.com/format"]
 
 
 def test_to_graph_should_return_type() -> None:

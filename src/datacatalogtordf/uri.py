@@ -14,6 +14,12 @@ class URI(str):
 
     _invalid_uri_chars = '<>" {}|\\^`'
 
+    Args:
+        link: The string to validate as URI.
+
+    Raises:
+        InvalidURIError: If the string is not a valid URI.
+
     Ref: https://github.com/RDFLib/rdflib/blob/master/rdflib/term.py#L75
 
     Example:

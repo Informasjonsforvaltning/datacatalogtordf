@@ -1,13 +1,20 @@
 """Test cases for the catalog module."""
 
-from typing import Any
+from typing import Any, List
 
+import pytest
 from pytest_mock import MockFixture
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
 from rdflib.compare import graph_diff, isomorphic
 from skolemizer.testutils import skolemization, SkolemUtils
 
-from datacatalogtordf import Catalog, CatalogRecord, DataService, Dataset
+from datacatalogtordf import (
+    Catalog,
+    CatalogRecord,
+    DataService,
+    Dataset,
+    InvalidURIError,
+)
 from tests.testutils import assert_isomorphic
 
 DCT = Namespace("http://purl.org/dc/terms/")
@@ -446,6 +453,69 @@ def test_to_graph_should_return_model_as_graph() -> None:
     assert _isomorphic
 
 
+def test_to_graph_should_return_model_as_graph_when_setting_list() -> None:
+    """It returns a model graph isomorphic to spec."""
+    catalog = Catalog()
+    catalog.identifier = "http://example.com/catalogs/1"
+    # Creating a class as a placeholder for real InformationModel class
+    InformationModel = type(
+        "InformationModel",
+        (object,),
+        {
+            "title": "",
+            "identifier": "",
+            "_to_graph": lambda self: model_to_graph(self),
+        },
+    )
+
+    _models: List[Any] = []
+    model_1 = InformationModel()
+    model_1.identifier = "http://example.com/models/1"  # type: ignore
+    model_1.title = {"en": "My first model"}  # type: ignore
+    _models.append(model_1)
+
+    model_2 = InformationModel()
+    model_2.identifier = "http://example.com/models/2"  # type: ignore
+    model_2.title = {"en": "My second model"}  # type: ignore
+    _models.append(model_2)
+    catalog.models = _models
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix modelldcatno: <https://data.norge.no/vocabulary/modelldcatno#> .
+
+    <http://example.com/catalogs/1> a dcat:Catalog ;
+        modelldcatno:model  <http://example.com/models/1> ,
+                            <http://example.com/models/2> ;
+    .
+    <http://example.com/models/1> a modelldcatno:InformationModel ;
+        dct:title   "My first model"@en ;
+    .
+    <http://example.com/models/2> a modelldcatno:InformationModel ;
+        dct:title   "My second model"@en ;
+    .
+    """
+    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
+def test_set_models_to_list_of_invalid_formats() -> None:
+    """Should raise InvalidURIError."""
+    catalog = Catalog()
+    catalog.identifier = "http://example.com/catalogs/1"
+    with pytest.raises(InvalidURIError):
+        catalog.models = ["http://invalid^.uri.com/format"]
+
+
 def service_to_graph(model: Any) -> Graph:
     """Helper function to create a service graph to test with."""
     g = Graph()
@@ -516,6 +586,71 @@ def test_to_graph_should_return_service_as_graph() -> None:
         _dump_diff(g1, g2)
         pass
     assert _isomorphic
+
+
+def test_to_graph_should_return_service_as_graph_when_setting_list() -> None:
+    """It returns a service graph isomorphic to spec."""
+    catalog = Catalog()
+    catalog.identifier = "http://example.com/catalogs/1"
+    # Creating a class as a placeholder for real Service class
+    Service = type(
+        "Service",
+        (object,),
+        {
+            "title": "",
+            "identifier": "",
+            "_to_graph": lambda self: service_to_graph(self),
+        },
+    )
+
+    _contains_services: List[Any] = []
+    service_1 = Service()
+    service_1.identifier = "http://example.com/services/1"  # type: ignore
+    service_1.title = {"en": "My first service"}  # type: ignore
+    _contains_services.append(service_1)
+
+    service_2 = Service()
+    service_2.identifier = "http://example.com/services/2"  # type: ignore
+    service_2.title = {"en": "My second service"}  # type: ignore
+    _contains_services.append(service_2)
+
+    catalog.contains_services = _contains_services
+
+    src = """
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix dcat: <http://www.w3.org/ns/dcat#> .
+    @prefix dcatno: <https://data.norge.no/vocabulary/dcatno#> .
+    @prefix cpsvno: <https://data.norge.no/vocabulary/cpsvno#> .
+
+    <http://example.com/catalogs/1> a dcat:Catalog ;
+        dcatno:containsService  <http://example.com/services/1> ,
+                            <http://example.com/services/2> ;
+    .
+    <http://example.com/services/1> a cpsvno:Service ;
+        dct:title   "My first service"@en ;
+    .
+    <http://example.com/services/2> a cpsvno:Service ;
+        dct:title   "My second service"@en ;
+    .
+    """
+    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
+def test_set_contains_services_to_list_of_invalid_formats() -> None:
+    """Should raise InvalidURIError."""
+    catalog = Catalog()
+    catalog.identifier = "http://example.com/catalogs/1"
+    with pytest.raises(InvalidURIError):
+        catalog.contains_services = ["http://invalid^.uri.com/format"]
 
 
 def test_to_graph_should_return_dct_identifier_as_graph() -> None:
