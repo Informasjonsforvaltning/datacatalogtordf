@@ -130,7 +130,7 @@ class Catalog(Dataset):
 
     @models.setter
     def models(self: Catalog, models: List[Any]) -> None:
-        # Validate conforms_to URIs:
+        # Validate model URIs:
         for model in models:
             if type(model) is str:
                 URI(model)
