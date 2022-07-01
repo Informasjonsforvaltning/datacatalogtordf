@@ -256,7 +256,7 @@ class Distribution:
 
     @media_types.setter
     def media_types(self: Distribution, media_types: List[str]) -> None:
-        # Validate format URIs:
+        # Validate media_type URIs:
         for media_type in media_types:
             URI(media_type)
         self._media_types = media_types
