@@ -1,17 +1,12 @@
 name: Coverage
 on: push
 jobs:
-  coverage:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.10"
-          architecture: x64
-      - run: pipx install nox==2022.1.7
-      - run: pipx install poetry==1.1.13
-      - run: pipx inject nox nox-poetry==1.0.0
-      - run: nox --sessions tests-3.10 coverage
-        env:
-          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+  run-coverage:
+    name: Coverage
+    uses: Informasjonsforvaltning/workflows/.github/workflows/coverage-nox.yaml@main
+    with:
+      python_version: "3.10"
+      python_architecture: x64
+      sessions: tests-3.10
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -6,14 +6,19 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup python
+        uses: actions/setup-python@v4
         with:
           python-version: "3.10"
           architecture: x64
-      - run: pipx install nox==2022.1.7
-      - run: pipx install poetry==1.1.13
-      - run: pipx inject nox nox-poetry==1.0.0
+      - name: Install dependencies
+        run: |
+          pip install --constraint=.github/workflows/constraints.txt pip
+          pipx install --pip-args=--constraint=.github/workflows/constraints.txt poetry
+          pipx install --pip-args=--constraint=.github/workflows/constraints.txt nox
+          pipx inject --pip-args=--constraint=.github/workflows/constraints.txt nox nox-poetry
       - run: nox
       - run: poetry build
       - run: poetry publish --username=__token__ --password=${{secrets.PYPI_TOKEN}}
