@@ -5,7 +5,7 @@ jobs:
     name: Coverage
     uses: Informasjonsforvaltning/workflows/.github/workflows/coverage-nox.yaml@main
     with:
-      python_version: "3.10"
+      python_version: '3.10'
       python_architecture: x64
       sessions: tests-3.10
     secrets:
