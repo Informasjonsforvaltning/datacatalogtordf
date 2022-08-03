@@ -1,24 +1,29 @@
 name: Tests
 on: push
 jobs:
-  tests:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.8", "3.9", "3.10"]
-    name: Python ${{ matrix.python-version }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-          architecture: x64
-      - name: Install dependencies
-        run: |
-          pip install --constraint=.github/workflows/constraints.txt pip
-          pipx install --pip-args=--constraint=.github/workflows/constraints.txt poetry
-          pipx install --pip-args=--constraint=.github/workflows/constraints.txt nox
-          pipx inject --pip-args=--constraint=.github/workflows/constraints.txt nox nox-poetry
-      - run: nox
+  test_3-8:
+    name: Python 3.8
+    uses: Informasjonsforvaltning/workflows/.github/workflows/test-nox.yaml@main
+    with:
+      python_version: '3.8'
+      python_architecture: x64
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  test_3-9:
+    name: Python 3.9
+    uses: Informasjonsforvaltning/workflows/.github/workflows/test-nox.yaml@main
+    with:
+      python_version: '3.9'
+      python_architecture: x64
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  test_3-10:
+    name: Python 3.10
+    uses: Informasjonsforvaltning/workflows/.github/workflows/test-nox.yaml@main
+    with:
+      python_version: '3.10'
+      python_architecture: x64
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
