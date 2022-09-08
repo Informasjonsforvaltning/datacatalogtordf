@@ -1,8 +1,7 @@
 """Test cases for the catalog module."""
 
-from typing import Any, List
+from typing import Any
 
-import pytest
 from pytest_mock import MockFixture
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
 from rdflib.compare import graph_diff, isomorphic
@@ -13,7 +12,7 @@ from datacatalogtordf import (
     CatalogRecord,
     DataService,
     Dataset,
-    InvalidURIError,
+    Agent,
 )
 from tests.testutils import assert_isomorphic
 
@@ -400,259 +399,6 @@ def model_to_graph(model: Any) -> Graph:
     return g
 
 
-def test_to_graph_should_return_model_as_graph() -> None:
-    """It returns a model graph isomorphic to spec."""
-    catalog = Catalog()
-    catalog.identifier = "http://example.com/catalogs/1"
-    # Creating a class as a placeholder for real InformationModel class
-    InformationModel = type(
-        "InformationModel",
-        (object,),
-        {
-            "title": "",
-            "identifier": "",
-            "_to_graph": lambda self: model_to_graph(self),
-        },
-    )
-
-    model_1 = InformationModel()
-    model_1.identifier = "http://example.com/models/1"  # type: ignore
-    model_1.title = {"en": "My first model"}  # type: ignore
-    catalog.models.append(model_1)
-
-    model_2 = InformationModel()
-    model_2.identifier = "http://example.com/models/2"  # type: ignore
-    model_2.title = {"en": "My second model"}  # type: ignore
-    catalog.models.append(model_2)
-
-    src = """
-    @prefix dct: <http://purl.org/dc/terms/> .
-    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-    @prefix dcat: <http://www.w3.org/ns/dcat#> .
-    @prefix modelldcatno: <https://data.norge.no/vocabulary/modelldcatno#> .
-
-    <http://example.com/catalogs/1> a dcat:Catalog ;
-        modelldcatno:model  <http://example.com/models/1> ,
-                            <http://example.com/models/2> ;
-    .
-    <http://example.com/models/1> a modelldcatno:InformationModel ;
-        dct:title   "My first model"@en ;
-    .
-    <http://example.com/models/2> a modelldcatno:InformationModel ;
-        dct:title   "My second model"@en ;
-    .
-    """
-    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
-    g2 = Graph().parse(data=src, format="turtle")
-
-    _isomorphic = isomorphic(g1, g2)
-    if not _isomorphic:
-        _dump_diff(g1, g2)
-        pass
-    assert _isomorphic
-
-
-def test_to_graph_should_return_model_as_graph_when_setting_list() -> None:
-    """It returns a model graph isomorphic to spec."""
-    catalog = Catalog()
-    catalog.identifier = "http://example.com/catalogs/1"
-    # Creating a class as a placeholder for real InformationModel class
-    InformationModel = type(
-        "InformationModel",
-        (object,),
-        {
-            "title": "",
-            "identifier": "",
-            "_to_graph": lambda self: model_to_graph(self),
-        },
-    )
-
-    _models: List[Any] = []
-    model_1 = InformationModel()
-    model_1.identifier = "http://example.com/models/1"  # type: ignore
-    model_1.title = {"en": "My first model"}  # type: ignore
-    _models.append(model_1)
-
-    model_2 = InformationModel()
-    model_2.identifier = "http://example.com/models/2"  # type: ignore
-    model_2.title = {"en": "My second model"}  # type: ignore
-    _models.append(model_2)
-    catalog.models = _models
-
-    src = """
-    @prefix dct: <http://purl.org/dc/terms/> .
-    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-    @prefix dcat: <http://www.w3.org/ns/dcat#> .
-    @prefix modelldcatno: <https://data.norge.no/vocabulary/modelldcatno#> .
-
-    <http://example.com/catalogs/1> a dcat:Catalog ;
-        modelldcatno:model  <http://example.com/models/1> ,
-                            <http://example.com/models/2> ;
-    .
-    <http://example.com/models/1> a modelldcatno:InformationModel ;
-        dct:title   "My first model"@en ;
-    .
-    <http://example.com/models/2> a modelldcatno:InformationModel ;
-        dct:title   "My second model"@en ;
-    .
-    """
-    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
-    g2 = Graph().parse(data=src, format="turtle")
-
-    _isomorphic = isomorphic(g1, g2)
-    if not _isomorphic:
-        _dump_diff(g1, g2)
-        pass
-    assert _isomorphic
-
-
-def test_set_models_to_list_of_invalid_formats() -> None:
-    """Should raise InvalidURIError."""
-    catalog = Catalog()
-    catalog.identifier = "http://example.com/catalogs/1"
-    with pytest.raises(InvalidURIError):
-        catalog.models = ["http://invalid^.uri.com/format"]
-
-
-def service_to_graph(model: Any) -> Graph:
-    """Helper function to create a service graph to test with."""
-    g = Graph()
-
-    g.add((URIRef(model.identifier), RDF.type, CPSVNO.Service))
-
-    for key in model.title:
-        g.add(
-            (
-                URIRef(model.identifier),
-                DCT.title,
-                Literal(model.title[key], lang=key),
-            )
-        )
-
-    return g
-
-
-def test_to_graph_should_return_service_as_graph() -> None:
-    """It returns a service graph isomorphic to spec."""
-    catalog = Catalog()
-    catalog.identifier = "http://example.com/catalogs/1"
-    # Creating a class as a placeholder for real Service class
-    Service = type(
-        "Service",
-        (object,),
-        {
-            "title": "",
-            "identifier": "",
-            "_to_graph": lambda self: service_to_graph(self),
-        },
-    )
-
-    service_1 = Service()
-    service_1.identifier = "http://example.com/services/1"  # type: ignore
-    service_1.title = {"en": "My first service"}  # type: ignore
-    catalog.contains_services.append(service_1)
-
-    service_2 = Service()
-    service_2.identifier = "http://example.com/services/2"  # type: ignore
-    service_2.title = {"en": "My second service"}  # type: ignore
-    catalog.contains_services.append(service_2)
-
-    src = """
-    @prefix dct: <http://purl.org/dc/terms/> .
-    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-    @prefix dcat: <http://www.w3.org/ns/dcat#> .
-    @prefix dcatno: <https://data.norge.no/vocabulary/dcatno#> .
-    @prefix cpsvno: <https://data.norge.no/vocabulary/cpsvno#> .
-
-    <http://example.com/catalogs/1> a dcat:Catalog ;
-        dcatno:containsService  <http://example.com/services/1> ,
-                            <http://example.com/services/2> ;
-    .
-    <http://example.com/services/1> a cpsvno:Service ;
-        dct:title   "My first service"@en ;
-    .
-    <http://example.com/services/2> a cpsvno:Service ;
-        dct:title   "My second service"@en ;
-    .
-    """
-    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
-    g2 = Graph().parse(data=src, format="turtle")
-
-    _isomorphic = isomorphic(g1, g2)
-    if not _isomorphic:
-        _dump_diff(g1, g2)
-        pass
-    assert _isomorphic
-
-
-def test_to_graph_should_return_service_as_graph_when_setting_list() -> None:
-    """It returns a service graph isomorphic to spec."""
-    catalog = Catalog()
-    catalog.identifier = "http://example.com/catalogs/1"
-    # Creating a class as a placeholder for real Service class
-    Service = type(
-        "Service",
-        (object,),
-        {
-            "title": "",
-            "identifier": "",
-            "_to_graph": lambda self: service_to_graph(self),
-        },
-    )
-
-    _contains_services: List[Any] = []
-    service_1 = Service()
-    service_1.identifier = "http://example.com/services/1"  # type: ignore
-    service_1.title = {"en": "My first service"}  # type: ignore
-    _contains_services.append(service_1)
-
-    service_2 = Service()
-    service_2.identifier = "http://example.com/services/2"  # type: ignore
-    service_2.title = {"en": "My second service"}  # type: ignore
-    _contains_services.append(service_2)
-
-    catalog.contains_services = _contains_services
-
-    src = """
-    @prefix dct: <http://purl.org/dc/terms/> .
-    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-    @prefix dcat: <http://www.w3.org/ns/dcat#> .
-    @prefix dcatno: <https://data.norge.no/vocabulary/dcatno#> .
-    @prefix cpsvno: <https://data.norge.no/vocabulary/cpsvno#> .
-
-    <http://example.com/catalogs/1> a dcat:Catalog ;
-        dcatno:containsService  <http://example.com/services/1> ,
-                            <http://example.com/services/2> ;
-    .
-    <http://example.com/services/1> a cpsvno:Service ;
-        dct:title   "My first service"@en ;
-    .
-    <http://example.com/services/2> a cpsvno:Service ;
-        dct:title   "My second service"@en ;
-    .
-    """
-    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
-    g2 = Graph().parse(data=src, format="turtle")
-
-    _isomorphic = isomorphic(g1, g2)
-    if not _isomorphic:
-        _dump_diff(g1, g2)
-        pass
-    assert _isomorphic
-
-
-def test_set_contains_services_to_list_of_invalid_formats() -> None:
-    """Should raise InvalidURIError."""
-    catalog = Catalog()
-    catalog.identifier = "http://example.com/catalogs/1"
-    with pytest.raises(InvalidURIError):
-        catalog.contains_services = ["http://invalid^.uri.com/format"]
-
-
 def test_to_graph_should_return_dct_identifier_as_graph() -> None:
     """It returns a dct_identifier graph isomorphic to spec."""
     catalog = Catalog()
@@ -908,6 +654,243 @@ def test_to_graph_should_return_catalog_record_skolemization(
 
     g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
     g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
+def test_to_json_should_return_partial_catalog_as_json_dict() -> None:
+    """It returns a catalog json dict."""
+    publisher = Agent()
+    publisher.identifier = "http://publisher"
+
+    catalog = Catalog()
+    catalog.identifier = "http://example.com/catalogs/1"
+    catalog.publisher = publisher
+    json = catalog.to_json()
+
+    assert json == {
+        "_type": "Catalog",
+        "access_rights_comments": [],
+        "catalogrecords": [],
+        "catalogs": [],
+        "conforms_to": [],
+        "datasets": [],
+        "distributions": [],
+        "has_parts": [],
+        "identifier": "http://example.com/catalogs/1",
+        "is_referenced_by": [],
+        "landing_page": [],
+        "language": [],
+        "publisher": {"_type": "Agent", "identifier": "http://publisher"},
+        "qualified_attributions": [],
+        "qualified_relation": [],
+        "resource_relation": [],
+        "services": [],
+        "theme": [],
+        "themes": [],
+    }
+
+
+def test_to_json_should_return_catalog_as_json_dict() -> None:
+    """It returns a catalog json dict."""
+    other_catalog1 = Catalog()
+    other_catalog1.identifier = "http://example.com/catalog/other1"
+
+    other_catalog2 = Catalog()
+    other_catalog2.identifier = "http://example.com/catalog/other2"
+
+    catalog_record = CatalogRecord()
+    catalog_record.identifier = "http://example.com/catalog-record/1"
+
+    data_service = DataService()
+    data_service.identifier = "http://example.com/data-service/1"
+
+    dataset1 = Dataset()
+    dataset1.identifier = "http://example.com/datasets/1"
+    dataset1.title = {"nb": "Datasett 1", "en": "Dataset 1"}
+    dataset1.frequency = "http://WEEKLY"
+
+    dataset2 = Dataset()
+    dataset2.identifier = "http://example.com/datasets/2"
+    dataset2.title = {"nb": "Datasett 2", "en": "Dataset 2"}
+
+    catalog = Catalog()
+    catalog.identifier = "http://example.com/catalogs/1"
+    catalog.title = {"nb": "Denne katalogen", "en": "This catalog"}
+    catalog.description = {"nb": "Beskrivelse", "en": "Description"}
+    catalog.has_parts.append(other_catalog2)
+    catalog.catalogs.append(other_catalog1)
+    catalog.catalogrecords.append(catalog_record)
+    catalog.datasets.append(dataset1)
+    catalog.datasets.append(dataset2)
+    catalog.services.append(data_service)
+
+    json = catalog.to_json()
+
+    assert json == {
+        "_type": "Catalog",
+        "access_rights_comments": [],
+        "catalogrecords": [
+            {
+                "_type": "CatalogRecord",
+                "conforms_to": [],
+                "identifier": "http://example.com/catalog-record/1",
+            }
+        ],
+        "catalogs": [
+            {
+                "_type": "Catalog",
+                "access_rights_comments": [],
+                "catalogrecords": [],
+                "catalogs": [],
+                "conforms_to": [],
+                "datasets": [],
+                "distributions": [],
+                "has_parts": [],
+                "identifier": "http://example.com/catalog/other1",
+                "is_referenced_by": [],
+                "landing_page": [],
+                "language": [],
+                "qualified_attributions": [],
+                "qualified_relation": [],
+                "resource_relation": [],
+                "services": [],
+                "theme": [],
+                "themes": [],
+            }
+        ],
+        "conforms_to": [],
+        "datasets": [
+            {
+                "_type": "Dataset",
+                "access_rights_comments": [],
+                "conforms_to": [],
+                "distributions": [],
+                "frequency": "http://WEEKLY",
+                "identifier": "http://example.com/datasets/1",
+                "is_referenced_by": [],
+                "landing_page": [],
+                "language": [],
+                "qualified_attributions": [],
+                "qualified_relation": [],
+                "resource_relation": [],
+                "theme": [],
+                "title": {"en": "Dataset 1", "nb": "Datasett 1"},
+            },
+            {
+                "_type": "Dataset",
+                "access_rights_comments": [],
+                "conforms_to": [],
+                "distributions": [],
+                "identifier": "http://example.com/datasets/2",
+                "is_referenced_by": [],
+                "landing_page": [],
+                "language": [],
+                "qualified_attributions": [],
+                "qualified_relation": [],
+                "resource_relation": [],
+                "theme": [],
+                "title": {"en": "Dataset 2", "nb": "Datasett 2"},
+            },
+        ],
+        "description": {"en": "Description", "nb": "Beskrivelse"},
+        "distributions": [],
+        "has_parts": [
+            {
+                "_type": "Catalog",
+                "access_rights_comments": [],
+                "catalogrecords": [],
+                "catalogs": [],
+                "conforms_to": [],
+                "datasets": [],
+                "distributions": [],
+                "has_parts": [],
+                "identifier": "http://example.com/catalog/other2",
+                "is_referenced_by": [],
+                "landing_page": [],
+                "language": [],
+                "qualified_attributions": [],
+                "qualified_relation": [],
+                "resource_relation": [],
+                "services": [],
+                "theme": [],
+                "themes": [],
+            }
+        ],
+        "identifier": "http://example.com/catalogs/1",
+        "is_referenced_by": [],
+        "landing_page": [],
+        "language": [],
+        "qualified_attributions": [],
+        "qualified_relation": [],
+        "resource_relation": [],
+        "services": [
+            {
+                "_type": "DataService",
+                "conforms_to": [],
+                "identifier": "http://example.com/data-service/1",
+                "is_referenced_by": [],
+                "landing_page": [],
+                "language": [],
+                "media_types": [],
+                "qualified_attributions": [],
+                "qualified_relation": [],
+                "resource_relation": [],
+                "servesdatasets": [],
+                "theme": [],
+            }
+        ],
+        "theme": [],
+        "themes": [],
+        "title": {"en": "This catalog", "nb": "Denne katalogen"},
+    }
+
+
+def test_from_json_should_return_catalog() -> None:
+    """It returns a catalog json dict."""
+    other_catalog1 = Catalog()
+    other_catalog1.identifier = "http://example.com/catalog/other1"
+
+    other_catalog2 = Catalog()
+    other_catalog2.identifier = "http://example.com/catalog/other2"
+
+    catalog_record = CatalogRecord()
+    catalog_record.identifier = "http://example.com/catalog-record/1"
+
+    data_service = DataService()
+    data_service.identifier = "http://example.com/data-service/1"
+
+    dataset1 = Dataset()
+    dataset1.identifier = "http://example.com/datasets/1"
+    dataset1.title = {"nb": "Datasett 1", "en": "Dataset 1"}
+    dataset1.frequency = "http://WEEKLY"
+
+    dataset2 = Dataset()
+    dataset2.identifier = "http://example.com/datasets/2"
+    dataset2.title = {"nb": "Datasett 2", "en": "Dataset 2"}
+
+    catalog = Catalog()
+    catalog.identifier = "http://example.com/catalogs/1"
+    catalog.title = {"nb": "Denne katalogen", "en": "This catalog"}
+    catalog.description = {"nb": "Beskrivelse", "en": "Description"}
+    catalog.has_parts.append(other_catalog2)
+    catalog.catalogs.append(other_catalog1)
+    catalog.catalogrecords.append(catalog_record)
+    catalog.datasets.append(dataset1)
+    catalog.datasets.append(dataset2)
+    catalog.services.append(data_service)
+    catalog.is_referenced_by = [other_catalog2]
+
+    json = catalog.to_json()
+
+    catalog_from_json = Catalog.from_json(json)
+
+    g1 = Graph().parse(data=catalog.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=catalog_from_json.to_rdf(), format="turtle")
 
     _isomorphic = isomorphic(g1, g2)
     if not _isomorphic:

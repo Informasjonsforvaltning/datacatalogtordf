@@ -11,16 +11,17 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional, TYPE_CHECKING, Union
 
-from concepttordf import Contact
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 from rdflib.term import Identifier
 
 from .agent import Agent
+from .contact import Contact
 from .periodoftime import Date
 from .uri import URI
 
 if TYPE_CHECKING:  # pragma: no cover
     from .relationship import Relationship  # pytype: disable=pyi-error
+    from .catalog import Catalog  # pytype: disable=pyi-error
 
 
 DCT = Namespace("http://purl.org/dc/terms/")
@@ -41,7 +42,7 @@ class Resource(ABC):
     __slots__ = (
         "_g",
         "_access_rights",
-        "_conformsTo",
+        "_conforms_to",
         "_contactpoint",
         "_creator",
         "_description",
@@ -68,7 +69,7 @@ class Resource(ABC):
     # Types
     _g: Graph
     _access_rights: URI  # 6.4.1
-    _conformsTo: List[str]  # 6.4.2
+    _conforms_to: List[str]  # 6.4.2
     _contactpoint: Contact  # 6.4.3
     _creator: URI  # 6.4.4
     _description: Dict[str, str]  # 6.4.5
@@ -96,7 +97,7 @@ class Resource(ABC):
         """Inits an object with default values."""
         self._type = DCAT.Resource
         # Initalize lists:
-        self.conformsTo = list()
+        self.conforms_to = list()
         self.theme = list()
         self.is_referenced_by = list()
         self.qualified_attributions = list()
@@ -151,16 +152,16 @@ class Resource(ABC):
         self._access_rights = URI(access_rights)
 
     @property
-    def conformsTo(self: Resource) -> List[str]:
+    def conforms_to(self: Resource) -> List[str]:
         """List[URI]: A list of links to established standards to which the described resource conforms."""  # noqa: B950
-        return self._conformsTo
+        return self._conforms_to
 
-    @conformsTo.setter
-    def conformsTo(self: Resource, conformsTo: List[str]) -> None:
+    @conforms_to.setter
+    def conforms_to(self: Resource, conforms_to: List[str]) -> None:
         # Validate conforms_to URIs:
-        for string in conformsTo:
+        for string in conforms_to:
             URI(string)
-        self._conformsTo = conformsTo
+        self._conforms_to = conforms_to
 
     @property
     def theme(self: Resource) -> List[str]:
@@ -329,6 +330,91 @@ class Resource(ABC):
         self._prev = prev
 
     # -
+    def to_json(self):
+        """
+        Convert the Resource to a json / dict. It will omit the
+        non-initalized fields.
+        :return: The json representation of this instance.
+        :rtype: dict
+        """
+        output = {"_type": type(self).__name__}
+        # Add ins for optional top level attributes
+        for k in dir(self):
+            try:
+                v = getattr(self, k)
+                is_method = callable(v)
+                is_private = k.startswith("_")
+                if is_method or is_private:
+                    continue
+
+                if isinstance(v, list):
+                    output[k] = []
+                    for i in v:
+                        to_json = hasattr(i, "to_json") and callable(
+                            getattr(i, "to_json")
+                        )
+                        output[k].append(i.to_json() if to_json else i)
+                else:
+                    to_json = hasattr(v, "to_json") and callable(getattr(v, "to_json"))
+                    output[k] = v.to_json() if to_json else v
+
+            except:
+                continue
+
+        return output
+
+    @classmethod
+    def from_json(cls, json) -> Resource:
+        """
+        Convert a JSON (dict)
+        :param dict json: A dict representing this class.
+        :return: The object.
+        """
+        resource = cls()
+        for key in json:
+            is_private = key.startswith("_")
+            if not is_private:
+                v = json[key]
+                if isinstance(v, list):
+                    alist = []
+                    for i in v:
+                        attr = cls._attr_from_json(key, i)
+                        if attr is not None:
+                            alist.append(attr)
+                        else:
+                            alist.append(i)
+                    setattr(resource, key, alist)
+                else:
+                    attr = cls._attr_from_json(key, v)
+                    if attr is not None:
+                        setattr(resource, key, attr)
+                    else:
+                        setattr(resource, key, v)
+
+        return resource
+
+    @classmethod
+    def _attr_from_json(cls, attr: str, json_dict: Dict) -> any:
+        if attr == "contactpoint":
+            return Contact.from_json(json_dict)
+        if attr == "publisher":
+            return Agent.from_json(json_dict)
+        if attr == "qualified_relation":
+            # Prevent circular import
+            clazz = getattr(__import__("datacatalogtordf"), "Relationship")
+            return clazz.from_json(json_dict)
+        if attr == "is_referenced_by" or attr == "prev":
+            if (
+                isinstance(json_dict, dict)
+                and "_type" in json_dict.keys()
+                and json_dict["_type"]
+                in ["Catalog", "Dataset", "DatasetSeries", "DataService"]
+            ):
+                clazz = getattr(__import__("datacatalogtordf"), json_dict["_type"])
+                return clazz.from_json(json_dict)
+
+        return None
+
     def to_rdf(
         self: Resource, format: str = "turtle", encoding: Optional[str] = "utf-8"
     ) -> Union[bytes, str]:
@@ -372,7 +458,7 @@ class Resource(ABC):
         self._publisher_to_graph()
         self._title_to_graph()
         self._access_rights_to_graph()
-        self._conformsTo_to_graph()
+        self._conforms_to_to_graph()
         self._description_to_graph()
         self._theme_to_graph()
         self._contactpoint_to_graph()
@@ -428,9 +514,9 @@ class Resource(ABC):
                 (URIRef(self.identifier), DCT.accessRights, URIRef(self.access_rights))
             )
 
-    def _conformsTo_to_graph(self: Resource) -> None:
-        if getattr(self, "conformsTo", None):
-            for _c in self.conformsTo:
+    def _conforms_to_to_graph(self: Resource) -> None:
+        if getattr(self, "conforms_to", None):
+            for _c in self.conforms_to:
                 _uri = URI(_c)
                 self._g.add((URIRef(self.identifier), DCT.conformsTo, URIRef(_uri)))
 

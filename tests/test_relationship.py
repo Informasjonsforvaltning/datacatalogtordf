@@ -106,6 +106,63 @@ def test_to_graph_should_return_relation_as_graph() -> None:
     assert _isomorphic
 
 
+def test_to_json_should_return_relationship_as_json_dict() -> None:
+    """It returns a catalog json dict."""
+
+    dataset = Dataset()
+    dataset.identifier = "http://dataset-identifier"
+
+    rel = Relationship()
+    rel.identifier = "http://rel-identifier"
+    rel.relation = dataset
+    rel.had_role = "dataset"
+    json = rel.to_json()
+
+    assert json == {
+        "_type": "Relationship",
+        "had_role": "dataset",
+        "identifier": "http://rel-identifier",
+        "relation": {
+            "_type": "Dataset",
+            "access_rights_comments": [],
+            "conforms_to": [],
+            "distributions": [],
+            "identifier": "http://dataset-identifier",
+            "is_referenced_by": [],
+            "landing_page": [],
+            "language": [],
+            "qualified_attributions": [],
+            "qualified_relation": [],
+            "resource_relation": [],
+            "theme": [],
+        },
+    }
+
+
+def test_from_json_should_return_relationship() -> None:
+    """It returns a catalog json dict."""
+
+    dataset = Dataset()
+    dataset.identifier = "http://dataset-identifier"
+
+    rel = Relationship()
+    rel.identifier = "http://rel-identifier"
+    rel.relation = dataset
+    rel.had_role = "dataset"
+    json = rel.to_json()
+
+    rel_from_json = Relationship.from_json(json)
+
+    g1 = Graph().parse(data=rel.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=rel_from_json.to_rdf(), format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
 # ---------------------------------------------------------------------- #
 # Utils for displaying debug information
 

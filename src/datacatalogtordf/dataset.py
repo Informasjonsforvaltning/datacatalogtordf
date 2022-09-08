@@ -22,7 +22,7 @@ Example:
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import List, Optional, TYPE_CHECKING, Union
+from typing import List, Optional, TYPE_CHECKING, Union, Dict
 
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 from rdflib.term import Identifier
@@ -30,6 +30,7 @@ from skolemizer import Skolemizer
 
 if TYPE_CHECKING:  # pragma: no cover
     from .dataset_series import DatasetSeries  # pytype: disable=pyi-error
+
 from .distribution import Distribution
 from .location import Location
 from .periodoftime import PeriodOfTime
@@ -187,6 +188,26 @@ class Dataset(Resource):
         self._in_series = in_series
 
     # -
+
+    @classmethod
+    def _attr_from_json(cls, attr: str, json_dict: Dict) -> any:
+        obj = Resource._attr_from_json(attr, json_dict)
+        if obj is not None:
+            return obj
+
+        if attr == "distributions":
+            return Distribution.from_json(json_dict)
+        if attr == "spatial":
+            return Location.from_json(json_dict)
+        if attr == "temporal":
+            return PeriodOfTime.from_json(json_dict)
+        if attr == "in_series":
+            # Prevent circular import
+            clazz = getattr(__import__("datacatalogtordf"), "DatasetSeries")
+            return clazz.from_json(json_dict)
+
+        return None
+
     def to_rdf(
         self: Dataset,
         format: str = "turtle",

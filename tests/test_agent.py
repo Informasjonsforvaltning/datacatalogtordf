@@ -200,6 +200,63 @@ def test_to_graph_should_return_same_as() -> None:
     assert _isomorphic
 
 
+def test_to_json_should_return_partial_agent_as_json_dict() -> None:
+    """It returns a agent json dict."""
+    agent = Agent()
+    agent.identifier = "http://example.com/agent/1"
+
+    json = agent.to_json()
+
+    assert json == {
+        "_type": "Agent",
+        "identifier": "http://example.com/agent/1",
+    }
+
+
+def test_to_json_should_return_agent_as_json_dict() -> None:
+    """It returns a agent json dict."""
+    agent = Agent()
+    agent.identifier = "http://example.com/agent/1"
+    agent.name = {"nb": "Agent A", "en": "Agent A"}
+    agent.organization_id = "org-id"
+    agent.organization_type = "http://org-type"
+    agent.same_as = "http://same-as"
+
+    json = agent.to_json()
+
+    assert json == {
+        "_type": "Agent",
+        "identifier": "http://example.com/agent/1",
+        "name": {"nb": "Agent A", "en": "Agent A"},
+        "organization_id": "org-id",
+        "organization_type": "http://org-type",
+        "same_as": "http://same-as",
+    }
+
+
+def test_from_json_should_return_agent() -> None:
+    """It returns a agent instance."""
+    agent = Agent()
+    agent.identifier = "http://example.com/agent/1"
+    agent.name = {"nb": "Agent A", "en": "Agent A"}
+    agent.organization_id = "org-id"
+    agent.organization_type = "http://org-type"
+    agent.same_as = "http://same-as"
+
+    json = agent.to_json()
+
+    agent_from_json = Agent.from_json(json)
+
+    g1 = Graph().parse(data=agent.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=agent_from_json.to_rdf(), format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
 # ---------------------------------------------------------------------- #
 # Utils for displaying debug information
 

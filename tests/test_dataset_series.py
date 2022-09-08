@@ -156,6 +156,148 @@ def test_to_graph_should_return_dataset_series() -> None:
     assert _isomorphic
 
 
+def test_to_json_should_return_dataset_series_as_json_dict() -> None:
+    """It returns a catalog json dict."""
+    dataset1 = Dataset()
+    dataset1.identifier = "http://dataset1-identifier"
+    dataset1.title = {"en": "dataset1 title"}
+    dataset1.description = {"en": "dataset1 description"}
+    dataset1.conforms_to = ["http://dataset1-conforms-to"]
+    dataset1.keyword = {"en": "keyword"}
+    dataset1.language = ["http://language"]
+
+    dataset2 = Dataset()
+    dataset2.identifier = "http://dataset2-identifier"
+    dataset2.title = {"en": "dataset2 title"}
+    dataset2.description = {"en": "dataset2 description"}
+    dataset2.conforms_to = ["http://dataset2-conforms-to"]
+    dataset2.keyword = {"en": "keyword"}
+    dataset2.language = ["http://language"]
+    dataset2.prev = dataset1
+
+    dataset_series = DatasetSeries()
+    dataset_series.identifier = "http://dataset_series-identifier"
+    dataset_series.title = {"en": "dataset_series title"}
+    dataset_series.description = {"en": "dataset_series description"}
+    dataset_series.conforms_to = ["http://dataset_series-conforms-to"]
+    dataset_series.keyword = {"en": "keyword"}
+    dataset_series.first = dataset1
+    dataset_series.last = dataset2
+
+    json = dataset_series.to_json()
+
+    assert json == {
+        "_type": "DatasetSeries",
+        "access_rights_comments": [],
+        "conforms_to": ["http://dataset_series-conforms-to"],
+        "description": {"en": "dataset_series description"},
+        "distributions": [],
+        "first": {
+            "_type": "Dataset",
+            "access_rights_comments": [],
+            "conforms_to": ["http://dataset1-conforms-to"],
+            "description": {"en": "dataset1 description"},
+            "distributions": [],
+            "identifier": "http://dataset1-identifier",
+            "is_referenced_by": [],
+            "keyword": {"en": "keyword"},
+            "landing_page": [],
+            "language": ["http://language"],
+            "qualified_attributions": [],
+            "qualified_relation": [],
+            "resource_relation": [],
+            "theme": [],
+            "title": {"en": "dataset1 title"},
+        },
+        "identifier": "http://dataset_series-identifier",
+        "is_referenced_by": [],
+        "keyword": {"en": "keyword"},
+        "landing_page": [],
+        "language": [],
+        "last": {
+            "_type": "Dataset",
+            "access_rights_comments": [],
+            "conforms_to": ["http://dataset2-conforms-to"],
+            "description": {"en": "dataset2 description"},
+            "distributions": [],
+            "identifier": "http://dataset2-identifier",
+            "is_referenced_by": [],
+            "keyword": {"en": "keyword"},
+            "landing_page": [],
+            "language": ["http://language"],
+            "prev": {
+                "_type": "Dataset",
+                "access_rights_comments": [],
+                "conforms_to": ["http://dataset1-conforms-to"],
+                "description": {"en": "dataset1 description"},
+                "distributions": [],
+                "identifier": "http://dataset1-identifier",
+                "is_referenced_by": [],
+                "keyword": {"en": "keyword"},
+                "landing_page": [],
+                "language": ["http://language"],
+                "qualified_attributions": [],
+                "qualified_relation": [],
+                "resource_relation": [],
+                "theme": [],
+                "title": {"en": "dataset1 title"},
+            },
+            "qualified_attributions": [],
+            "qualified_relation": [],
+            "resource_relation": [],
+            "theme": [],
+            "title": {"en": "dataset2 title"},
+        },
+        "qualified_attributions": [],
+        "qualified_relation": [],
+        "resource_relation": [],
+        "theme": [],
+        "title": {"en": "dataset_series title"},
+    }
+
+
+def test_from_json_should_return_dataset_series() -> None:
+    """It returns a catalog json dict."""
+
+    dataset1 = Dataset()
+    dataset1.identifier = "http://dataset1-identifier"
+    dataset1.title = {"en": "dataset1 title"}
+    dataset1.description = {"en": "dataset1 description"}
+    dataset1.conforms_to = ["http://dataset1-conforms-to"]
+    dataset1.keyword = {"en": "keyword"}
+    dataset1.language = ["http://language"]
+
+    dataset2 = Dataset()
+    dataset2.identifier = "http://dataset2-identifier"
+    dataset2.title = {"en": "dataset2 title"}
+    dataset2.description = {"en": "dataset2 description"}
+    dataset2.conforms_to = ["http://dataset2-conforms-to"]
+    dataset2.keyword = {"en": "keyword"}
+    dataset2.language = ["http://language"]
+    dataset2.prev = dataset1
+
+    dataset_series = DatasetSeries()
+    dataset_series.identifier = "http://dataset-series-identifier"
+    dataset_series.title = {"en": "dataset-series title"}
+    dataset_series.description = {"en": "dataset-series description"}
+    dataset_series.first = dataset1
+    dataset_series.last = dataset2
+    dataset_series.is_referenced_by = [dataset1]
+
+    json = dataset_series.to_json()
+
+    dataset_series_from_json = DatasetSeries.from_json(json)
+
+    g1 = Graph().parse(data=dataset_series.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=dataset_series_from_json.to_rdf(), format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
 # ---------------------------------------------------------------------- #
 # Utils for displaying debug information
 

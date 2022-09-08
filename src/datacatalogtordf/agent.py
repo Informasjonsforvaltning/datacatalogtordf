@@ -17,6 +17,7 @@ Example:
     >>> bool(dataset.to_rdf())
     True
 """
+
 from __future__ import annotations
 
 from typing import Dict, Optional, Union
@@ -25,7 +26,6 @@ from rdflib import Graph, Literal, Namespace, OWL, RDF, URIRef
 from skolemizer import Skolemizer
 
 from .uri import URI
-
 
 DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
@@ -39,8 +39,16 @@ class Agent:
         identifier (URI): the identifier of the dataset.
     """
 
-    slots = ("_identifier", "_name", "_organization_id", "_same_as")
+    __slots__ = (
+        "_g",
+        "_identifier",
+        "_name",
+        "_organization_id",
+        "_organization_type",
+        "_same_as",
+    )
 
+    _g: Graph
     _identifier: URI
     _name: Dict[str, str]
     _organization_id: str
@@ -104,6 +112,46 @@ class Agent:
         self._same_as = URI(same_as)
 
     # -
+    def to_json(self):
+        """
+        Convert the Resource to a json / dict. It will omit the
+        non-initalized fields.
+        :return: The json representation of this instance.
+        :rtype: dict
+        """
+        output = {"_type": type(self).__name__}
+        # Add ins for optional top level attributes
+        for k in dir(self):
+            try:
+                v = getattr(self, k)
+                is_method = callable(v)
+                is_private = k.startswith("_")
+                if is_method or is_private:
+                    continue
+
+                to_json = hasattr(v, "to_json") and callable(getattr(v, "to_json"))
+                output[k] = v.to_json() if to_json else v
+
+            except AttributeError:
+                continue
+
+        return output
+
+    @classmethod
+    def from_json(cls, json) -> Agent:
+        """
+        Convert a JSON (dict)
+        :param dict json: A dict representing this class.
+        :return: The object.
+        """
+        resource = cls()
+        for key in json:
+            is_private = key.startswith("_")
+            if not is_private:
+                setattr(resource, key, json[key])
+
+        return resource
+
     def to_rdf(
         self: Agent, format: str = "turtle", encoding: Optional[str] = "utf-8"
     ) -> Union[bytes, str]:

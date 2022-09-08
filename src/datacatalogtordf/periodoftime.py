@@ -17,13 +17,12 @@ Example:
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Optional, Union
+from typing import Dict, Optional, Union
 
 from rdflib import BNode, Graph, Literal, Namespace, RDF
 from rdflib.term import Identifier
 
 from .exceptions import InvalidDateError, InvalidDateIntervalError
-
 
 DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
@@ -66,8 +65,9 @@ class PeriodOfTime:
             start date is after the end date
     """
 
-    slots = ("_identifier", "_start_date", "_end_date")
+    __slots__ = ("_g", "_start_date", "_end_date", "_ref")
 
+    _g: Graph
     _start_date: str
     _end_date: str
     _ref: Identifier
@@ -113,6 +113,43 @@ class PeriodOfTime:
         self._end_date = _date
 
     # -
+    def to_json(self) -> Dict:
+        """Convert the Resource to a json / dict. It will omit the non-initalized fields.
+
+        :returns: The json representation of this instance.
+        :rtype: dict
+        """
+        output = {"_type": type(self).__name__}
+        # Add ins for optional top level attributes
+        for k in dir(self):
+            try:
+                v = getattr(self, k)
+                is_method = callable(v)
+                is_private = k.startswith("_")
+                if is_method or is_private:
+                    continue
+
+                to_json = hasattr(v, "to_json") and callable(getattr(v, "to_json"))
+                output[k] = v.to_json() if to_json else v
+            except AttributeError:
+                continue
+
+        return output
+
+    @classmethod
+    def from_json(cls, json) -> PeriodOfTime:
+        """Convert a JSON (dict).
+        :param dict json: A dict representing this class.
+        :return: The object.
+        """
+        resource = cls()
+        for key in json:
+            is_private = key.startswith("_")
+            if not is_private:
+                setattr(resource, key, json[key])
+
+        return resource
+
     def to_rdf(
         self: PeriodOfTime, format: str = "turtle", encoding: Optional[str] = "utf-8"
     ) -> Union[bytes, str]:

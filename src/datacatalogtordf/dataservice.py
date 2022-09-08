@@ -16,7 +16,7 @@ Example:
 """
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from rdflib import Graph, Namespace, RDF, URIRef
 from skolemizer import Skolemizer
@@ -91,6 +91,32 @@ class DataService(Resource):
         self._media_types = media_types
 
     # -
+    @classmethod
+    def from_json(cls, json) -> Resource:
+        """
+        Convert a JSON (dict)
+        :param dict json: A dict representing this class.
+        :return: The object.
+        """
+        resource = cls()
+        for key in json:
+            is_private = key.startswith("_")
+            if not is_private:
+                v = json[key]
+                if isinstance(v, list):
+                    alist = []
+                    for i in v:
+                        attr = cls._attr_from_json(key, i)
+                        if attr is not None:
+                            alist.append(attr)
+                        else:
+                            alist.append(i)
+                    setattr(resource, key, alist)
+                else:
+                    setattr(resource, key, v)
+
+        return resource
+
     def _to_graph(self: DataService) -> Graph:
 
         if not getattr(self, "identifier", None):
@@ -147,3 +173,14 @@ class DataService(Resource):
 
         for _media_type in self.media_types:
             self._g.add((URIRef(self.identifier), DCAT.mediaType, URIRef(_media_type)))
+
+    @classmethod
+    def _attr_from_json(cls, attr: str, json_dict: Dict) -> any:
+        obj = Resource._attr_from_json(attr, json_dict)
+        if obj is not None:
+            return obj
+
+        if attr == "servesdatasets":
+            return Dataset.from_json(json_dict)
+
+        return None

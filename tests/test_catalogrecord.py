@@ -293,6 +293,63 @@ def test_set_conforms_to_list_of_invalid_formats() -> None:
         catalogrecord.conforms_to = ["http://invalid^.uri.com/format"]
 
 
+def test_to_json_should_return_catalog_record_as_json_dict() -> None:
+    """It returns a catalog json dict."""
+    record = CatalogRecord()
+    record.identifier = "http://record-identifier"
+    record.title = {"en": "record title"}
+    record.description = {"en": "record description"}
+    record.conforms_to = ["http://record-conforms-to"]
+    record.listing_date = "2022-01-01"
+    record.modification_date = "2022-01-02"
+
+    json = record.to_json()
+
+    assert json == {
+        "_type": "CatalogRecord",
+        "conforms_to": ["http://record-conforms-to"],
+        "description": {"en": "record description"},
+        "identifier": "http://record-identifier",
+        "listing_date": "2022-01-01",
+        "modification_date": "2022-01-02",
+        "title": {"en": "record title"},
+    }
+
+
+def test_from_json_should_return_catalog_record() -> None:
+    """It returns a catalog json dict."""
+
+    dataset = Dataset()
+    dataset.identifier = "http://dataset-identifier"
+    dataset.title = {"en": "dataset title"}
+    dataset.description = {"en": "dataset description"}
+    dataset.conforms_to = ["http://dataset-conforms-to"]
+    dataset.keyword = {"en": "keyword"}
+    dataset.language = ["http://language"]
+
+    record = CatalogRecord()
+    record.identifier = "http://example.com/catalogs/1"
+    record.title = {"nb": "Denne katalogen", "en": "This catalog"}
+    record.description = {"nb": "Beskrivelse", "en": "Description"}
+    record.conforms_to = ["http://comforms-to"]
+    record.listing_date = "2022-01-01"
+    record.modification_date = "2022-01-02"
+    record.primary_topic = dataset
+
+    json = record.to_json()
+
+    catalog_record_from_json = CatalogRecord.from_json(json)
+
+    g1 = Graph().parse(data=record.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=catalog_record_from_json.to_rdf(), format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
 # ---------------------------------------------------------------------- #
 # Utils for displaying debug information
 

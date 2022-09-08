@@ -23,7 +23,6 @@ from skolemizer import Skolemizer
 
 from .uri import URI
 
-
 DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
 LOCN = Namespace("http://www.w3.org/ns/locn#")
@@ -36,8 +35,9 @@ class Location:
     Ref: `dcat:Location <https://www.w3.org/TR/vocab-dcat-2/#Class:Location>`_
     """
 
-    slots = ("_identifier", "_geometry", "_bounding_box", "_centroid")
+    __slots__ = ("_g", "_identifier", "_geometry", "_bounding_box", "_centroid", "_ref")
 
+    _g: Graph
     _identifier: URI
     _geometry: str
     _bounding_box: str
@@ -93,6 +93,46 @@ class Location:
         self._centroid = centroid
 
     # -
+    def to_json(self):
+        """
+        Convert the Resource to a json / dict. It will omit the
+        non-initalized fields.
+        :return: The json representation of this instance.
+        :rtype: dict
+        """
+        output = {"_type": type(self).__name__}
+        # Add ins for optional top level attributes
+        for k in dir(self):
+            try:
+                v = getattr(self, k)
+                is_method = callable(v)
+                is_private = k.startswith("_")
+                if is_method or is_private:
+                    continue
+
+                to_json = hasattr(v, "to_json") and callable(getattr(v, "to_json"))
+                output[k] = v.to_json() if to_json else v
+
+            except AttributeError:
+                continue
+
+        return output
+
+    @classmethod
+    def from_json(cls, json) -> Location:
+        """
+        Convert a JSON (dict)
+        :param dict json: A dict representing this class.
+        :return: The object.
+        """
+        resource = cls()
+        for key in json:
+            is_private = key.startswith("_")
+            if not is_private:
+                setattr(resource, key, json[key])
+
+        return resource
+
     def to_rdf(
         self: Location, format: str = "turtle", encoding: Optional[str] = "utf-8"
     ) -> Union[bytes, str]:

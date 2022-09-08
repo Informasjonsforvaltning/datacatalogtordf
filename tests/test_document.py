@@ -2,6 +2,7 @@
 import pytest
 from pytest_mock import MockFixture
 from rdflib import Graph
+from rdflib.compare import isomorphic, graph_diff
 from skolemizer.testutils import skolemization
 
 from datacatalogtordf.document import Document
@@ -111,3 +112,61 @@ def test_to_graph_should_return_language() -> None:
     g2 = Graph().parse(data=src, format="turtle")
 
     assert_isomorphic(g1, g2)
+
+
+def test_to_json_should_return_document_as_json_dict() -> None:
+    """It returns a catalog json dict."""
+
+    doc = Document()
+    doc.identifier = "http://doc-identifier"
+    doc.title = {"en": "doc title"}
+    doc.language = "http://language"
+    json = doc.to_json()
+
+    assert json == {
+        "_type": "Document",
+        "identifier": "http://doc-identifier",
+        "language": "http://language",
+        "title": {"en": "doc title"},
+    }
+
+
+def test_from_json_should_return_document() -> None:
+    """It returns a document."""
+
+    doc = Document()
+    doc.identifier = "http://doc-identifier"
+    doc.title = {"en": "doc title"}
+    doc.language = "http://language"
+    json = doc.to_json()
+
+    doc_from_json = Document.from_json(json)
+
+    g1 = Graph().parse(data=doc.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=doc_from_json.to_rdf(), format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
+# ---------------------------------------------------------------------- #
+# Utils for displaying debug information
+
+
+def _dump_diff(g1: Graph, g2: Graph) -> None:
+    in_both, in_first, in_second = graph_diff(g1, g2)
+    print("\nin both:")
+    _dump_turtle(in_both)
+    print("\nin first:")
+    _dump_turtle(in_first)
+    print("\nin second:")
+    _dump_turtle(in_second)
+
+
+def _dump_turtle(g: Graph) -> None:
+    for _l in g.serialize(format="turtle").splitlines():
+        if _l:
+            print(_l)
