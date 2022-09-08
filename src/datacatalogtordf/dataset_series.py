@@ -31,12 +31,11 @@ Example:
 """
 from __future__ import annotations
 
-from typing import Optional, Union
+from typing import Dict, Optional, Union
 
 from rdflib import Graph, Namespace, URIRef
 
 from .dataset import Dataset
-
 
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
 
@@ -125,6 +124,19 @@ class DatasetSeries(Dataset):
         ).serialize(format=format, encoding=encoding)
 
     # -
+
+    @classmethod
+    def _attr_from_json(cls, attr: str, json_dict: Dict) -> any:
+        obj = Dataset._attr_from_json(attr, json_dict)
+        if obj is not None:
+            return obj
+
+        if attr == "first":
+            return Dataset.from_json(json_dict)
+        if attr == "last":
+            return Dataset.from_json(json_dict)
+
+        return None
 
     def _to_graph(
         self: DatasetSeries,

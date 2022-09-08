@@ -21,6 +21,7 @@ except PackageNotFoundError:  # pragma: no cover
 from .agent import Agent
 from .catalog import Catalog
 from .catalogrecord import CatalogRecord
+from .contact import Contact
 from .dataservice import DataService
 from .dataset import Dataset
 from .dataset_series import DatasetSeries

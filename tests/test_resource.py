@@ -1,11 +1,17 @@
 """Test cases for the resource module."""
 
-from concepttordf import Contact
 import pytest
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 
-from datacatalogtordf import Agent, Dataset, InvalidURIError, Relationship, Resource
+from datacatalogtordf import (
+    Agent,
+    Contact,
+    Dataset,
+    InvalidURIError,
+    Relationship,
+    Resource,
+)
 
 """
 A test class for testing the _abstract_ class Resource.
@@ -188,12 +194,12 @@ def test_to_graph_should_return_access_rights() -> None:
         assert _isomorphic
 
 
-def test_to_graph_should_return_conformsTo() -> None:
+def test_to_graph_should_return_conforms_to() -> None:
     """It returns a conformsTo graph isomorphic to spec."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
-    resource.conformsTo.append("http://example.com/standards/1")
-    resource.conformsTo.append("http://example.com/standards/2")
+    resource.conforms_to.append("http://example.com/standards/1")
+    resource.conforms_to.append("http://example.com/standards/2")
 
     src = """
     @prefix dct: <http://purl.org/dc/terms/> .
@@ -216,12 +222,12 @@ def test_to_graph_should_return_conformsTo() -> None:
     assert _isomorphic
 
 
-def test_set_conformsTo_list_of_invalid_uris() -> None:
+def test_set_conforms_to_list_of_invalid_uris() -> None:
     """Should raise InvalidURIError."""
     resource = Dataset()
     resource.identifier = "http://example.com/datasets/1"
     with pytest.raises(InvalidURIError):
-        resource.conformsTo = ["http://invalid^.uri.com/format"]
+        resource.conforms_to = ["http://invalid^.uri.com/format"]
 
 
 def test_to_graph_should_return_contactpoint() -> None:

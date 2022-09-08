@@ -21,7 +21,7 @@ Example:
 """
 from __future__ import annotations
 
-from typing import Any, List, Optional, Union
+from typing import List, Optional, Union, Dict
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
 from skolemizer import Skolemizer
@@ -31,7 +31,6 @@ from .dataservice import DataService
 from .dataset import Dataset
 from .resource import Resource
 from .uri import URI
-
 
 DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
@@ -54,20 +53,16 @@ class Catalog(Dataset):
         "_services",
         "_catalogs",
         "_catalogrecords",
-        "_models",
-        "_contains_services",
         "_dct_identifier",
     )
 
     _homepage: URI
     _themes: List[str]
-    _has_parts: List[Resource]
+    _has_parts: List[Catalog]
     _datasets: List[Dataset]
     _services: List[DataService]
     _catalogs: List[Catalog]
     _catalogrecords: List[CatalogRecord]
-    _models: List[Any]
-    _contains_services: List[Any]
     _dct_identifier: str
 
     def __init__(self, identifier: Optional[str] = None) -> None:
@@ -84,8 +79,6 @@ class Catalog(Dataset):
         self.services = []
         self.catalogs = []
         self.catalogrecords = []
-        self.models = []
-        self.contains_services = []
 
     @property
     def homepage(self: Catalog) -> str:
@@ -124,34 +117,6 @@ class Catalog(Dataset):
         self._datasets = datasets
 
     @property
-    def models(self: Catalog) -> List[Any]:
-        """List[URI]: A list of links to InformationModels."""
-        return self._models
-
-    @models.setter
-    def models(self: Catalog, models: List[Any]) -> None:
-        # Validate model URIs:
-        for model in models:
-            if type(model) is str:
-                URI(model)
-
-        self._models = models
-
-    @property
-    def contains_services(self: Catalog) -> List[Any]:
-        """List[URI]: A list of links to Services."""
-        return self._contains_services
-
-    @contains_services.setter
-    def contains_services(self: Catalog, contains_services: List[Any]) -> None:
-        # Validate contains_service URIs:
-        for contains_service in contains_services:
-            if type(contains_service) is str:
-                URI(contains_service)
-
-        self._contains_services = contains_services
-
-    @property
     def services(self: Catalog) -> List[DataService]:
         """List[DataService]: A list of dataservices of sites or end-points that is listed in the catalog."""  # noqa: B950
         return self._services
@@ -187,7 +152,7 @@ class Catalog(Dataset):
     def dct_identifier(self, dct_identifier: str) -> None:
         self._dct_identifier = dct_identifier
 
-        # -
+    # -
 
     def to_rdf(
         self: Catalog,
@@ -195,8 +160,6 @@ class Catalog(Dataset):
         encoding: Optional[str] = "utf-8",
         include_datasets: bool = True,
         include_services: bool = True,
-        include_models: bool = True,
-        include_contains_services: bool = True,
     ) -> Union[bytes, str]:
         """Maps the catalog to rdf.
 
@@ -210,8 +173,6 @@ class Catalog(Dataset):
             encoding (str): the encoding to serialize into
             include_datasets (bool): includes the dataset graphs in the catalog
             include_services (bool): includes the services in the catalog
-            include_models (bool): includes the models in the catalog
-            include_contains_services (bool): includes the services (cpsvno) in the catalog
 
         Returns:
             a rdf serialization as a bytes literal according to format.
@@ -219,8 +180,6 @@ class Catalog(Dataset):
         return self._to_graph(
             include_datasets,
             include_services,
-            include_models,
-            include_contains_services,
         ).serialize(format=format, encoding=encoding)
 
     # -
@@ -229,8 +188,6 @@ class Catalog(Dataset):
         self: Catalog,
         include_datasets: bool = True,
         include_services: bool = True,
-        include_models: bool = True,
-        include_contains_services: bool = True,
     ) -> Graph:
 
         if not getattr(self, "identifier", None):
@@ -250,8 +207,6 @@ class Catalog(Dataset):
         self._services_to_graph()
         self._catalogs_to_graph()
         self._catalogrecords_to_graph()
-        self._models_to_graph()
-        self._contains_services_to_graph()
 
         # Add all the datasets to the graf
         if include_datasets:
@@ -261,16 +216,6 @@ class Catalog(Dataset):
         # Add all the services to the graf
         if include_services:
             for service in self._services:
-                self._g += service._to_graph()
-
-        # Add all the models to the graf
-        if include_models:
-            for model in self._models:
-                self._g += model._to_graph()
-
-        # Add all the contains_services  to the graf
-        if include_contains_services:
-            for service in self._contains_services:
                 self._g += service._to_graph()
 
         return self._g
@@ -372,24 +317,20 @@ class Catalog(Dataset):
                     )
                 )
 
-    def _models_to_graph(self: Catalog) -> None:
-        if getattr(self, "models", None):
-            for _model in self._models:
-                self._g.add(
-                    (
-                        URIRef(self.identifier),
-                        MODELLDCATNO.model,
-                        URIRef(_model.identifier),
-                    )
-                )
+    @classmethod
+    def _attr_from_json(cls, attr: str, json_dict: Dict) -> any:
+        obj = Dataset._attr_from_json(attr, json_dict)
+        if obj is not None:
+            return obj
 
-    def _contains_services_to_graph(self: Catalog) -> None:
-        if getattr(self, "contains_services", None):
-            for _service in self._contains_services:
-                self._g.add(
-                    (
-                        URIRef(self.identifier),
-                        DCATNO.containsService,
-                        URIRef(_service.identifier),
-                    )
-                )
+        if attr == "has_parts":
+            return Catalog.from_json(json_dict)
+        if attr == "datasets":
+            return Dataset.from_json(json_dict)
+        if attr == "services":
+            return DataService.from_json(json_dict)
+        if attr == "catalogs":
+            return Catalog.from_json(json_dict)
+        if attr == "catalogrecords":
+            return CatalogRecord.from_json(json_dict)
+        return None

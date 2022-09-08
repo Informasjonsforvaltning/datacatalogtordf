@@ -9,10 +9,14 @@ from skolemizer.testutils import skolemization
 
 from datacatalogtordf import (
     Dataset,
+    DatasetSeries,
     Distribution,
     InvalidURIError,
     Location,
     PeriodOfTime,
+    Contact,
+    Agent,
+    Relationship,
 )
 
 
@@ -489,6 +493,110 @@ def test_to_graph_should_return_dct_identifier_as_graph() -> None:
     """
     g1 = Graph().parse(data=dataset.to_rdf(), format="turtle")
     g2 = Graph().parse(data=src, format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
+def test_to_json_should_return_dataset_as_json_dict() -> None:
+    """It returns a catalog json dict."""
+    dataset = Dataset()
+    dataset.identifier = "http://dataset-identifier"
+    dataset.title = {"en": "dataset title"}
+    dataset.description = {"en": "dataset description"}
+    dataset.conforms_to = ["http://dataset-conforms-to"]
+    dataset.keyword = {"en": "keyword"}
+    dataset.language = ["http://language"]
+
+    dist = Distribution()
+    dist.identifier = "http://distribution-identifier"
+    dist.title = {"en": "dist title"}
+    dist.description = {"en": "dist description"}
+    dist.formats = ["http://csv", "http://xml"]
+    dist.license = "http://license"
+    dataset.distributions = [dist]
+
+    json = dataset.to_json()
+
+    assert json == {
+        "_type": "Dataset",
+        "access_rights_comments": [],
+        "conforms_to": ["http://dataset-conforms-to"],
+        "description": {"en": "dataset description"},
+        "distributions": [
+            {
+                "_type": "Distribution",
+                "conforms_to": [],
+                "description": {"en": "dist description"},
+                "formats": ["http://csv", "http://xml"],
+                "identifier": "http://distribution-identifier",
+                "license": "http://license",
+                "media_types": [],
+                "title": {"en": "dist title"},
+            }
+        ],
+        "identifier": "http://dataset-identifier",
+        "is_referenced_by": [],
+        "keyword": {"en": "keyword"},
+        "landing_page": [],
+        "language": ["http://language"],
+        "qualified_attributions": [],
+        "qualified_relation": [],
+        "resource_relation": [],
+        "theme": [],
+        "title": {"en": "dataset title"},
+    }
+
+
+def test_from_json_should_return_dataset() -> None:
+    """It returns a catalog json dict."""
+    agent = Agent()
+    agent.identifier = "http://agent/1"
+
+    distribution = Distribution()
+    distribution.identifier = "http://example.com/data-service/1"
+    distribution.title = {"nb": "Service A", "en": "Service A"}
+    distribution.description = {"nb": "Beskrivelse", "en": "Description"}
+
+    location = Location()
+    location.identifier = "http://location/1"
+
+    temporal = PeriodOfTime()
+    temporal.start_date = "2022-01-01"
+
+    series = DatasetSeries()
+    series.identifier = "http://dataset-series/1"
+
+    contact = Contact()
+    contact.identifier = "http://contact/1"
+
+    relationship = Relationship()
+    relationship.identifier = "http://relationship/1"
+
+    dataset = Dataset()
+    dataset.identifier = "http://dataset-identifier"
+    dataset.title = {"en": "dataset title"}
+    dataset.description = {"en": "dataset description"}
+    dataset.conforms_to = ["http://dataset-conforms-to"]
+    dataset.keyword = {"en": "keyword"}
+    dataset.language = ["http://language"]
+    dataset.spatial = [location]
+    dataset.temporal = [temporal]
+    dataset.in_series = series
+    dataset.distributions = [distribution]
+    dataset.contactpoint = contact
+    dataset.publisher = agent
+    dataset.qualified_relation = [relationship]
+
+    json = dataset.to_json()
+
+    dataset_from_json = Dataset.from_json(json)
+
+    g1 = Graph().parse(data=dataset.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=dataset_from_json.to_rdf(), format="turtle")
 
     _isomorphic = isomorphic(g1, g2)
     if not _isomorphic:

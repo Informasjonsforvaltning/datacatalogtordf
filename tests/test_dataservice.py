@@ -211,6 +211,74 @@ def test_to_graph_should_return_media_type() -> None:
     assert _isomorphic
 
 
+def test_to_json_should_return_data_service_as_json_dict() -> None:
+    """It returns a catalog json dict."""
+    data_service = DataService()
+    data_service.identifier = "http://data-service-identifier"
+    data_service.title = {"en": "data-service title"}
+    data_service.description = {"en": "data-service description"}
+    data_service.conforms_to = ["http://data-service-conforms-to"]
+    data_service.listing_date = "2022-01-01"
+    data_service.modification_date = "2022-01-02"
+    data_service.keyword = {"en": "keyword"}
+    json = data_service.to_json()
+
+    assert json == {
+        "_type": "DataService",
+        "conforms_to": ["http://data-service-conforms-to"],
+        "description": {"en": "data-service description"},
+        "identifier": "http://data-service-identifier",
+        "is_referenced_by": [],
+        "keyword": {"en": "keyword"},
+        "landing_page": [],
+        "language": [],
+        "listing_date": "2022-01-01",
+        "media_types": [],
+        "modification_date": "2022-01-02",
+        "qualified_attributions": [],
+        "qualified_relation": [],
+        "resource_relation": [],
+        "servesdatasets": [],
+        "theme": [],
+        "title": {"en": "data-service title"},
+    }
+
+
+def test_from_json_should_return_data_service() -> None:
+    """It returns a catalog json dict."""
+
+    dataset = Dataset()
+    dataset.identifier = "http://dataset-identifier"
+    dataset.title = {"en": "dataset title"}
+    dataset.description = {"en": "dataset description"}
+    dataset.conforms_to = ["http://dataset-conforms-to"]
+    dataset.keyword = {"en": "keyword"}
+    dataset.language = ["http://language"]
+
+    data_service = DataService()
+    data_service.identifier = "http://example.com/data-service/1"
+    data_service.title = {"nb": "Service A", "en": "Service A"}
+    data_service.description = {"nb": "Beskrivelse", "en": "Description"}
+    data_service.conforms_to = ["http://comforms-to"]
+    data_service.listing_date = "2022-01-01"
+    data_service.modification_date = "2022-01-02"
+    data_service.servesdatasets = [dataset]
+    data_service.is_referenced_by = [dataset]
+
+    json = data_service.to_json()
+
+    data_service_from_json = DataService.from_json(json)
+
+    g1 = Graph().parse(data=data_service.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=data_service_from_json.to_rdf(), format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
 # ---------------------------------------------------------------------- #
 # Utils for displaying debug information
 

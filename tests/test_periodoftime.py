@@ -88,6 +88,54 @@ def test_invalid_interval_end_date() -> None:
         _period_of_time.start_date = "2020-04-07"
 
 
+def test_to_json_should_return_partial_periodoftime_as_json_dict() -> None:
+    """It returns a period of time json dict."""
+
+    _period_of_time = PeriodOfTime()
+    _period_of_time.start_date = "2022-01-01"
+    _json = _period_of_time.to_json()
+
+    assert _json == {
+        "_type": "PeriodOfTime",
+        "start_date": "2022-01-01",
+    }
+
+
+def test_to_json_should_return_periodoftime_as_json_dict() -> None:
+    """It returns a period of time json dict."""
+
+    _period_of_time = PeriodOfTime()
+    _period_of_time.start_date = "2022-01-01"
+    _period_of_time.end_date = "2023-12-31"
+    _json = _period_of_time.to_json()
+
+    assert _json == {
+        "_type": "PeriodOfTime",
+        "start_date": "2022-01-01",
+        "end_date": "2023-12-31",
+    }
+
+
+def test_from_json_should_return_period_of_time_instance() -> None:
+    """It returns a period of time instance."""
+
+    _period_of_time = PeriodOfTime()
+    _period_of_time.start_date = "2022-01-01"
+    _period_of_time.end_date = "2023-12-31"
+    _json = _period_of_time.to_json()
+
+    _period_of_time_from_json = PeriodOfTime.from_json(_json)
+
+    g1 = Graph().parse(data=_period_of_time.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=_period_of_time_from_json.to_rdf(), format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
 # ---------------------------------------------------------------------- #
 # Utils for displaying debug information
 

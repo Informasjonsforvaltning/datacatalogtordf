@@ -292,6 +292,67 @@ class Distribution:
         self._package_format = URI(package_format)
 
     # -
+    def to_json(self):
+        """
+        Convert the Resource to a json / dict. It will omit the
+        non-initalized fields.
+        :return: The json representation of this instance.
+        :rtype: dict
+        """
+        output = {"_type": type(self).__name__}
+        # Add ins for optional top level attributes
+        for k in dir(self):
+            try:
+                v = getattr(self, k)
+                is_method = callable(v)
+                is_private = k.startswith("_")
+                if is_method or is_private:
+                    continue
+
+                if isinstance(v, list):
+                    output[k] = []
+                    for i in v:
+                        to_json = hasattr(i, "to_json") and callable(
+                            getattr(i, "to_json")
+                        )
+                        output[k].append(i.to_json() if to_json else i)
+                else:
+                    to_json = hasattr(v, "to_json") and callable(getattr(v, "to_json"))
+                    output[k] = v.to_json() if to_json else v
+
+            except:
+                continue
+
+        return output
+
+    @classmethod
+    def from_json(cls, json) -> Distribution:
+        """
+        Convert a JSON (dict)
+        :param dict json: A dict representing this class.
+        :return: The object.
+        """
+        resource = cls()
+        for key in json:
+            is_private = key.startswith("_")
+            if not is_private:
+                v = json[key]
+                attr = cls._attr_from_json(key, v)
+                if attr is not None:
+                    setattr(resource, key, attr)
+                else:
+                    setattr(resource, key, v)
+
+        return resource
+
+    @classmethod
+    def _attr_from_json(cls, attr: str, json_dict: Dict) -> any:
+        if attr == "access_service":
+            # Prevent circular import
+            clazz = getattr(__import__("datacatalogtordf"), "DataService")
+            return clazz.from_json(json_dict)
+        return None
+
     def to_rdf(
         self: Distribution, format: str = "turtle", encoding: Optional[str] = "utf-8"
     ) -> Union[bytes, str]:

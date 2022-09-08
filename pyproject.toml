@@ -15,7 +15,6 @@ repository = "https://github.com/Informasjonsforvaltning/datacatalogtordf"
 version = "2.1.2"
 
 [tool.poetry.dependencies]
-concepttordf = "^2.0.0"
 python = ">=3.8,<3.11"
 rdflib = "^6.1.1"
 skolemizer = "^1.1.0"

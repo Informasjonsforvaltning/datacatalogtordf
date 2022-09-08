@@ -196,6 +196,47 @@ def test_to_graph_should_return_centroid_as_graph() -> None:
     assert _isomorphic
 
 
+def test_to_json_should_return_location_as_json_dict() -> None:
+    """It returns a catalog json dict."""
+
+    loc = Location()
+    loc.identifier = "http://loc-identifier"
+    loc.geometry = "geometry"
+    loc.bounding_box = "bouding box"
+    loc.centroid = "centroid"
+    json = loc.to_json()
+
+    assert json == {
+        "_type": "Location",
+        "bounding_box": "bouding box",
+        "centroid": "centroid",
+        "geometry": "geometry",
+        "identifier": "http://loc-identifier",
+    }
+
+
+def test_from_json_should_return_location() -> None:
+    """It returns a catalog json dict."""
+
+    loc = Location()
+    loc.identifier = "http://loc-identifier"
+    loc.geometry = "geometry"
+    loc.bounding_box = "bouding box"
+    loc.centroid = "centroid"
+    json = loc.to_json()
+
+    loc_from_json = Location.from_json(json)
+
+    g1 = Graph().parse(data=loc.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=loc_from_json.to_rdf(), format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
 # ---------------------------------------------------------------------- #
 # Utils for displaying debug information
 

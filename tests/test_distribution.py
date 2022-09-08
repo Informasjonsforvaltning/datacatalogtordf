@@ -642,6 +642,56 @@ def test_set_format_with_list_of_invalid_formats() -> None:
         distribution.formats = ["http://invalid^.uri.com/format"]
 
 
+def test_to_json_should_return_distribution_as_json_dict() -> None:
+    """It returns a catalog json dict."""
+
+    dist = Distribution()
+    dist.identifier = "http://distribution-identifier"
+    dist.title = {"en": "dist title"}
+    dist.description = {"en": "dist description"}
+    dist.formats = ["http://csv", "http://xml"]
+    dist.license = "http://license"
+
+    json = dist.to_json()
+
+    assert json == {
+        "_type": "Distribution",
+        "conforms_to": [],
+        "description": {"en": "dist description"},
+        "formats": ["http://csv", "http://xml"],
+        "identifier": "http://distribution-identifier",
+        "license": "http://license",
+        "media_types": [],
+        "title": {"en": "dist title"},
+    }
+
+
+def test_from_json_should_return_distribution() -> None:
+    """It returns a distribution."""
+
+    data_service = DataService()
+    data_service.identifier = "http://data-service-identifier"
+
+    distribution = Distribution()
+    distribution.identifier = "http://distribution-identifier"
+    distribution.title = {"en": "distribution title"}
+    distribution.description = {"en": "distribution description"}
+    distribution.access_service = data_service
+
+    json = distribution.to_json()
+
+    distribution_from_json = Distribution.from_json(json)
+
+    g1 = Graph().parse(data=distribution.to_rdf(), format="turtle")
+    g2 = Graph().parse(data=distribution_from_json.to_rdf(), format="turtle")
+
+    _isomorphic = isomorphic(g1, g2)
+    if not _isomorphic:
+        _dump_diff(g1, g2)
+        pass
+    assert _isomorphic
+
+
 # ---------------------------------------------------------------------- #
 # Utils for displaying debug information
 
