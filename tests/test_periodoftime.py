@@ -90,7 +90,6 @@ def test_invalid_interval_end_date() -> None:
 
 def test_to_json_should_return_partial_periodoftime_as_json_dict() -> None:
     """It returns a period of time json dict."""
-
     _period_of_time = PeriodOfTime()
     _period_of_time.start_date = "2022-01-01"
     _json = _period_of_time.to_json()
@@ -103,7 +102,6 @@ def test_to_json_should_return_partial_periodoftime_as_json_dict() -> None:
 
 def test_to_json_should_return_periodoftime_as_json_dict() -> None:
     """It returns a period of time json dict."""
-
     _period_of_time = PeriodOfTime()
     _period_of_time.start_date = "2022-01-01"
     _period_of_time.end_date = "2023-12-31"
@@ -118,7 +116,6 @@ def test_to_json_should_return_periodoftime_as_json_dict() -> None:
 
 def test_from_json_should_return_period_of_time_instance() -> None:
     """It returns a period of time instance."""
-
     _period_of_time = PeriodOfTime()
     _period_of_time.start_date = "2022-01-01"
     _period_of_time.end_date = "2023-12-31"

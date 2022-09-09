@@ -15,10 +15,10 @@ Example:
 """
 from __future__ import annotations
 
-from typing import Optional
+from typing import Dict, Optional
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
-from skolemizer import Skolemizer
+from skolemizer import Skolemizer  # type: ignore
 
 VCARD = Namespace("http://www.w3.org/2006/vcard/ns#")
 
@@ -96,12 +96,11 @@ class Contact:
     def url(self, url: str) -> None:
         self._url = url
 
-    def to_json(self):
-        """
-        Convert the Contact to a json / dict. It will omit the
-        non-initalized fields.
-        :return: The json representation of this instance.
-        :rtype: dict
+    def to_json(self) -> Dict:
+        """Convert the Contact to a json / dict. It will omit the non-initalized fields.
+
+        Returns:
+            Dict: The json representation of this instance.
         """
         output = {"_type": type(self).__name__}
         # Add ins for optional top level attributes
@@ -122,11 +121,14 @@ class Contact:
         return output
 
     @classmethod
-    def from_json(cls, json) -> Contact:
-        """
-        Convert a JSON (dict)
-        :param dict json: A dict representing this class.
-        :return: The object.
+    def from_json(cls, json: Dict) -> Contact:
+        """Convert a JSON (dict).
+
+        Args:
+            json: A dict representing this class.
+
+        Returns:
+            Contact: The object.
         """
         resource = cls()
         for key in json:

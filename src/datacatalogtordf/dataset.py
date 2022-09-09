@@ -22,11 +22,11 @@ Example:
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import List, Optional, TYPE_CHECKING, Union, Dict
+from typing import Any, Dict, List, Optional, TYPE_CHECKING, Union
 
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 from rdflib.term import Identifier
-from skolemizer import Skolemizer
+from skolemizer import Skolemizer  # type: ignore
 
 if TYPE_CHECKING:  # pragma: no cover
     from .dataset_series import DatasetSeries  # pytype: disable=pyi-error
@@ -190,7 +190,7 @@ class Dataset(Resource):
     # -
 
     @classmethod
-    def _attr_from_json(cls, attr: str, json_dict: Dict) -> any:
+    def _attr_from_json(cls, attr: str, json_dict: Dict) -> Any:
         obj = Resource._attr_from_json(attr, json_dict)
         if obj is not None:
             return obj

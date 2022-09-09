@@ -16,7 +16,7 @@ Example:
 """
 from __future__ import annotations
 
-from typing import List, Optional, Dict
+from typing import Any, Dict, List, Optional, TYPE_CHECKING
 
 from rdflib import Graph, Namespace, RDF, URIRef
 from skolemizer import Skolemizer
@@ -24,6 +24,9 @@ from skolemizer import Skolemizer
 from .dataset import Dataset
 from .resource import Resource
 from .uri import URI
+
+if TYPE_CHECKING:  # pragma: no cover
+    pass
 
 DCT = Namespace("http://purl.org/dc/terms/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
@@ -65,7 +68,8 @@ class DataService(Resource):
 
     @property
     def endpointDescription(self: DataService) -> str:
-        """URI: A description of the services available via the end-points, including their operations, parameters etc."""  # noqa: B950
+        """URI: A description of the services available via the end-points, including their operations, parameters etc."""
+        # noqa: B950
         return self._endpointDescription
 
     @endpointDescription.setter
@@ -92,11 +96,14 @@ class DataService(Resource):
 
     # -
     @classmethod
-    def from_json(cls, json) -> Resource:
-        """
-        Convert a JSON (dict)
-        :param dict json: A dict representing this class.
-        :return: The object.
+    def from_json(cls, json: Dict) -> Resource:
+        """Convert a JSON (dict).
+
+        Args:
+            json: A dict representing this class.
+
+        Returns:
+            Resource: The object.
         """
         resource = cls()
         for key in json:
@@ -175,7 +182,7 @@ class DataService(Resource):
             self._g.add((URIRef(self.identifier), DCAT.mediaType, URIRef(_media_type)))
 
     @classmethod
-    def _attr_from_json(cls, attr: str, json_dict: Dict) -> any:
+    def _attr_from_json(cls, attr: str, json_dict: Dict) -> Any:
         obj = Resource._attr_from_json(attr, json_dict)
         if obj is not None:
             return obj

@@ -2,7 +2,7 @@
 import pytest
 from pytest_mock import MockFixture
 from rdflib import Graph
-from rdflib.compare import isomorphic, graph_diff
+from rdflib.compare import graph_diff, isomorphic
 from skolemizer.testutils import skolemization
 
 from datacatalogtordf.document import Document
@@ -116,7 +116,6 @@ def test_to_graph_should_return_language() -> None:
 
 def test_to_json_should_return_document_as_json_dict() -> None:
     """It returns a catalog json dict."""
-
     doc = Document()
     doc.identifier = "http://doc-identifier"
     doc.title = {"en": "doc title"}
@@ -133,7 +132,6 @@ def test_to_json_should_return_document_as_json_dict() -> None:
 
 def test_from_json_should_return_document() -> None:
     """It returns a document."""
-
     doc = Document()
     doc.identifier = "http://doc-identifier"
     doc.title = {"en": "doc title"}

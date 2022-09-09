@@ -2,7 +2,7 @@
 from pytest_mock import MockFixture
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
-from skolemizer.testutils import skolemization
+from skolemizer.testutils import skolemization  # type: ignore
 
 from datacatalogtordf import Location
 
@@ -198,7 +198,6 @@ def test_to_graph_should_return_centroid_as_graph() -> None:
 
 def test_to_json_should_return_location_as_json_dict() -> None:
     """It returns a catalog json dict."""
-
     loc = Location()
     loc.identifier = "http://loc-identifier"
     loc.geometry = "geometry"
@@ -217,7 +216,6 @@ def test_to_json_should_return_location_as_json_dict() -> None:
 
 def test_from_json_should_return_location() -> None:
     """It returns a catalog json dict."""
-
     loc = Location()
     loc.identifier = "http://loc-identifier"
     loc.geometry = "geometry"

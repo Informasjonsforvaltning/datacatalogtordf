@@ -170,9 +170,6 @@ def test_to_json_should_return_contact_as_json_dict() -> None:
     contact = Contact()
     contact.identifier = "http://example.com/contact/1"
     contact.name = {"nb": "Contact A", "en": "Contact A"}
-    contact.organization_id = "org-id"
-    contact.organization_type = "http://org-type"
-    contact.same_as = "http://same-as"
 
     json = contact.to_json()
 
@@ -180,9 +177,6 @@ def test_to_json_should_return_contact_as_json_dict() -> None:
         "_type": "Contact",
         "identifier": "http://example.com/contact/1",
         "name": {"nb": "Contact A", "en": "Contact A"},
-        "organization_id": "org-id",
-        "organization_type": "http://org-type",
-        "same_as": "http://same-as",
     }
 
 
@@ -191,9 +185,9 @@ def test_from_json_should_return_contact() -> None:
     contact = Contact()
     contact.identifier = "http://example.com/contact/1"
     contact.name = {"nb": "Contact A", "en": "Contact A"}
-    contact.organization_id = "org-id"
-    contact.organization_type = "http://org-type"
-    contact.same_as = "http://same-as"
+    contact.email = "john.doe@email.com"
+    contact.telephone = "123456789"
+    contact.url = "http://contact-url"
 
     json = contact.to_json()
 

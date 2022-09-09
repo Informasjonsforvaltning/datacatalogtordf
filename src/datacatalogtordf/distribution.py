@@ -17,11 +17,11 @@ Example:
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import Dict, List, Optional, TYPE_CHECKING, Union
+from typing import Any, Dict, List, Optional, TYPE_CHECKING, Union
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
 from rdflib.namespace import DCTERMS
-from skolemizer import Skolemizer
+from skolemizer import Skolemizer  # type: ignore
 
 from .periodoftime import Date
 from .uri import URI
@@ -182,7 +182,8 @@ class Distribution:
 
     @property
     def access_URL(self: Distribution) -> str:
-        """URI: A URL of the resource that gives access to a distribution of the dataset. E.g. landing page, feed, SPARQL endpoint."""  # noqa: B950
+        """URI: A URL of the resource that gives access to a distribution of the dataset. E.g. landing page, feed, SPARQL endpoint."""
+        # noqa: B950
         return self._access_URL
 
     @access_URL.setter
@@ -191,7 +192,8 @@ class Distribution:
 
     @property
     def access_service(self: Distribution) -> DataService:
-        """DataService: A data service that gives access to the distribution of the dataset."""  # noqa: B950
+        """DataService: A data service that gives access to the distribution of the dataset."""
+        # noqa: B950
         return self._access_service
 
     @access_service.setter
@@ -200,7 +202,8 @@ class Distribution:
 
     @property
     def download_URL(self: Distribution) -> str:
-        """URI: The URL of the downloadable file in a given format. E.g. CSV file or RDF file. The format is indicated by the distribution's dct:format and/or dcat:mediaType."""  # noqa: B950
+        """URI: The URL of the downloadable file in a given format. E.g. CSV file or RDF file. The format is indicated by the distribution's dct:format and/or dcat:mediaType."""
+        # noqa: B950
         return self._download_URL
 
     @download_URL.setter
@@ -218,7 +221,8 @@ class Distribution:
 
     @property
     def spatial_resolution_in_meters(self: Distribution) -> List[Decimal]:
-        """List[Decimal]: A list of minimum spatial separation resolvables in a dataset distribution, measured in meters."""  # noqa: B950
+        """List[Decimal]: A list of minimum spatial separation resolvables in a dataset distribution, measured in meters."""
+        # noqa: B950
         return self._spatial_resolution_in_meters
 
     @spatial_resolution_in_meters.setter
@@ -275,7 +279,8 @@ class Distribution:
 
     @property
     def compression_format(self: Distribution) -> str:
-        """URI: Link to the compression format of the distribution in which the data is contained in a compressed form, e.g. to reduce the size of the downloadable file."""  # noqa: B950
+        """URI: Link to the compression format of the distribution in which the data is contained in a compressed form, e.g. to reduce the size of the downloadable file."""
+        # noqa: B950
         return self._compression_format
 
     @compression_format.setter
@@ -284,7 +289,8 @@ class Distribution:
 
     @property
     def package_format(self: Distribution) -> str:
-        """URI: Link to the package format of the distribution in which one or more data files are grouped together, e.g. to enable a set of related files to be downloaded together."""  # noqa: B950
+        """URI: Link to the package format of the distribution in which one or more data files are grouped together, e.g. to enable a set of related files to be downloaded together."""
+        # noqa: B950
         return self._package_format
 
     @package_format.setter
@@ -292,14 +298,13 @@ class Distribution:
         self._package_format = URI(package_format)
 
     # -
-    def to_json(self):
+    def to_json(self) -> Dict:
+        """Convert the Resource to a json / dict. It will omit the non-initalized fields.
+
+        Returns:
+            Dict: The json representation of this instance.
         """
-        Convert the Resource to a json / dict. It will omit the
-        non-initalized fields.
-        :return: The json representation of this instance.
-        :rtype: dict
-        """
-        output = {"_type": type(self).__name__}
+        output: Dict = {"_type": type(self).__name__}
         # Add ins for optional top level attributes
         for k in dir(self):
             try:
@@ -320,17 +325,20 @@ class Distribution:
                     to_json = hasattr(v, "to_json") and callable(getattr(v, "to_json"))
                     output[k] = v.to_json() if to_json else v
 
-            except:
+            except AttributeError:
                 continue
 
         return output
 
     @classmethod
-    def from_json(cls, json) -> Distribution:
-        """
-        Convert a JSON (dict)
-        :param dict json: A dict representing this class.
-        :return: The object.
+    def from_json(cls, json: Dict) -> Distribution:
+        """Convert a JSON (dict).
+
+        Args:
+            json: A dict representing this class.
+
+        Returns:
+            Distribution: The object.
         """
         resource = cls()
         for key in json:
@@ -346,7 +354,7 @@ class Distribution:
         return resource
 
     @classmethod
-    def _attr_from_json(cls, attr: str, json_dict: Dict) -> any:
+    def _attr_from_json(cls: Any, attr: str, json_dict: Dict) -> Any:
         if attr == "access_service":
             # Prevent circular import
             clazz = getattr(__import__("datacatalogtordf"), "DataService")

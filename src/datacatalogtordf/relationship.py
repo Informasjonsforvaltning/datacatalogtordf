@@ -16,10 +16,10 @@ Example:
 """
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING, Union, Dict
+from typing import Any, Dict, Optional, TYPE_CHECKING, Union
 
 from rdflib import Graph, Namespace, RDF, URIRef
-from skolemizer import Skolemizer
+from skolemizer import Skolemizer  # type: ignore
 
 from .uri import URI
 
@@ -77,12 +77,11 @@ class Relationship:
         self._relation = relation
 
     # -
-    def to_json(self):
-        """
-        Convert the Resource to a json / dict. It will omit the
-        non-initalized fields.
-        :return: The json representation of this instance.
-        :rtype: dict
+    def to_json(self) -> Dict:
+        """Convert the Resource to a json / dict. It will omit the non-initalized fields.
+
+        Returns:
+            Dict: The json representation of this instance.
         """
         output = {"_type": type(self).__name__}
         # Add ins for optional top level attributes
@@ -103,11 +102,14 @@ class Relationship:
         return output
 
     @classmethod
-    def from_json(cls, json) -> Relationship:
-        """
-        Convert a JSON (dict)
-        :param dict json: A dict representing this class.
-        :return: The object.
+    def from_json(cls, json: Dict) -> Relationship:
+        """Convert a JSON (dict).
+
+        Args:
+            json: A dict representing this class.
+
+        Returns:
+            Relationship: The object.
         """
         resource = cls()
         for key in json:
@@ -124,7 +126,7 @@ class Relationship:
         return resource
 
     @classmethod
-    def _attr_from_json(cls, attr: str, json_dict: Dict) -> any:
+    def _attr_from_json(cls: Any, attr: str, json_dict: Dict) -> Any:
         if attr == "relation":
             if (
                 isinstance(json_dict, dict)

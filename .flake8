@@ -2,7 +2,7 @@
 select = ANN,B,B9,BLK,C,D,DAR,E,F,I,S,W
 docstring-convention = google
 max-complexity = 10
-ignore = ANN101,ANN401,B009,E203,E501,W503
+ignore = ANN101,ANN102,ANN401,B009,E203,E501,W503
 max-line-length = 88
 per-file-ignores = 
     __init__.py:F401

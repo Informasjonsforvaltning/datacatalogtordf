@@ -16,10 +16,10 @@ Example:
 """
 from __future__ import annotations
 
-from typing import Optional, Union
+from typing import Dict, Optional, Union
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
-from skolemizer import Skolemizer
+from skolemizer import Skolemizer  # type: ignore
 
 from .uri import URI
 
@@ -93,12 +93,11 @@ class Location:
         self._centroid = centroid
 
     # -
-    def to_json(self):
-        """
-        Convert the Resource to a json / dict. It will omit the
-        non-initalized fields.
-        :return: The json representation of this instance.
-        :rtype: dict
+    def to_json(self) -> Dict:
+        """Convert the Resource to a json / dict. It will omit the non-initalized fields.
+
+        Returns:
+            Dict: The json representation of this instance.
         """
         output = {"_type": type(self).__name__}
         # Add ins for optional top level attributes
@@ -119,11 +118,14 @@ class Location:
         return output
 
     @classmethod
-    def from_json(cls, json) -> Location:
-        """
-        Convert a JSON (dict)
-        :param dict json: A dict representing this class.
-        :return: The object.
+    def from_json(cls, json: Dict) -> Location:
+        """Convert a JSON (dict).
+
+        Args:
+            json: A dict representing this class.
+
+        Returns:
+            Location: The object.
         """
         resource = cls()
         for key in json:

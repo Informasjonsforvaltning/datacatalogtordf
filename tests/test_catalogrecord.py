@@ -318,7 +318,6 @@ def test_to_json_should_return_catalog_record_as_json_dict() -> None:
 
 def test_from_json_should_return_catalog_record() -> None:
     """It returns a catalog json dict."""
-
     dataset = Dataset()
     dataset.identifier = "http://dataset-identifier"
     dataset.title = {"en": "dataset title"}

@@ -8,14 +8,14 @@ from rdflib.compare import graph_diff, isomorphic
 from skolemizer.testutils import skolemization
 
 from datacatalogtordf import (
+    Agent,
+    Contact,
     Dataset,
     DatasetSeries,
     Distribution,
     InvalidURIError,
     Location,
     PeriodOfTime,
-    Contact,
-    Agent,
     Relationship,
 )
 

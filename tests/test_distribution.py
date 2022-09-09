@@ -644,7 +644,6 @@ def test_set_format_with_list_of_invalid_formats() -> None:
 
 def test_to_json_should_return_distribution_as_json_dict() -> None:
     """It returns a catalog json dict."""
-
     dist = Distribution()
     dist.identifier = "http://distribution-identifier"
     dist.title = {"en": "dist title"}
@@ -668,7 +667,6 @@ def test_to_json_should_return_distribution_as_json_dict() -> None:
 
 def test_from_json_should_return_distribution() -> None:
     """It returns a distribution."""
-
     data_service = DataService()
     data_service.identifier = "http://data-service-identifier"
 
