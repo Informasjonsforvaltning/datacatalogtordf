@@ -31,7 +31,7 @@ Example:
 """
 from __future__ import annotations
 
-from typing import Dict, Optional, Union
+from typing import Any, Dict, Optional, Union
 
 from rdflib import Graph, Namespace, URIRef
 
@@ -49,12 +49,10 @@ class DatasetSeries(Dataset):
         identifier (URI): the identifier of the dataset-series.
     """
 
-    __slots__ = (
-        "_first",
-        "_last",
-    )
+    __slots__ = "_type", "_first", "_last"
 
     # Types
+    _type: URIRef
     _first: Dataset  # 6.4.31
     _last: Dataset  # 6.4.32
 
@@ -126,7 +124,7 @@ class DatasetSeries(Dataset):
     # -
 
     @classmethod
-    def _attr_from_json(cls, attr: str, json_dict: Dict) -> any:
+    def _attr_from_json(cls, attr: str, json_dict: Dict) -> Any:
         obj = Dataset._attr_from_json(attr, json_dict)
         if obj is not None:
             return obj

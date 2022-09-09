@@ -21,15 +21,14 @@ Example:
 """
 from __future__ import annotations
 
-from typing import List, Optional, Union, Dict
+from typing import Any, Dict, List, Optional, Union
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
-from skolemizer import Skolemizer
+from skolemizer import Skolemizer  # type: ignore
 
 from .catalogrecord import CatalogRecord
 from .dataservice import DataService
 from .dataset import Dataset
-from .resource import Resource
 from .uri import URI
 
 DCT = Namespace("http://purl.org/dc/terms/")
@@ -54,6 +53,7 @@ class Catalog(Dataset):
         "_catalogs",
         "_catalogrecords",
         "_dct_identifier",
+        "_type",
     )
 
     _homepage: URI
@@ -64,6 +64,7 @@ class Catalog(Dataset):
     _catalogs: List[Catalog]
     _catalogrecords: List[CatalogRecord]
     _dct_identifier: str
+    _type: URIRef
 
     def __init__(self, identifier: Optional[str] = None) -> None:
         """Inits catalog object with default values."""
@@ -99,12 +100,12 @@ class Catalog(Dataset):
         self._themes = themes
 
     @property
-    def has_parts(self: Catalog) -> List[Resource]:
-        """List[Resource]: A list of resources that is listed in the catalog."""
+    def has_parts(self: Catalog) -> List[Catalog]:
+        """List[Catalog]: A list of resources that is listed in the catalog."""
         return self._has_parts
 
     @has_parts.setter
-    def has_parts(self: Catalog, has_parts: List[Resource]) -> None:
+    def has_parts(self: Catalog, has_parts: List[Catalog]) -> None:
         self._has_parts = has_parts
 
     @property
@@ -318,7 +319,7 @@ class Catalog(Dataset):
                 )
 
     @classmethod
-    def _attr_from_json(cls, attr: str, json_dict: Dict) -> any:
+    def _attr_from_json(cls: Any, attr: str, json_dict: Dict) -> Any:
         obj = Dataset._attr_from_json(attr, json_dict)
         if obj is not None:
             return obj

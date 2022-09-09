@@ -7,13 +7,7 @@ from rdflib import Graph, Literal, Namespace, RDF, URIRef
 from rdflib.compare import graph_diff, isomorphic
 from skolemizer.testutils import skolemization, SkolemUtils
 
-from datacatalogtordf import (
-    Catalog,
-    CatalogRecord,
-    DataService,
-    Dataset,
-    Agent,
-)
+from datacatalogtordf import Agent, Catalog, CatalogRecord, DataService, Dataset
 from tests.testutils import assert_isomorphic
 
 DCT = Namespace("http://purl.org/dc/terms/")

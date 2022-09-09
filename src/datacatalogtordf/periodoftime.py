@@ -116,11 +116,11 @@ class PeriodOfTime:
     def to_json(self) -> Dict:
         """Convert the Resource to a json / dict. It will omit the non-initalized fields.
 
-        :returns: The json representation of this instance.
-        :rtype: dict
+        Returns:
+            Dict: The json representation of this instance.
         """
         output = {"_type": type(self).__name__}
-        # Add ins for optional top level attributes
+        # Add ins for optional top level attributespyme
         for k in dir(self):
             try:
                 v = getattr(self, k)
@@ -137,10 +137,14 @@ class PeriodOfTime:
         return output
 
     @classmethod
-    def from_json(cls, json) -> PeriodOfTime:
+    def from_json(cls, json: Dict) -> PeriodOfTime:
         """Convert a JSON (dict).
-        :param dict json: A dict representing this class.
-        :return: The object.
+
+        Args:
+            json: A dict representing this class.
+
+        Returns:
+            PeriodOfTime: The object.
         """
         resource = cls()
         for key in json:

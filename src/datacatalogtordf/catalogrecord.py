@@ -17,13 +17,10 @@ Example:
 """
 from __future__ import annotations
 
-from typing import Dict, List, Optional, TYPE_CHECKING, Union
+from typing import Any, Dict, List, Optional, Union
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
-from skolemizer import Skolemizer
-
-if TYPE_CHECKING:  # pragma: no cover
-    pass
+from skolemizer import Skolemizer  # type: ignore
 
 from .periodoftime import Date
 from .resource import Resource
@@ -117,7 +114,8 @@ class CatalogRecord:
 
     @property
     def primary_topic(self: CatalogRecord) -> Resource:
-        """Resource: The dcat:Resource (dataset or service) described in the record."""  # noqa: B950
+        """Resource: The dcat:Resource (dataset or service) described in the record."""
+        # noqa: B950
         return self._primary_topic
 
     @primary_topic.setter
@@ -138,14 +136,13 @@ class CatalogRecord:
         self._conforms_to = conforms_to
 
     # -
-    def to_json(self):
+    def to_json(self) -> Dict:
+        """Convert the Resource to a json / dict. It will omit the non-initalized fields.
+
+        Returns:
+            Dict: The json representation of this instance.
         """
-        Convert the Resource to a json / dict. It will omit the
-        non-initalized fields.
-        :return: The json representation of this instance.
-        :rtype: dict
-        """
-        output = {"_type": type(self).__name__}
+        output: Dict = {"_type": type(self).__name__}
         # Add ins for optional top level attributes
         for k in dir(self):
             try:
@@ -166,17 +163,20 @@ class CatalogRecord:
                     to_json = hasattr(v, "to_json") and callable(getattr(v, "to_json"))
                     output[k] = v.to_json() if to_json else v
 
-            except:
+            except AttributeError:
                 continue
 
         return output
 
     @classmethod
-    def from_json(cls, json) -> CatalogRecord:
-        """
-        Convert a JSON (dict)
-        :param dict json: A dict representing this class.
-        :return: The object.
+    def from_json(cls, json: Dict) -> CatalogRecord:
+        """Convert a JSON (dict).
+
+        Args:
+            json: A dict representing this class.
+
+        Returns:
+            CatalogRecord: The object.
         """
         resource = cls()
         for key in json:
@@ -192,7 +192,7 @@ class CatalogRecord:
         return resource
 
     @classmethod
-    def _attr_from_json(cls, attr: str, json_dict: Dict) -> any:
+    def _attr_from_json(cls, attr: str, json_dict: Dict) -> Any:
         if attr == "primary_topic":
             for class_name in ["Catalog", "Dataset", "DatasetSeries", "DataService"]:
                 clazz = getattr(__import__("datacatalogtordf"), class_name)

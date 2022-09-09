@@ -33,7 +33,7 @@ flake8-black = "^0.3.3"
 flake8-bugbear = "^22.4.25"
 flake8-docstrings = "^1.5.0"
 flake8-import-order = "^0.18.1"
-mypy = "^0.950"
+mypy = "0.971"
 nox = "^2022.1.7"
 nox-poetry = "^1.0.0"
 pytest = "^7.1.2"
@@ -63,6 +63,8 @@ show_error_codes = true
 show_error_context = true
 strict = false
 warn_unreachable = true
+implicit_reexport = true
+ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 ignore_missing_imports = true

@@ -218,7 +218,6 @@ def test_to_json_should_return_data_service_as_json_dict() -> None:
     data_service.title = {"en": "data-service title"}
     data_service.description = {"en": "data-service description"}
     data_service.conforms_to = ["http://data-service-conforms-to"]
-    data_service.listing_date = "2022-01-01"
     data_service.modification_date = "2022-01-02"
     data_service.keyword = {"en": "keyword"}
     json = data_service.to_json()
@@ -232,7 +231,6 @@ def test_to_json_should_return_data_service_as_json_dict() -> None:
         "keyword": {"en": "keyword"},
         "landing_page": [],
         "language": [],
-        "listing_date": "2022-01-01",
         "media_types": [],
         "modification_date": "2022-01-02",
         "qualified_attributions": [],
@@ -246,7 +244,6 @@ def test_to_json_should_return_data_service_as_json_dict() -> None:
 
 def test_from_json_should_return_data_service() -> None:
     """It returns a catalog json dict."""
-
     dataset = Dataset()
     dataset.identifier = "http://dataset-identifier"
     dataset.title = {"en": "dataset title"}
@@ -260,8 +257,6 @@ def test_from_json_should_return_data_service() -> None:
     data_service.title = {"nb": "Service A", "en": "Service A"}
     data_service.description = {"nb": "Beskrivelse", "en": "Description"}
     data_service.conforms_to = ["http://comforms-to"]
-    data_service.listing_date = "2022-01-01"
-    data_service.modification_date = "2022-01-02"
     data_service.servesdatasets = [dataset]
     data_service.is_referenced_by = [dataset]
 

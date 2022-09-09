@@ -9,7 +9,7 @@ Refer to sub-class for typical usage examples.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional, TYPE_CHECKING, Union
+from typing import Any, Dict, List, Optional, TYPE_CHECKING, Union
 
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 from rdflib.term import Identifier
@@ -21,7 +21,6 @@ from .uri import URI
 
 if TYPE_CHECKING:  # pragma: no cover
     from .relationship import Relationship  # pytype: disable=pyi-error
-    from .catalog import Catalog  # pytype: disable=pyi-error
 
 
 DCT = Namespace("http://purl.org/dc/terms/")
@@ -293,7 +292,11 @@ class Resource(ABC):
 
     @property
     def rights(self: Resource) -> str:
-        """URI: A link to a statement that concerns all rights not addressed with dct:license or dct:accessRights, such as copyright statements."""  # noqa: B950
+        """URI: A link to a statement that concerns all rights not addressed with dct:license or dct:accessRights, such as copyright statements.
+
+        Returns:
+            str: The link
+        """  # noqa: B950
         return self._rights
 
     @rights.setter
@@ -330,14 +333,13 @@ class Resource(ABC):
         self._prev = prev
 
     # -
-    def to_json(self):
+    def to_json(self) -> Dict:
+        """Convert the Resource to a json / dict. It will omit the non-initalized fields.
+
+        Returns:
+            Dict: The json representation of this instance.
         """
-        Convert the Resource to a json / dict. It will omit the
-        non-initalized fields.
-        :return: The json representation of this instance.
-        :rtype: dict
-        """
-        output = {"_type": type(self).__name__}
+        output: Dict = {"_type": type(self).__name__}
         # Add ins for optional top level attributes
         for k in dir(self):
             try:
@@ -358,17 +360,20 @@ class Resource(ABC):
                     to_json = hasattr(v, "to_json") and callable(getattr(v, "to_json"))
                     output[k] = v.to_json() if to_json else v
 
-            except:
+            except AttributeError:
                 continue
 
         return output
 
     @classmethod
-    def from_json(cls, json) -> Resource:
-        """
-        Convert a JSON (dict)
-        :param dict json: A dict representing this class.
-        :return: The object.
+    def from_json(cls, json: Dict) -> Resource:
+        """Convert a JSON (dict).
+
+        Args:
+            json: A dict representing this class.
+
+        Returns:
+            Resource: The object.
         """
         resource = cls()
         for key in json:
@@ -394,7 +399,7 @@ class Resource(ABC):
         return resource
 
     @classmethod
-    def _attr_from_json(cls, attr: str, json_dict: Dict) -> any:
+    def _attr_from_json(cls: Any, attr: str, json_dict: Dict) -> Any:
         if attr == "contactpoint":
             return Contact.from_json(json_dict)
         if attr == "publisher":
@@ -540,10 +545,10 @@ class Resource(ABC):
     def _contactpoint_to_graph(self: Resource) -> None:
         if getattr(self, "contactpoint", None):
             contact = self.contactpoint
-            contactPoint = BNode()
+            contact_point = BNode()
             for _s, p, o in contact._to_graph().triples((None, None, None)):
-                self._g.add((contactPoint, p, o))
-            self._g.add((URIRef(self.identifier), DCAT.contactPoint, contactPoint))
+                self._g.add((contact_point, p, o))
+            self._g.add((URIRef(self.identifier), DCAT.contactPoint, contact_point))
 
     def _creator_to_graph(self: Resource) -> None:
         if getattr(self, "creator", None):

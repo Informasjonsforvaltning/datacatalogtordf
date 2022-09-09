@@ -16,7 +16,7 @@ from __future__ import annotations
 from typing import Dict, Optional, Union
 
 from rdflib import DCTERMS, FOAF, Graph, Literal, Namespace, RDF, URIRef
-from skolemizer import Skolemizer
+from skolemizer import Skolemizer  # type: ignore
 
 from datacatalogtordf.uri import URI
 
@@ -71,12 +71,11 @@ class Document:
         self._language = URI(language)
 
     # -
-    def to_json(self):
-        """
-        Convert the Resource to a json / dict. It will omit the
-        non-initalized fields.
-        :return: The json representation of this instance.
-        :rtype: dict
+    def to_json(self) -> Dict:
+        """Convert the Resource to a json / dict. It will omit the non-initalized fields.
+
+        Returns:
+            Dict: The json representation of this instance.
         """
         output = {"_type": type(self).__name__}
         # Add ins for optional top level attributes
@@ -97,11 +96,14 @@ class Document:
         return output
 
     @classmethod
-    def from_json(cls, json) -> Document:
-        """
-        Convert a JSON (dict)
-        :param dict json: A dict representing this class.
-        :return: The object.
+    def from_json(cls, json: Dict) -> Document:
+        """Convert a JSON (dict).
+
+        Args:
+            json: A dict representing this class.
+
+        Returns:
+             Document: The object.
         """
         resource = cls()
         for key in json:

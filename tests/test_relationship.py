@@ -108,7 +108,6 @@ def test_to_graph_should_return_relation_as_graph() -> None:
 
 def test_to_json_should_return_relationship_as_json_dict() -> None:
     """It returns a catalog json dict."""
-
     dataset = Dataset()
     dataset.identifier = "http://dataset-identifier"
 
@@ -141,7 +140,6 @@ def test_to_json_should_return_relationship_as_json_dict() -> None:
 
 def test_from_json_should_return_relationship() -> None:
     """It returns a catalog json dict."""
-
     dataset = Dataset()
     dataset.identifier = "http://dataset-identifier"
 
