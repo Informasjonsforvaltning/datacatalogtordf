@@ -1,5 +1,8 @@
 [tool.poetry]
-authors = ["Stig B. Dørmænen <stigbd@gmail.com>"]
+authors = [
+  "Stig B. Dørmænen <stigbd@gmail.com>",
+  "Jeff Reiffers <jeffreiffers@gmail.com>"
+]
 classifiers = [
   "Programming Language :: Python :: 3",
   "License :: OSI Approved :: Apache Software License",
@@ -12,7 +15,7 @@ license = "Apache-2.0"
 name = "datacatalogtordf"
 readme = "README.md"
 repository = "https://github.com/Informasjonsforvaltning/datacatalogtordf"
-version = "2.1.2"
+version = "3.0.0"
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.11"
