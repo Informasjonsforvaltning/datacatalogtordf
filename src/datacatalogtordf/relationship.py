@@ -151,7 +151,7 @@ class Relationship:
         Returns:
             a rdf serialization as a bytes literal according to format.
         """
-        return self._to_graph().serialize(format=format, encoding=encoding)
+        return self._to_graph().serialize(format=format, encoding=encoding)  # pyright: ignore[reportReturnType]
 
     # -
     def _to_graph(self: Relationship) -> Graph:

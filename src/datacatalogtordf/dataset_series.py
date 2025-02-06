@@ -87,7 +87,7 @@ class DatasetSeries(Dataset):
 
     # -
 
-    def to_rdf(
+    def to_rdf( # pyright: ignore[reportIncompatibleMethodOverride]
         self: DatasetSeries,
         format: str = "turtle",
         encoding: Optional[str] = "utf-8",
@@ -119,7 +119,7 @@ class DatasetSeries(Dataset):
             include_services,
             include_models,
             include_contains_services,
-        ).serialize(format=format, encoding=encoding)
+        ).serialize(format=format, encoding=encoding)  # pyright: ignore[reportReturnType]
 
     # -
 
@@ -136,7 +136,7 @@ class DatasetSeries(Dataset):
 
         return None
 
-    def _to_graph(
+    def _to_graph( # pyright: ignore[reportIncompatibleMethodOverride]
         self: DatasetSeries,
         include_datasets: bool = True,
         include_services: bool = True,

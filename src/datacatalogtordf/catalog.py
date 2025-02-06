@@ -155,7 +155,7 @@ class Catalog(Dataset):
 
     # -
 
-    def to_rdf(
+    def to_rdf( # pyright: ignore[reportIncompatibleMethodOverride]
         self: Catalog,
         format: str = "turtle",
         encoding: Optional[str] = "utf-8",
@@ -181,11 +181,11 @@ class Catalog(Dataset):
         return self._to_graph(
             include_datasets,
             include_services,
-        ).serialize(format=format, encoding=encoding)
+        ).serialize(format=format, encoding=encoding)  # pyright: ignore[reportReturnType]
 
     # -
 
-    def _to_graph(
+    def _to_graph( # pyright: ignore[reportIncompatibleMethodOverride]
         self: Catalog,
         include_datasets: bool = True,
         include_services: bool = True,

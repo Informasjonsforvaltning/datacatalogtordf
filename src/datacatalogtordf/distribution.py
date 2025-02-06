@@ -365,7 +365,7 @@ class Distribution:
         self: Distribution, format: str = "turtle", encoding: Optional[str] = "utf-8"
     ) -> Union[bytes, str]:
         """Maps the distribution to rdf."""
-        return self._to_graph().serialize(format=format, encoding=encoding)
+        return self._to_graph().serialize(format=format, encoding=encoding)  # pyright: ignore[reportReturnType]
 
     # -
     def _to_graph(self: Distribution) -> Graph:

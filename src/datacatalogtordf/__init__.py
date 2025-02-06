@@ -8,10 +8,7 @@ Modules:
     dataservice
     distribution
 """
-try:
-    from importlib.metadata import version, PackageNotFoundError  # type: ignore
-except ImportError:  # pragma: no cover
-    from importlib_metadata import version, PackageNotFoundError  # type: ignore
+from importlib.metadata import version, PackageNotFoundError
 
 try:
     __version__ = version(__name__)
@@ -33,3 +30,23 @@ from .periodoftime import PeriodOfTime
 from .relationship import Relationship
 from .resource import Resource
 from .uri import InvalidURIError, URI
+
+__all__ = [
+    "Agent",
+    "Catalog",
+    "CatalogRecord",
+    "Contact",
+    "DataService",
+    "Dataset",
+    "DatasetSeries",
+    "Distribution",
+    "Document",
+    "InvalidDateError",
+    "InvalidDateIntervalError",
+    "Location",
+    "PeriodOfTime",
+    "Relationship",
+    "Resource",
+    "InvalidURIError",
+    "URI",
+]

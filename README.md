@@ -72,47 +72,42 @@ Will produce the following output:
 
 ### Requirements
 
-- [pyenv](https://github.com/pyenv/pyenv) (recommended)
-- python3
-- [pipx](https://github.com/pipxproject/pipx) (recommended)
-- [poetry](https://python-poetry.org/)
-- [nox](https://nox.thea.codes/en/stable/)
+You need [uv](https://docs.astral.sh/uv/) to manage dependencies and run the application.
 
-```Shell
-% pipx install poetry==1.1.13
-% pipx install nox==2022.1.7
-% pipx inject nox nox-poetry==0.9.0
+Install it with:
+
+```shell
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
+or follow the instructions on the [uv website](https://docs.astral.sh/uv/getting-started/installation/).
 
 ### Install developer tools
 
 ```Shell
 % git clone https://github.com/Informasjonsforvaltning/datacatalogtordf.git
 % cd datacatalogtordf
-% pyenv install 3.8.12
-% pyenv install 3.9.10
-% pyenv local 3.8.12 3.9.10 
-% poetry install
+% uv sync
 ```
+
 
 ### Run all sessions
 
 ```Shell
-% nox
+% uv run poe release
 ```
 
 ### Run all tests with coverage reporting
 
 ```Shell
-% nox -rs tests
+% uv run poe tests
 ```
 
 ### Debugging
 
-You can enter into [Pdb](https://docs.python.org/3/library/pdb.html) by passing `--pdb` to pytest:
+You can set breakpoints directly in code by using the function `breakpoint()`.
+
+Run the tests with the `--pdb` flag to enter the debugger when a test fails:
 
 ```Shell
-nox -rs tests -- --pdb
+% uv run --python 3.13 pytest --capture=no --pdb
 ```
-
-You can set breakpoints directly in code by using the function `breakpoint()`.

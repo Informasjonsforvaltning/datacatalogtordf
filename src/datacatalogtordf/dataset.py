@@ -231,7 +231,7 @@ class Dataset(Resource):
         """
         return self._to_graph(include_distributions).serialize(
             format=format, encoding=encoding
-        )
+        )  # type: ignore[reportReturnType]
 
     def _to_graph(
         self: Dataset,
