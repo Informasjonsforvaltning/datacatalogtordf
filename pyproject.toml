@@ -32,6 +32,9 @@ dev = [
     "pytest-cov>=5.0.0",
     "pytest-mock>=3.14.0",
     "ruff>=0.9.4",
+    "sphinx>=7.1.2",
+    "sphinx-autodoc-typehints>=2.0.1",
+    "xdoctest>=1.2.0",
 ]
 
 [tool.coverage.paths]
@@ -66,4 +69,6 @@ test = [
     { cmd = "uv run --python 3.12 pytest -s --cov --cov-report=term-missing --cov-report=html" },
     { cmd = "uv run --python 3.13 pytest -s --cov --cov-report=term-missing --cov-report=html" },
 ]
-release = ["lint", "pyright", "check-deps", "audit", "test"]
+xdoctest = "uv run xdoctest datacatalogtordf"
+build_docs = "uv run sphinx-build docs docs/_build"
+release = ["lint", "pyright", "check-deps", "audit", "test", "xdoctest"]

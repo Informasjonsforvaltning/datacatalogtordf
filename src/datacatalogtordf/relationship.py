@@ -9,7 +9,6 @@ Example:
     >>>
     >>> relationship = Relationship()
     >>> relationship.identifier = "http://example.com/relations/1"
-    >>> relationship.title = {"en": "Title of relationship"}
     >>>
     >>> bool(relationship.to_rdf())
     True
