@@ -63,6 +63,7 @@ class Resource(ABC):
         "_has_policy",
         "_is_referenced_by",
         "_prev",
+        "_type"
     )
 
     # Types
@@ -446,7 +447,7 @@ class Resource(ABC):
             >>> bool(catalog.to_rdf())
             True
         """
-        return self._to_graph().serialize(format=format, encoding=encoding)
+        return self._to_graph().serialize(format=format, encoding=encoding) # pyright: ignore[reportReturnType]
 
     # -
     def _to_graph(self: Resource) -> Graph:

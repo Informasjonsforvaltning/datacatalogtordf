@@ -18,7 +18,7 @@ from typing import Dict, Optional, Union
 from rdflib import DCTERMS, FOAF, Graph, Literal, Namespace, RDF, URIRef
 from skolemizer import Skolemizer  # type: ignore
 
-from datacatalogtordf.uri import URI
+from .uri import URI
 
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
 
@@ -125,7 +125,7 @@ class Document:
         Returns:
             a rdf serialization as a bytes literal according to format.
         """
-        return self._to_graph().serialize(format=format, encoding=encoding)
+        return self._to_graph().serialize(format=format, encoding=encoding)  # pyright: ignore[reportReturnType]
 
     def _to_graph(self: Document) -> Graph:
 

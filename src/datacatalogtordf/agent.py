@@ -166,7 +166,7 @@ class Agent:
         Returns:
             a rdf serialization as a bytes literal according to format.
         """
-        return self._to_graph().serialize(format=format, encoding=encoding)
+        return self._to_graph().serialize(format=format, encoding=encoding) # type: ignore[reportReturnType]
 
     # -
     def _to_graph(self: Agent) -> Graph:

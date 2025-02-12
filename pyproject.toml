@@ -1,52 +1,41 @@
-[tool.poetry]
+[project]
+name = "datacatalogtordf"
+version = "3.0.0"
+description = "A library for mapping a data catalog to rdf"
+readme = "README.md"
+requires-python = ">=3.8,<3.14"
 authors = [
-  "Stig B. Dørmænen <stigbd@gmail.com>",
-  "Jeff Reiffers <jeffreiffers@gmail.com>"
+    { name = "Jeff Reiffers", email = "jeffreiffers@gmail.com" },
+    { name = "Stig B. Dørmænen", email = "stigbd@gmail.com" },
 ]
 classifiers = [
-  "Programming Language :: Python :: 3",
-  "License :: OSI Approved :: Apache Software License",
-  "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
 ]
-description = "A library for mapping a data catalog to rdf"
-documentation = "https://datacatalogtordf.readthedocs.io"
-homepage = "https://github.com/Informasjonsforvaltning/datacatalogtordf"
 license = "Apache-2.0"
-name = "datacatalogtordf"
-readme = "README.md"
-repository = "https://github.com/Informasjonsforvaltning/datacatalogtordf"
-version = "3.0.0"
+dependencies = ["rdflib>=6.3.2", "skolemizer>=1.1.0"]
 
-[tool.poetry.dependencies]
-python = ">=3.8,<3.11"
-rdflib = "^6.1.1"
-skolemizer = "^1.1.0"
+[project.urls]
+Homepage = "https://github.com/Informasjonsforvaltning/datacatalogtordf"
+Documentation = "https://datacatalogtordf.readthedocs.io"
+Repository = "https://github.com/Informasjonsforvaltning/datacatalogtordf"
+Issues = "https://github.com/Informasjonsforvaltning/datacatalogtordf/issues"
 
-[tool.poetry.dev-dependencies]
-Sphinx = "^5.0.1"
-bandit = "^1.7.4"
-black = "^22.1.0"
-codecov = "^2.0.16"
-coverage = "^6.4"
-darglint = "^1.5.5"
-flake8 = "^4.0.1"
-flake8-annotations = "^2.4.1"
-flake8-bandit = "^3.0.0"
-flake8-black = "^0.3.3"
-flake8-bugbear = "^22.4.25"
-flake8-docstrings = "^1.5.0"
-flake8-import-order = "^0.18.1"
-mypy = "0.971"
-nox = "^2022.1.7"
-nox-poetry = "^1.0.0"
-pytest = "^7.1.2"
-pytest-cov = "^3.0.0"
-pytest-mock = "^3.6.1"
-pytype = "^2022.5.19"
-safety = "^1.9.0"
-sphinx-autodoc-typehints = "^1.11.1"
-xdoctest = "^1.0.0"
-sphinxcontrib-napoleon = "^0.7"
+[dependency-groups]
+dev = [
+    "deptry>=0.20.0",
+    "pip-audit>=2.7.3",
+    "poethepoet>=0.30.0",
+    "pyright>=1.1.393",
+    "pytest>=8.3.4",
+    "pytest-cov>=5.0.0",
+    "pytest-mock>=3.14.0",
+    "ruff>=0.9.4",
+    "sphinx>=7.1.2",
+    "sphinx-autodoc-typehints>=2.0.1",
+    "xdoctest>=1.2.0",
+]
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
@@ -59,24 +48,27 @@ source = ["datacatalogtordf"]
 fail_under = 100
 show_missing = true
 
-[tool.mypy]
-pretty = true
-show_column_numbers = true
-show_error_codes = true
-show_error_context = true
-strict = false
-warn_unreachable = true
-implicit_reexport = true
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-ignore_missing_imports = true
-module = [
-  "concepttordf.*",
-  "skolemizer.*",
-  "pytest_mock.*",
-]
-
 [build-system]
-build-backend = "poetry.core.masonry.api"
-requires = ["poetry-core>=1.0.0"]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.deptry]
+extend_exclude = ["examples"]
+
+[tool.poe.tasks]
+format = "uv run ruff format"
+lint = "uv run ruff check --fix"
+pyright = "uv run pyright"
+check-deps = "uv run deptry ."
+audit = "uv run pip-audit"
+test = [
+    { cmd = "uv run --python 3.8 pytest -s --cov --cov-report=term-missing --cov-report=html" },
+    { cmd = "uv run --python 3.9 pytest -s --cov --cov-report=term-missing --cov-report=html" },
+    { cmd = "uv run --python 3.10 pytest -s --cov --cov-report=term-missing --cov-report=html" },
+    { cmd = "uv run --python 3.11 pytest -s --cov --cov-report=term-missing --cov-report=html" },
+    { cmd = "uv run --python 3.12 pytest -s --cov --cov-report=term-missing --cov-report=html" },
+    { cmd = "uv run --python 3.13 pytest -s --cov --cov-report=term-missing --cov-report=html" },
+]
+xdoctest = "uv run xdoctest datacatalogtordf"
+build_docs = "uv run sphinx-build docs docs/_build"
+release = ["lint", "pyright", "check-deps", "audit", "test", "xdoctest"]

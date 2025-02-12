@@ -1,0 +1,33 @@
+name: Install, build and test
+
+on:
+  pull_request:
+    types: [ready_for_review, opened, reopened, synchronize]
+    branches:
+      - main
+
+jobs:
+  install-build-and-test:
+    name: Install, build and test
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          # Install a specific version of uv.
+          version: "0.5.30"
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-versions"
+
+      - name: Install the project
+        run: uv sync --all-extras --dev
+
+      - name: Run linters, checks and tests
+        run: |
+          uv run poe release

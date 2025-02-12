@@ -158,7 +158,7 @@ class PeriodOfTime:
         self: PeriodOfTime, format: str = "turtle", encoding: Optional[str] = "utf-8"
     ) -> Union[bytes, str]:
         """Maps the period_of_time to rdf."""
-        return self._to_graph().serialize(format=format, encoding=encoding)
+        return self._to_graph().serialize(format=format, encoding=encoding)  # pyright: ignore[reportReturnType]
 
     # -
     def _to_graph(self: PeriodOfTime) -> Graph:
