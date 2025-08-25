@@ -11,6 +11,7 @@ Example:
     >>> document.identifier = "http://example.com/documents/1"
     >>> document.title = {"en": "The Python Language Reference Manual"}
 """
+
 from __future__ import annotations
 
 from typing import Dict, Optional, Union
@@ -128,7 +129,6 @@ class Document:
         return self._to_graph().serialize(format=format, encoding=encoding)
 
     def _to_graph(self: Document) -> Graph:
-
         if not getattr(self, "identifier", None):
             self.identifier = Skolemizer.add_skolemization()
 

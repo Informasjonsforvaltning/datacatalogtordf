@@ -1,4 +1,5 @@
 """Test cases for the dataset_series module."""
+
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
 

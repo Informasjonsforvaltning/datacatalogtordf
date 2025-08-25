@@ -6,10 +6,11 @@ according to the
 
 Refer to sub-class for typical usage examples.
 """
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, TYPE_CHECKING, Union
+from typing import Any, cast, Dict, List, Optional, TYPE_CHECKING, Union
 
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 from rdflib.term import Identifier
@@ -52,6 +53,7 @@ class Resource(ABC):
         "_publisher",
         "_identifier",
         "_theme",
+        "_type",
         "_type_genre",
         "_resource_relation",
         "_qualified_relation",
@@ -79,6 +81,7 @@ class Resource(ABC):
     _publisher: Union[Agent, str]  # 6.4.10
     _identifier: URI  # 6.4.11
     _theme: List[str]  # 6.4.12
+    _type: URIRef  # Resource type
     _type_genre: URI  # 6.4.13
     _resource_relation: List[str]  # 6.4.14
     _qualified_relation: List[Relationship]  # 6.4.15
@@ -450,7 +453,6 @@ class Resource(ABC):
 
     # -
     def _to_graph(self: Resource) -> Graph:
-
         # Set up graph and namespaces:
         self._g = Graph()
         self._g.bind("dct", DCT)
@@ -487,18 +489,22 @@ class Resource(ABC):
 
     def _publisher_to_graph(self: Resource) -> None:
         if getattr(self, "publisher", None):
-            if type(self.publisher) is str:
+            if isinstance(self.publisher, str):
                 self._g.add(
                     (URIRef(self.identifier), DCT.publisher, URIRef(self.publisher))
                 )
-            elif type(self.publisher) is Agent:
+            elif isinstance(self.publisher, Agent):
                 _agent: Identifier
-                if getattr(self.publisher, "identifier", None):
-                    _agent = URIRef(self.publisher.identifier)
+                publisher_agent = cast(Agent, self.publisher)
+                if (
+                    hasattr(publisher_agent, "identifier")
+                    and publisher_agent.identifier
+                ):
+                    _agent = URIRef(publisher_agent.identifier)
                 else:
                     _agent = BNode()
 
-                for _s, p, o in self.publisher._to_graph().triples((None, None, None)):
+                for _s, p, o in publisher_agent._to_graph().triples((None, None, None)):
                     self._g.add((_agent, p, o))
                 self._g.add((URIRef(self.identifier), DCT.publisher, _agent))
 

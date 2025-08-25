@@ -1,4 +1,5 @@
 """Test cases for the location module."""
+
 from pytest_mock import MockFixture
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic

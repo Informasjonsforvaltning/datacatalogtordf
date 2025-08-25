@@ -1,4 +1,5 @@
 """URI helper module for very basic validation of a uri."""
+
 from __future__ import annotations
 
 from .exceptions import InvalidURIError

@@ -1,4 +1,5 @@
 """Test cases for the distribution module."""
+
 from decimal import Decimal
 
 import pytest

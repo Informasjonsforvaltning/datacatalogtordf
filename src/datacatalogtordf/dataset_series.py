@@ -29,6 +29,7 @@ Example:
     True
 
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, Optional, Union
@@ -143,7 +144,6 @@ class DatasetSeries(Dataset):
         include_models: bool = True,
         include_contains_services: bool = True,
     ) -> Graph:
-
         super(DatasetSeries, self)._to_graph()
 
         self._first_to_graph()

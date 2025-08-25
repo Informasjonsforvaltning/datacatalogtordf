@@ -1,4 +1,5 @@
 """Test cases for the dataset module."""
+
 from decimal import Decimal
 
 import pytest

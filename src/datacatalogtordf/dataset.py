@@ -19,6 +19,7 @@ Example:
     >>> bool(dataset.to_rdf())
     True
 """
+
 from __future__ import annotations
 
 from decimal import Decimal
@@ -237,7 +238,6 @@ class Dataset(Resource):
         self: Dataset,
         include_distributions: bool = True,
     ) -> Graph:
-
         if not getattr(self, "identifier", None):
             self.identifier = Skolemizer.add_skolemization()
 
@@ -277,7 +277,6 @@ class Dataset(Resource):
     def _distributions_to_graph(self: Dataset) -> None:
         if getattr(self, "distributions", None):
             for distribution in self._distributions:
-
                 if not getattr(distribution, "identifier", None):
                     distribution.identifier = Skolemizer.add_skolemization()
 
@@ -304,7 +303,6 @@ class Dataset(Resource):
             for spatial in self.spatial:
                 _location: Union[Identifier, None] = None
                 if isinstance(spatial, Location):
-
                     if not getattr(spatial, "identifier", None):
                         _location = BNode()
                     else:

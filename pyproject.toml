@@ -5,6 +5,9 @@ authors = [
 ]
 classifiers = [
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
   "License :: OSI Approved :: Apache Software License",
   "Operating System :: OS Independent",
 ]
@@ -18,35 +21,39 @@ repository = "https://github.com/Informasjonsforvaltning/datacatalogtordf"
 version = "3.0.0"
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.11"
-rdflib = "^6.1.1"
+python = ">=3.10,<3.13"
+rdflib = "^7.0.0"
 skolemizer = "^1.1.0"
 
 [tool.poetry.dev-dependencies]
-Sphinx = "^5.0.1"
-bandit = "^1.7.4"
-black = "^22.1.0"
-codecov = "^2.0.16"
-coverage = "^6.4"
-darglint = "^1.5.5"
-flake8 = "^4.0.1"
-flake8-annotations = "^2.4.1"
-flake8-bandit = "^3.0.0"
-flake8-black = "^0.3.3"
-flake8-bugbear = "^22.4.25"
-flake8-docstrings = "^1.5.0"
-flake8-import-order = "^0.18.1"
-mypy = "0.971"
-nox = "^2022.1.7"
+Sphinx = "^7.2.6"
+bandit = "^1.7.5"
+black = ">=24.3.0"
+codecov = "^2.1.13"
+coverage = "^7.4.0"
+darglint = "^1.8.1"
+flake8 = "^7.0.0"
+flake8-annotations = "^2.9.1"
+flake8-bandit = "^4.1.1"
+flake8-black = "^0.3.6"
+flake8-bugbear = "^24.12.12"
+flake8-docstrings = "^1.7.0"
+flake8-import-order = "^0.18.2"
+mypy = "^1.8.0"
+nox = "^2023.4.22"
 nox-poetry = "^1.0.0"
-pytest = "^7.1.2"
-pytest-cov = "^3.0.0"
-pytest-mock = "^3.6.1"
-pytype = "^2022.5.19"
-safety = "^1.9.0"
-sphinx-autodoc-typehints = "^1.11.1"
-xdoctest = "^1.0.0"
+pytest = "^7.4.4"
+pytest-cov = "^4.1.0"
+pytest-mock = "^3.12.0"
+pytype = "^2023.12.7"
+safety = "<2.4.0"
+sphinx-autodoc-typehints = "^1.25.3"
+xdoctest = "^1.1.2"
 sphinxcontrib-napoleon = "^0.7"
+
+
+
+
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]

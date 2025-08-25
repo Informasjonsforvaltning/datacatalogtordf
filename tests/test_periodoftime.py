@@ -1,4 +1,5 @@
 """Test cases for the relationship module."""
+
 import pytest
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic

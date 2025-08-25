@@ -1,4 +1,6 @@
 name: TestPyPI
+permissions:
+  contents: read
 on:
   push:
     branches:
@@ -7,7 +9,7 @@ jobs:
   test_pypi:
     uses: Informasjonsforvaltning/workflows/.github/workflows/test-pypi.yaml@main
     with:
-      python_version: '3.10'
+      python_version: "3.10"
       python_architecture: x64
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

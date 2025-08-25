@@ -15,6 +15,7 @@ Example:
     True
 
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional, Union
@@ -208,7 +209,6 @@ class CatalogRecord:
 
     # -
     def _to_graph(self: CatalogRecord) -> Graph:
-
         if not getattr(self, "identifier", None):
             self.identifier = Skolemizer.add_skolemization()
 
@@ -274,7 +274,6 @@ class CatalogRecord:
 
     def _primary_topic_to_graph(self: CatalogRecord) -> None:
         if getattr(self, "primary_topic", None):
-
             if not getattr(self.primary_topic, "identifier", None):
                 self.primary_topic.identifier = Skolemizer.add_skolemization()
 

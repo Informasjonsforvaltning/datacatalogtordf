@@ -13,6 +13,7 @@ Example:
     >>> bool(contact.to_rdf())
     True
 """
+
 from __future__ import annotations
 
 from typing import Dict, Optional
@@ -139,7 +140,6 @@ class Contact:
         return resource
 
     def _to_graph(self) -> Graph:
-
         self._add_contact_to_graph()
 
         return self._g

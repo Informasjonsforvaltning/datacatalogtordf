@@ -1,4 +1,5 @@
 """Test cases for the dataset module."""
+
 import pytest
 from pytest_mock import MockFixture
 from rdflib import Graph

@@ -1,4 +1,5 @@
 """Exeptions module for datacatalogtordf."""
+
 from typing import Optional
 
 __all__ = ["Error", "InvalidDateError", "InvalidDateIntervalError"]
