@@ -728,9 +728,9 @@ def test_to_graph_should_return_qualified_attributions() -> None:
     resource.identifier = "http://example.com/datasets/1"
     qualified_attribution = {}
     qualified_attribution["agent"] = "http://example.com/agents/1"
-    qualified_attribution[
-        "hadrole"
-    ] = "http://registry.it.csiro.au/def/isotc211/CI_RoleCode/distributor"
+    qualified_attribution["hadrole"] = (
+        "http://registry.it.csiro.au/def/isotc211/CI_RoleCode/distributor"
+    )
     resource.qualified_attributions.append(qualified_attribution)
 
     src = """

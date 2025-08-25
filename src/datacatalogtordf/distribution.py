@@ -14,6 +14,7 @@ Example:
     >>> bool(distribution.to_rdf())
     True
 """
+
 from __future__ import annotations
 
 from decimal import Decimal
@@ -369,7 +370,6 @@ class Distribution:
 
     # -
     def _to_graph(self: Distribution) -> Graph:
-
         if not getattr(self, "identifier", None):
             self.identifier = Skolemizer.add_skolemization()
 
@@ -473,7 +473,6 @@ class Distribution:
 
     def _access_service_to_graph(self: Distribution) -> None:
         if getattr(self, "access_service", None):
-
             if not getattr(self.access_service, "identifier", None):
                 self.access_service.identifier = Skolemizer.add_skolemization()
 

@@ -14,6 +14,7 @@ Example:
     >>> bool(dataservice.to_rdf())
     True
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional, TYPE_CHECKING
@@ -125,7 +126,6 @@ class DataService(Resource):
         return resource
 
     def _to_graph(self: DataService) -> Graph:
-
         if not getattr(self, "identifier", None):
             self.identifier = Skolemizer.add_skolemization()
 
@@ -146,13 +146,11 @@ class DataService(Resource):
 
     # -
     def _endpointURL_to_graph(self: DataService) -> None:
-
         self._g.add(
             (URIRef(self.identifier), DCAT.endpointURL, URIRef(self.endpointURL))
         )
 
     def _endpointDescription_to_graph(self: DataService) -> None:
-
         self._g.add(
             (
                 URIRef(self.identifier),
@@ -162,9 +160,7 @@ class DataService(Resource):
         )
 
     def _servesdatasets_to_graph(self: DataService) -> None:
-
         for dataset in self._servesdatasets:
-
             if not getattr(dataset, "identifier", None):
                 dataset.identifier = Skolemizer.add_skolemization()
 
@@ -177,7 +173,6 @@ class DataService(Resource):
             )
 
     def _media_type_to_graph(self: DataService) -> None:
-
         for _media_type in self.media_types:
             self._g.add((URIRef(self.identifier), DCAT.mediaType, URIRef(_media_type)))
 

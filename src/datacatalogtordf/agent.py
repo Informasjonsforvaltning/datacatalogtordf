@@ -170,7 +170,6 @@ class Agent:
 
     # -
     def _to_graph(self: Agent) -> Graph:
-
         if not getattr(self, "identifier", None):
             self.identifier = Skolemizer.add_skolemization()
 

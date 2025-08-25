@@ -14,6 +14,7 @@ Example:
     >>> bool(period_of_time.to_rdf())
     True
 """
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -162,7 +163,6 @@ class PeriodOfTime:
 
     # -
     def _to_graph(self: PeriodOfTime) -> Graph:
-
         self._ref = BNode()
         self._g.add((self._ref, RDF.type, DCT.PeriodOfTime))
 

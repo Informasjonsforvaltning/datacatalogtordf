@@ -14,6 +14,7 @@ Example:
     >>> bool(relationship.to_rdf())
     True
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, Optional, TYPE_CHECKING, Union
@@ -155,7 +156,6 @@ class Relationship:
 
     # -
     def _to_graph(self: Relationship) -> Graph:
-
         if not getattr(self, "identifier", None):
             self.identifier = Skolemizer.add_skolemization()
 
@@ -176,7 +176,6 @@ class Relationship:
         return self._g
 
     def _relation_to_graph(self: Relationship) -> None:
-
         self._g.add(
             (
                 self._ref,
@@ -186,7 +185,6 @@ class Relationship:
         )
 
     def _had_role_to_graph(self: Relationship) -> None:
-
         self._g.add(
             (
                 self._ref,

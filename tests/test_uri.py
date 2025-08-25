@@ -1,4 +1,5 @@
 """Test cases for the URI module."""
+
 import pytest
 
 from datacatalogtordf import InvalidURIError, URI

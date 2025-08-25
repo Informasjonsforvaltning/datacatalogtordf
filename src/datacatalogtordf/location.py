@@ -14,6 +14,7 @@ Example:
     >>> bool(location.to_rdf())
     True
 """
+
 from __future__ import annotations
 
 from typing import Dict, Optional, Union
@@ -151,7 +152,6 @@ class Location:
 
     # -
     def _to_graph(self: Location) -> Graph:
-
         if not getattr(self, "identifier", None):
             self.identifier = Skolemizer.add_skolemization()
 

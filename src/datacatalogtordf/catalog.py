@@ -19,6 +19,7 @@ Example:
     True
 
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional, Union
@@ -190,7 +191,6 @@ class Catalog(Dataset):
         include_datasets: bool = True,
         include_services: bool = True,
     ) -> Graph:
-
         if not getattr(self, "identifier", None):
             self.identifier = Skolemizer.add_skolemization()
 
@@ -247,11 +247,8 @@ class Catalog(Dataset):
                 )
 
     def _has_parts_to_graph(self: Catalog) -> None:
-
         if getattr(self, "has_parts", None):
-
             for has_parts in self._has_parts:
-
                 if not getattr(has_parts, "identifier", None):
                     has_parts.identifier = Skolemizer.add_skolemization()
 
@@ -262,7 +259,6 @@ class Catalog(Dataset):
     def _datasets_to_graph(self: Catalog) -> None:
         if getattr(self, "datasets", None):
             for _dataset in self._datasets:
-
                 if not getattr(_dataset, "identifier", None):
                     _dataset.identifier = Skolemizer.add_skolemization()
 
@@ -275,11 +271,8 @@ class Catalog(Dataset):
                 )
 
     def _services_to_graph(self: Catalog) -> None:
-
         if getattr(self, "services", None):
-
             for _service in self._services:
-
                 if not getattr(_service, "identifier", None):
                     _service.identifier = Skolemizer.add_skolemization()
 
@@ -293,9 +286,7 @@ class Catalog(Dataset):
 
     def _catalogs_to_graph(self: Catalog) -> None:
         if getattr(self, "catalogs", None):
-
             for _catalog in self._catalogs:
-
                 if not getattr(_catalog, "identifier", None):
                     _catalog.identifier = Skolemizer.add_skolemization()
 
@@ -306,7 +297,6 @@ class Catalog(Dataset):
     def _catalogrecords_to_graph(self: Catalog) -> None:
         if getattr(self, "catalogrecords", None):
             for _catalogrecord in self._catalogrecords:
-
                 if not getattr(_catalogrecord, "identifier", None):
                     _catalogrecord.identifier = Skolemizer.add_skolemization()
 
