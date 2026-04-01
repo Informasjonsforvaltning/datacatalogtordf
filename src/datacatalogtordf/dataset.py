@@ -31,7 +31,6 @@ from skolemizer import Skolemizer  # type: ignore
 
 if TYPE_CHECKING:  # pragma: no cover
     from .dataset_series import DatasetSeries  # pytype: disable=pyi-error
-
 from .distribution import Distribution
 from .location import Location
 from .periodoftime import PeriodOfTime
