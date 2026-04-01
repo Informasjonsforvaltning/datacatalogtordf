@@ -8,7 +8,6 @@ from skolemizer.testutils import skolemization
 from datacatalogtordf import Dataset
 from datacatalogtordf import Relationship
 
-
 # import pytest
 
 
