@@ -20,8 +20,8 @@ from __future__ import annotations
 from typing import Any, Dict, Optional, TYPE_CHECKING, Union
 
 from rdflib import Graph, Namespace, RDF, URIRef
-from skolemizer import Skolemizer  # type: ignore
 
+from .skolemizer import Skolemizer
 from .uri import URI
 
 if TYPE_CHECKING:  # pragma: no cover

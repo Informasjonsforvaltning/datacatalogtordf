@@ -20,10 +20,10 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional, TYPE_CHECKING
 
 from rdflib import Graph, Namespace, RDF, URIRef
-from skolemizer import Skolemizer
 
 from .dataset import Dataset
 from .resource import Resource
+from .skolemizer import Skolemizer
 from .uri import URI
 
 if TYPE_CHECKING:  # pragma: no cover

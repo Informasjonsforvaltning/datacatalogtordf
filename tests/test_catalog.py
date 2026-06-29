@@ -5,9 +5,9 @@ from typing import Any
 from pytest_mock import MockFixture
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
 from rdflib.compare import graph_diff, isomorphic
-from skolemizer.testutils import skolemization, SkolemUtils
 
 from datacatalogtordf import Agent, Catalog, CatalogRecord, DataService, Dataset
+from tests.skolemizer_testutils import skolemization, SkolemUtils
 from tests.testutils import assert_isomorphic
 
 DCT = Namespace("http://purl.org/dc/terms/")
@@ -435,7 +435,7 @@ def test_to_graph_should_return_blank_skolemization(mocker: MockFixture) -> None
         """
 
     mocker.patch(
-        "skolemizer.Skolemizer.add_skolemization",
+        "datacatalogtordf.skolemizer.Skolemizer.add_skolemization",
         return_value=skolemization,
     )
 
@@ -466,7 +466,7 @@ def test_to_graph_should_return_has_part_skolemization(mocker: MockFixture) -> N
     """
 
     mocker.patch(
-        "skolemizer.Skolemizer.add_skolemization",
+        "datacatalogtordf.skolemizer.Skolemizer.add_skolemization",
         return_value=skolemization,
     )
 
@@ -518,7 +518,7 @@ def test_to_graph_should_return_dataset_skolemization(mocker: MockFixture) -> No
     skolemutils = SkolemUtils()
 
     mocker.patch(
-        "skolemizer.Skolemizer.add_skolemization",
+        "datacatalogtordf.skolemizer.Skolemizer.add_skolemization",
         side_effect=skolemutils.get_skolemization,
     )
 
@@ -570,7 +570,7 @@ def test_to_graph_should_return_dataservice_skolemization(mocker: MockFixture) -
     skolemutils = SkolemUtils()
 
     mocker.patch(
-        "skolemizer.Skolemizer.add_skolemization",
+        "datacatalogtordf.skolemizer.Skolemizer.add_skolemization",
         side_effect=skolemutils.get_skolemization,
     )
 
@@ -605,7 +605,7 @@ def test_to_graph_should_return_catalog_skolemization(mocker: MockFixture) -> No
     """
 
     mocker.patch(
-        "skolemizer.Skolemizer.add_skolemization",
+        "datacatalogtordf.skolemizer.Skolemizer.add_skolemization",
         return_value=skolemization,
     )
 
@@ -642,7 +642,7 @@ def test_to_graph_should_return_catalog_record_skolemization(
     """
 
     mocker.patch(
-        "skolemizer.Skolemizer.add_skolemization",
+        "datacatalogtordf.skolemizer.Skolemizer.add_skolemization",
         return_value=skolemization,
     )
 

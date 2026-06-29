@@ -27,7 +27,6 @@ from typing import Any, Dict, List, Optional, TYPE_CHECKING, Union
 
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 from rdflib.term import Identifier
-from skolemizer import Skolemizer  # type: ignore
 
 if TYPE_CHECKING:  # pragma: no cover
     from .dataset_series import DatasetSeries  # pytype: disable=pyi-error
@@ -35,6 +34,7 @@ from .distribution import Distribution
 from .location import Location
 from .periodoftime import PeriodOfTime
 from .resource import Resource
+from .skolemizer import Skolemizer
 from .uri import URI
 
 DCT = Namespace("http://purl.org/dc/terms/")

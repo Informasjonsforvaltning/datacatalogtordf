@@ -19,7 +19,8 @@ from __future__ import annotations
 from typing import Dict, Optional
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
-from skolemizer import Skolemizer  # type: ignore
+
+from .skolemizer import Skolemizer
 
 VCARD = Namespace("http://www.w3.org/2006/vcard/ns#")
 

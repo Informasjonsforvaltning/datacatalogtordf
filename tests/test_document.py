@@ -4,9 +4,9 @@ import pytest
 from pytest_mock import MockFixture
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
-from skolemizer.testutils import skolemization
 
 from datacatalogtordf.document import Document
+from tests.skolemizer_testutils import skolemization
 from tests.testutils import assert_isomorphic
 
 
@@ -82,7 +82,7 @@ def test_to_graph_should_return_document_skolemized(mocker: MockFixture) -> None
         .
         """
     mocker.patch(
-        "skolemizer.Skolemizer.add_skolemization",
+        "datacatalogtordf.skolemizer.Skolemizer.add_skolemization",
         return_value=skolemization,
     )
 

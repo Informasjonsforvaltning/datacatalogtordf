@@ -21,10 +21,10 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional, Union
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
-from skolemizer import Skolemizer  # type: ignore
 
 from .periodoftime import Date
 from .resource import Resource
+from .skolemizer import Skolemizer
 from .uri import URI
 
 DCT = Namespace("http://purl.org/dc/terms/")
