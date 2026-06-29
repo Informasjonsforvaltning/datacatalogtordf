@@ -1,0 +1,14 @@
+name: Audit
+permissions:
+  contents: read
+  security-events: write
+on: push
+jobs:
+  audit:
+    name: Audit python v3.12
+    uses: Informasjonsforvaltning/workflows/.github/workflows/pip-audit.yaml@main
+    with:
+      python_version: "3.12"
+      python_architecture: x64
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
