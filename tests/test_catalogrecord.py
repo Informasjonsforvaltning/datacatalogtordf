@@ -4,9 +4,9 @@ import pytest
 from pytest_mock import MockFixture
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
-from skolemizer.testutils import skolemization
 
 from datacatalogtordf import CatalogRecord, Dataset, InvalidURIError
+from tests.skolemizer_testutils import skolemization
 from tests.testutils import assert_isomorphic
 
 
@@ -73,7 +73,7 @@ def test_to_graph_should_return_skolemization(mocker: MockFixture) -> None:
         """
 
     mocker.patch(
-        "skolemizer.Skolemizer.add_skolemization",
+        "datacatalogtordf.skolemizer.Skolemizer.add_skolemization",
         return_value=skolemization,
     )
 
@@ -244,7 +244,7 @@ def test_to_graph_should_return_primary_topic_skolemization(
     """
 
     mocker.patch(
-        "skolemizer.Skolemizer.add_skolemization",
+        "datacatalogtordf.skolemizer.Skolemizer.add_skolemization",
         return_value=skolemization,
     )
 

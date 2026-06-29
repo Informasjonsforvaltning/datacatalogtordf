@@ -3,10 +3,10 @@
 from pytest_mock import MockFixture
 from rdflib import Graph
 from rdflib.compare import graph_diff, isomorphic
-from skolemizer.testutils import skolemization
 
 from datacatalogtordf import Dataset
 from datacatalogtordf import Relationship
+from tests.skolemizer_testutils import skolemization
 
 # import pytest
 
@@ -62,7 +62,7 @@ def test_to_graph_should_return_skolemization(mocker: MockFixture) -> None:
     """
 
     mocker.patch(
-        "skolemizer.Skolemizer.add_skolemization",
+        "datacatalogtordf.skolemizer.Skolemizer.add_skolemization",
         return_value=skolemization,
     )
 

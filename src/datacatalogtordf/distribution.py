@@ -22,9 +22,9 @@ from typing import Any, Dict, List, Optional, TYPE_CHECKING, Union
 
 from rdflib import Graph, Literal, Namespace, RDF, URIRef
 from rdflib.namespace import DCTERMS
-from skolemizer import Skolemizer  # type: ignore
 
 from .periodoftime import Date
+from .skolemizer import Skolemizer
 from .uri import URI
 
 if TYPE_CHECKING:  # pragma: no cover
